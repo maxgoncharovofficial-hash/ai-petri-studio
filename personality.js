@@ -4,19 +4,21 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Personality page loaded');
     
-    // Добавляем обработчик для кнопки назад
+    // Добавляем обработчик для кнопки назад - точно как для основной кнопки
     const backButton = document.getElementById('back-button');
     console.log('Back button found:', backButton);
     
     if (backButton) {
-        backButton.addEventListener('click', function() {
-            console.log('Back button clicked via addEventListener');
-            goBack();
+        backButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Back button clicked');
+            window.location.href = 'index.html';
         });
+        
         backButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
             console.log('Back button touched');
-            goBack();
+            window.location.href = 'index.html';
         });
     }
     
@@ -116,10 +118,9 @@ function handlePersonalityProSection() {
     alert('Раздел "Распаковка личности Pro" в разработке');
 }
 
-// Функция возврата на главную страницу
+// Функция возврата на главную страницу (запасная)
 function goBack() {
-    console.log('Back button clicked');
-    // Простой переход без дополнительной логики
+    console.log('Back button clicked (fallback)');
     window.location.href = 'index.html';
 }
 
