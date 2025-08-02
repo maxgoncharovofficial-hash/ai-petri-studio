@@ -24,7 +24,6 @@ body {
     color: white;
     position: relative;
     overflow: hidden;
-    border-bottom: 3px solid #ff6b6b;
 }
 
 .header-content {
@@ -34,6 +33,7 @@ body {
     max-width: 600px;
     margin: 0 auto;
     justify-content: flex-start;
+    padding-left: 20px;
 }
 
 .header-icon {
@@ -131,10 +131,10 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
     cursor: pointer;
-    border: 2px solid #ff6b6b;
+    border: 1px solid var(--tg-theme-hint-color, #e9ecef);
 }
 
 .card:hover {
@@ -179,22 +179,20 @@ body {
 
 .threads-icon::before {
     content: '@';
-    font-size: 26px;
-    font-weight: 700;
+    font-size: 24px;
+    font-weight: 600;
     color: white;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 42px;
+    height: 42px;
     text-align: center;
     line-height: 1;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(2px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 
