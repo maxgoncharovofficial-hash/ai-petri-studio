@@ -321,6 +321,47 @@ body {
     transform: translate(-50%, -50%);
 }
 
+/* Градиентная горизонтальная шапка */
+.header-gradient {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 18px 18px 0 0;
+    padding: 18px 28px 16px 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    min-height: 64px;
+}
+
+.header-factory-icon {
+    font-size: 38px;
+    margin-right: 18px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.10));
+}
+
+.header-title-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.header-title {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin-bottom: 2px;
+    line-height: 1.1;
+}
+
+.header-subtitle {
+    color: rgba(255,255,255,0.85);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
 /* Responsive */
 @media (max-width: 480px) {
     .header-content {
@@ -338,5 +379,19 @@ body {
     
     .card-content h3 {
         font-size: 16px;
+    }
+    .header-gradient {
+        padding: 12px 10px 10px 10px;
+        min-height: 48px;
+    }
+    .header-factory-icon {
+        font-size: 28px;
+        margin-right: 10px;
+    }
+    .header-title {
+        font-size: 16px;
+    }
+    .header-subtitle {
+        font-size: 12px;
     }
 }
