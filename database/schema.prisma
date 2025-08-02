@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  telegramId  String   @unique
+  username    String?
+  firstName   String?
+  lastName    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  productData     ProductData?
+  audienceData    AudienceData?
+  casesData       CasesData?
+  personalityLite PersonalityLite?
+  personalityPro  PersonalityPro?
+
+  @@map("users")
+}
+
+model ProductData {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Product form fields
+  productName        String?
+  targetAudience     String?
+  uniqueValue        String?
+  mainBenefits       String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("product_data")
+}
+
+model AudienceData {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Audience form fields
+  ageLocation      String?
+  familyStatus     String?
+  interests        String?
+  mainProblems     String?
+  solutionSteps    String?
+  yourSolutions    String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("audience_data")
+}
+
+model CasesData {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Case fields
+  clientName    String
+  howFoundOut   String?
+  goals         String?
+  problems      String?
+  results       String?
+  whatHelped    String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cases_data")
+}
+
+model PersonalityLite {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Personality Lite form fields
+  interestingTopics    String?
+  frequentQuestions    String?
+  personalExperience   String?
+  explainToBeginner    String?
+  transformation       String?
+  communicationStyle   String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("personality_lite")
+}
+
+model PersonalityPro {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Personality Pro form fields
+  clientProblem    String?
+  uniqueApproach   String?
+  commonMistakes   String?
+  contentFormat    String?
+  expertMission    String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("personality_pro")
+} 

@@ -61,34 +61,68 @@ function initializeTabs() {
 
 // Переключение вкладок
 function switchTab(tabName) {
+    console.log('switchTab() called with tabName:', tabName);
+    
     // Обновляем активную вкладку
     document.querySelectorAll('.tab-button').forEach(btn => {
         btn.classList.remove('active');
     });
-    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    const activeTabButton = document.querySelector(`[data-tab="${tabName}"]`);
+    if (activeTabButton) {
+        activeTabButton.classList.add('active');
+        console.log('Active tab button updated');
+    } else {
+        console.error('Tab button not found for:', tabName);
+    }
     
     // Показываем соответствующий контент
     document.querySelectorAll('.tab-panel').forEach(panel => {
         panel.classList.remove('active');
     });
-    document.getElementById(`${tabName}-tab`).classList.add('active');
+    const activeTabPanel = document.getElementById(`${tabName}-tab`);
+    if (activeTabPanel) {
+        activeTabPanel.classList.add('active');
+        console.log('Active tab panel updated');
+    } else {
+        console.error('Tab panel not found for:', tabName);
+    }
     
     // Если переключаемся на список кейсов, обновляем его
     if (tabName === 'list') {
+        console.log('Switching to list tab, loading cases list...');
         loadCasesList();
     }
+    
+    console.log('Tab switched successfully to:', tabName);
 }
 
 // Инициализация обработчиков формы
 function initializeFormHandlers() {
     const form = document.getElementById('cases-form');
     const textareas = document.querySelectorAll('textarea');
+    const saveButton = document.getElementById('save-button');
     
     // Обработчик отправки формы
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+        console.log('Form submitted, calling saveData()');
         saveData();
     });
+    
+    // Дополнительный обработчик для кнопки сохранения
+    if (saveButton) {
+        saveButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Save button clicked, calling saveData()');
+            saveData();
+        });
+        
+        saveButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            console.log('Save button touched, calling saveData()');
+            saveData();
+        });
+    }
     
     // Обработчики для каждого textarea
     textareas.forEach((textarea, index) => {
@@ -167,58 +201,79 @@ function updateProgress() {
 
 // Сохранение кейса
 function saveData() {
+    console.log('saveData() called');
+    
     const clientName = document.getElementById('question-1').value.trim();
+    console.log('Client name:', clientName);
     
     // Валидация - имя клиента обязательно
     if (!clientName) {
+        console.log('Validation failed: client name is empty');
         alert('Пожалуйста, укажите имя клиента');
         return;
     }
     
+    // Собираем данные из всех полей
     const formData = {
         id: currentEditingCaseId || Date.now(),
         date: new Date().toLocaleDateString('ru-RU'),
         clientName: clientName,
-        howFoundOut: document.getElementById('question-2').value,
-        goals: document.getElementById('question-3').value,
-        problems: document.getElementById('question-4').value,
-        results: document.getElementById('question-5').value,
-        whatHelped: document.getElementById('question-6').value,
+        howFoundOut: document.getElementById('question-2').value.trim(),
+        goals: document.getElementById('question-3').value.trim(),
+        problems: document.getElementById('question-4').value.trim(),
+        results: document.getElementById('question-5').value.trim(),
+        whatHelped: document.getElementById('question-6').value.trim(),
         saved_at: new Date().toISOString()
     };
     
+    console.log('Form data collected:', formData);
+    
     // Получаем существующие кейсы
     const existingCases = getCases();
+    console.log('Existing cases count:', existingCases.length);
     
     if (currentEditingCaseId) {
         // Обновляем существующий кейс
         const index = existingCases.findIndex(case_ => case_.id === currentEditingCaseId);
         if (index !== -1) {
             existingCases[index] = formData;
+            console.log('Updated existing case at index:', index);
         }
     } else {
         // Добавляем новый кейс
         existingCases.push(formData);
+        console.log('Added new case, total cases now:', existingCases.length);
     }
     
     // Сохраняем в localStorage
-    localStorage.setItem('cases_data', JSON.stringify(existingCases));
+    try {
+        localStorage.setItem('cases_data', JSON.stringify(existingCases));
+        console.log('Data saved to localStorage successfully');
+    } catch (error) {
+        console.error('Error saving to localStorage:', error);
+        alert('Ошибка при сохранении данных');
+        return;
+    }
     
     // Очищаем форму
     clearForm();
+    console.log('Form cleared');
     
     // Сбрасываем режим редактирования
     currentEditingCaseId = null;
     
     // Показываем сообщение об успехе
     showSuccessMessage();
+    console.log('Success message shown');
     
     // Переключаемся на список кейсов
+    console.log('Switching to list tab...');
     setTimeout(() => {
         switchTab('list');
+        console.log('Switched to list tab');
     }, 1500);
     
-    console.log('Case saved:', formData);
+    console.log('Case saved successfully:', formData);
 }
 
 // Очистка формы
@@ -271,33 +326,50 @@ function getCases() {
 
 // Загрузка списка кейсов
 function loadCasesList() {
+    console.log('loadCasesList() called');
+    
     const cases = getCases();
+    console.log('Loaded cases from localStorage:', cases.length);
+    
     const casesList = document.getElementById('cases-list');
     const emptyState = document.getElementById('empty-state');
     const casesCount = document.getElementById('cases-count');
     
+    if (!casesList || !emptyState || !casesCount) {
+        console.error('Required elements not found');
+        return;
+    }
+    
     // Обновляем счетчик
     casesCount.textContent = `${cases.length} кейс${cases.length === 1 ? '' : cases.length < 5 ? 'а' : 'ов'}`;
+    console.log('Cases count updated:', casesCount.textContent);
     
     if (cases.length === 0) {
         // Показываем пустое состояние
         casesList.innerHTML = '';
         emptyState.style.display = 'block';
+        console.log('Showing empty state');
         return;
     }
     
     // Скрываем пустое состояние
     emptyState.style.display = 'none';
+    console.log('Hiding empty state');
     
     // Сортируем кейсы по дате (новые сверху)
     cases.sort((a, b) => new Date(b.saved_at) - new Date(a.saved_at));
+    console.log('Cases sorted by date');
     
     // Создаем HTML для каждого кейса
     const casesHTML = cases.map(case_ => createCaseCard(case_)).join('');
     casesList.innerHTML = casesHTML;
+    console.log('Cases HTML generated and inserted');
     
     // Добавляем обработчики для кнопок
     addCaseCardHandlers();
+    console.log('Case card handlers added');
+    
+    console.log('Cases list loaded successfully');
 }
 
 // Создание карточки кейса
