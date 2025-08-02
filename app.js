@@ -7,14 +7,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Проверяем доступность Telegram Web App
         if (window.Telegram && window.Telegram.WebApp) {
             tg = window.Telegram.WebApp;
-            
+            console.log('Telegram Web App найден:', tg);
+
             // Настройка Telegram Web App
             tg.ready();
+            console.log('tg.ready() выполнен');
             tg.expand();
-            
+            console.log('tg.expand() выполнен');
+
             console.log('Telegram Web App инициализирован успешно');
+            console.log('Доступные методы:', Object.keys(tg));
         } else {
             console.warn('Telegram Web App недоступен');
+            console.log('window.Telegram:', window.Telegram);
         }
     } catch (error) {
         console.error('Ошибка инициализации Telegram Web App:', error);
@@ -85,6 +90,7 @@ function handlePersonality() {
     try {
         if (tg && tg.HapticFeedback) {
             tg.HapticFeedback.impactOccurred('light');
+            console.log('Haptic feedback выполнен');
         }
     } catch (error) {
         console.error('Ошибка haptic feedback:', error);
@@ -93,10 +99,13 @@ function handlePersonality() {
     // Отправляем данные в бота для перехода в раздел распаковки личности
     try {
         if (tg && tg.sendData) {
-            tg.sendData(JSON.stringify({
+            const data = {
                 action: 'personality_unpack',
                 message: 'Открыт раздел РАСПАКОВКА ЛИЧНОСТИ'
-            }));
+            };
+            console.log('Отправляем данные в бота:', data);
+            tg.sendData(JSON.stringify(data));
+            console.log('Данные отправлены успешно');
         } else {
             console.log('sendData недоступен, показываем alert');
             alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
