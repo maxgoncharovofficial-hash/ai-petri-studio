@@ -329,7 +329,7 @@ body {
     display: flex;
     align-items: center;
     padding: 16px 20px;
-    background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+    background: linear-gradient(90deg, #2381cc 0%, #3b82f6 100%);
     margin-bottom: 20px;
 }
 .header-factory-icon {
