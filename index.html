@@ -15,7 +15,39 @@
     <div id="app">
         <!-- Header Gradient -->
         <div class="header-gradient">
-            <div class="header-factory-icon">🏭</div>
+            <div class="header-factory-icon">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <!-- Factory Building -->
+                    <rect x="4" y="16" width="24" height="12" fill="#8B4513" stroke="#654321" stroke-width="1"/>
+                    <rect x="6" y="12" width="8" height="4" fill="#A0522D" stroke="#654321" stroke-width="1"/>
+                    <rect x="18" y="12" width="8" height="4" fill="#A0522D" stroke="#654321" stroke-width="1"/>
+                    <rect x="8" y="8" width="4" height="4" fill="#CD853F" stroke="#654321" stroke-width="1"/>
+                    <rect x="20" y="8" width="4" height="4" fill="#CD853F" stroke="#654321" stroke-width="1"/>
+                    
+                    <!-- Windows -->
+                    <rect x="7" y="18" width="2" height="2" fill="#FFD700"/>
+                    <rect x="11" y="18" width="2" height="2" fill="#FFD700"/>
+                    <rect x="19" y="18" width="2" height="2" fill="#FFD700"/>
+                    <rect x="23" y="18" width="2" height="2" fill="#FFD700"/>
+                    
+                    <!-- Chimney -->
+                    <rect x="12" y="6" width="4" height="6" fill="#696969" stroke="#2F4F4F" stroke-width="1"/>
+                    
+                    <!-- Smoke Animation -->
+                    <circle cx="14" cy="4" r="1" fill="#D3D3D3" opacity="0.8">
+                        <animate attributeName="cy" values="4;2;0" dur="2s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.8;0.4;0" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="15" cy="3" r="0.8" fill="#C0C0C0" opacity="0.6">
+                        <animate attributeName="cy" values="3;1;-1" dur="2.5s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.6;0.3;0" dur="2.5s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="13" cy="5" r="0.6" fill="#E0E0E0" opacity="0.7">
+                        <animate attributeName="cy" values="5;3;1" dur="1.8s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.7;0.35;0" dur="1.8s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+            </div>
             <div class="header-title-block">
                 <div class="header-title">AiPetri Studio</div>
                 <div class="header-subtitle">Премиум автоматизация публикаций v24.6</div>
