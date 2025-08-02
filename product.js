@@ -184,6 +184,15 @@ function initializeModal() {
     console.log('Initializing modal:', modal);
     console.log('OK button:', okButton);
     
+    // Гарантированно скрываем модальное окно при инициализации
+    if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        modal.style.visibility = 'hidden';
+        modal.style.opacity = '0';
+        console.log('Modal hidden on initialization');
+    }
+    
     if (okButton) {
         okButton.addEventListener('click', function(e) {
             e.preventDefault();
@@ -214,6 +223,9 @@ function showModal() {
     const modal = document.getElementById('save-modal');
     if (modal) {
         modal.classList.add('show');
+        modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        modal.style.opacity = '1';
         console.log('Modal shown');
     }
 }
@@ -223,6 +235,9 @@ function hideModal() {
     const modal = document.getElementById('save-modal');
     if (modal) {
         modal.classList.remove('show');
+        modal.style.display = 'none';
+        modal.style.visibility = 'hidden';
+        modal.style.opacity = '0';
         console.log('Modal hidden');
     }
 }
