@@ -2,6 +2,16 @@
 
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', function() {
+    // Добавляем обработчик для кнопки назад
+    const backButton = document.getElementById('back-button');
+    if (backButton) {
+        backButton.addEventListener('click', goBack);
+        backButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            goBack();
+        });
+    }
+    
     // Инициализация обработчиков событий
     initializeSectionHandlers();
     
