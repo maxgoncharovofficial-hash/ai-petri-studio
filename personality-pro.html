@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Распаковка личности Pro - AiPetri Studio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="personality.css">
+    <link rel="stylesheet" href="personality-pro.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-title-block">
+                <div class="header-title">РАСПАКОВКА ЛИЧНОСТИ PRO</div>
+                <div class="header-subtitle">Углубленный анализ вашей экспертности</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="personality-pro-container">
+                <!-- Progress -->
+                <div class="progress-section">
+                    <div class="progress-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-text">Заполнено: <span class="stat-value" id="filled-questions">0/5</span> вопросов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-text">Прогресс: <span class="stat-value" id="progress-percentage">0%</span></div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form class="personality-pro-form" id="personality-pro-form">
+                    <!-- Question 1 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>1. Проблема клиентов</h3>
+                            <div class="char-counter">
+                                <span id="char-count-1">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какую проблему чаще всего решают ваши клиенты или подписчики с вашей помощью?
+                        </div>
+                        <textarea 
+                            id="question-1" 
+                            name="client_problem" 
+                            placeholder="🎯 Эксперт: «Ко мне приходят люди, которые боятся записывать видео. Они не знают, как говорить на камеру и создавать контент.» 💡 Почему это важно? Это помогает сформулировать основное предложение ценности."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>2. Уникальный подход</h3>
+                            <div class="char-counter">
+                                <span id="char-count-2">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какой у вас уникальный подход в решении этих проблем?
+                        </div>
+                        <textarea 
+                            id="question-2" 
+                            name="unique_approach" 
+                            placeholder="🎯 Эксперт: «Я использую метод "зеркального прогрева" – мои ученики сначала тренируются говорить перед зеркалом, а затем на камеру.» 💡 Почему это важно? Уникальные подходы выделяют вас среди конкурентов."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>3. Главные ошибки</h3>
+                            <div class="char-counter">
+                                <span id="char-count-3">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие главные ошибки делает ваша аудитория, пытаясь решить проблему самостоятельно?
+                        </div>
+                        <textarea 
+                            id="question-3" 
+                            name="common_mistakes" 
+                            placeholder="🎯 Эксперт: «Они сразу записывают видео без подготовки, не зная, что сказать, а потом разочаровываются в результате.» 💡 Почему это важно? Понимание ошибок усиливает вашу ценность."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>4. Формат подачи</h3>
+                            <div class="char-counter">
+                                <span id="char-count-4">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какой формат подачи информации вам ближе?
+                        </div>
+                        <textarea 
+                            id="question-4" 
+                            name="content_format" 
+                            placeholder="🎯 Эксперт: «Мне нравится разбирать кейсы учеников, личные примеры, разборы популярных блогеров.» 💡 Почему это важно? Аудитория должна понимать, как вы подаете материал."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>5. Миссия эксперта</h3>
+                            <div class="char-counter">
+                                <span id="char-count-5">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какая ваша миссия как эксперта?
+                        </div>
+                        <textarea 
+                            id="question-5" 
+                            name="expert_mission" 
+                            placeholder="🎯 Эксперт: «Я хочу помочь людям перестать бояться говорить на камеру и использовать это для продвижения себя или бизнеса.» 💡 Почему это важно? Миссия делает ваш бренд более мощным."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="save-button" id="save-button">
+                            💾 Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal для уведомления о сохранении -->
+    <div id="save-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">AiPetri Studio</div>
+            <div class="modal-body">
+                <span class="modal-icon">✓</span>
+                <span class="modal-text">Данные успешно сохранены!</span>
+            </div>
+            <button class="modal-button" id="modal-ok-button">ОК</button>
+        </div>
+    </div>
+
+    <script src="personality-pro.js?v=30.7"></script>
+</body>
+</html> 

@@ -115,7 +115,7 @@ function handlePersonalityLiteSection() {
 
 function handlePersonalityProSection() {
     console.log('Распаковка личности Pro clicked');
-    alert('Раздел "Распаковка личности Pro" в разработке');
+    window.location.href = 'personality-pro.html';
 }
 
 // Функция возврата на главную страницу (запасная)
