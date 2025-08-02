@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Распаковка личности Lite - AiPetri Studio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="personality.css">
+    <link rel="stylesheet" href="personality-lite.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-title-block">
+                <div class="header-title">РАСПАКОВКА ЛИЧНОСТИ LITE</div>
+                <div class="header-subtitle">Базовый анализ вашей экспертности</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="personality-lite-container">
+                <!-- Progress -->
+                <div class="progress-section">
+                    <div class="progress-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-text">Заполнено: <span class="stat-value" id="filled-questions">0/6</span> вопросов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-text">Прогресс: <span class="stat-value" id="progress-percentage">0%</span></div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form class="personality-lite-form" id="personality-lite-form">
+                    <!-- Question 1 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>1. Интересные темы</h3>
+                            <div class="char-counter">
+                                <span id="char-count-1">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие темы вам интересны и в чем вам нравится разбираться?
+                        </div>
+                        <textarea 
+                            id="question-1" 
+                            name="interesting_topics" 
+                            placeholder="🎯 Новичок: «Мне нравится читать про психологию общения, разбираться, почему люди поступают так или иначе.» 💡 Почему это важно? Это поможет понять, в какой теме вам будет комфортно создавать контент."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>2. Частые вопросы</h3>
+                            <div class="char-counter">
+                                <span id="char-count-2">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие вопросы вам чаще всего задают знакомые?
+                        </div>
+                        <textarea 
+                            id="question-2" 
+                            name="frequent_questions" 
+                            placeholder="🎯 Новичок: «Меня часто спрашивают, как я успеваю все делать и планировать день.» 💡 Почему это важно? Люди уже видят в вас определенную ценность – это первый шаг к экспертности."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>3. Личный опыт</h3>
+                            <div class="char-counter">
+                                <span id="char-count-3">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какой у вас личный опыт в этих темах?
+                        </div>
+                        <textarea 
+                            id="question-3" 
+                            name="personal_experience" 
+                            placeholder="🎯 Новичок: «Я сама прошла путь от хаотичного расписания к четкому планированию и теперь могу поделиться этим опытом.» 💡 Почему это важно? Личный опыт – это сильная база для создания контента."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>4. Объяснение новичку</h3>
+                            <div class="char-counter">
+                                <span id="char-count-4">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Если бы вам нужно было помочь новичку в этом, что бы вы объяснили ему первым делом?
+                        </div>
+                        <textarea 
+                            id="question-4" 
+                            name="explain_to_beginner" 
+                            placeholder="🎯 Новичок: «Я бы объяснила ему метод 40-30-30 – как управлять своим временем по блокам.» 💡 Почему это важно? Это показывает, что у вас есть знания и вы даете ценные советы."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>5. Трансформация</h3>
+                            <div class="char-counter">
+                                <span id="char-count-5">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какую трансформацию или пользу может получить человек, следуя вашим советам?
+                        </div>
+                        <textarea 
+                            id="question-5" 
+                            name="transformation" 
+                            placeholder="🎯 Новичок: «Человек научится планировать свою работу и не чувствовать постоянный стресс от дедлайнов.» 💡 Почему это важно? Это ваш конечный результат, который поможет продавать ваши идеи."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 6 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>6. Стиль общения</h3>
+                            <div class="char-counter">
+                                <span id="char-count-6">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какой стиль общения вам ближе?
+                        </div>
+                        <textarea 
+                            id="question-6" 
+                            name="communication_style" 
+                            placeholder="🎯 Новичок: «Мне нравится говорить просто, объяснять понятно»"
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="save-button" id="save-button">
+                            💾 Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal для уведомления о сохранении -->
+    <div id="save-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">AiPetri Studio</div>
+            <div class="modal-body">
+                <span class="modal-icon">✓</span>
+                <span class="modal-text">Данные успешно сохранены!</span>
+            </div>
+            <button class="modal-button" id="modal-ok-button">ОК</button>
+        </div>
+    </div>
+
+    <script src="personality-lite.js?v=30.6"></script>
+</body>
+</html> 

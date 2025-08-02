@@ -110,7 +110,7 @@ function handleCasesSection() {
 
 function handlePersonalityLiteSection() {
     console.log('Распаковка личности Lite clicked');
-    alert('Раздел "Распаковка личности Lite" в разработке');
+    window.location.href = 'personality-lite.html';
 }
 
 function handlePersonalityProSection() {
