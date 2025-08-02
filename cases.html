@@ -30,30 +30,46 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="cases-container">
-                <!-- Description -->
-                <div class="description-section">
-                    <p>Результаты ваших клиентов помогут найти точки соприкосновения с аудиторией. ИИ натинво встроит их в ваш контент.</p>
-                </div>
-
-                <!-- Progress -->
-                <div class="progress-section">
-                    <div class="progress-stats">
-                        <div class="stat-item">
-                            <div class="stat-icon">📊</div>
-                            <div class="stat-text">Заполнено: <span class="stat-value" id="filled-questions">0/6</span> вопросов</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-icon">📈</div>
-                            <div class="stat-text">Прогресс: <span class="stat-value" id="progress-percentage">0%</span></div>
-                        </div>
+                <!-- Tabs -->
+                <div class="tabs-container">
+                    <div class="tab-button active" data-tab="create">
+                        <span class="tab-icon">➕</span>
+                        <span class="tab-text">Создать кейс</span>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    <div class="tab-button" data-tab="list">
+                        <span class="tab-icon">📋</span>
+                        <span class="tab-text">Мои кейсы</span>
                     </div>
                 </div>
 
-                <!-- Form -->
-                <form class="cases-form" id="cases-form">
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Create Case Tab -->
+                    <div class="tab-panel active" id="create-tab">
+                        <!-- Description -->
+                        <div class="description-section">
+                            <p>Результаты ваших клиентов помогут найти точки соприкосновения с аудиторией. ИИ натинво встроит их в ваш контент.</p>
+                        </div>
+
+                        <!-- Progress -->
+                        <div class="progress-section">
+                            <div class="progress-stats">
+                                <div class="stat-item">
+                                    <div class="stat-icon">📊</div>
+                                    <div class="stat-text">Заполнено: <span class="stat-value" id="filled-questions">0/6</span> вопросов</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">📈</div>
+                                    <div class="stat-text">Прогресс: <span class="stat-value" id="progress-percentage">0%</span></div>
+                                </div>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Form -->
+                        <form class="cases-form" id="cases-form">
                     <!-- Question 1 -->
                     <div class="question-section">
                         <div class="question-header">
@@ -179,8 +195,27 @@
                         <button type="submit" class="save-button" id="save-button">
                             💾 Сохранить
                         </button>
+                        </form>
                     </div>
-                </form>
+
+                    <!-- List Cases Tab -->
+                    <div class="tab-panel" id="list-tab">
+                        <div class="cases-list-container">
+                            <div class="cases-list-header">
+                                <h3>Мои кейсы</h3>
+                                <div class="cases-count" id="cases-count">0 кейсов</div>
+                            </div>
+                            <div class="cases-list" id="cases-list">
+                                <!-- Cases will be loaded here -->
+                            </div>
+                            <div class="empty-state" id="empty-state">
+                                <div class="empty-icon">📋</div>
+                                <div class="empty-text">У вас пока нет сохраненных кейсов</div>
+                                <div class="empty-subtext">Создайте первый кейс, чтобы увидеть его здесь</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -191,9 +226,38 @@
             <div class="modal-header">AiPetri Studio</div>
             <div class="modal-body">
                 <span class="modal-icon">✓</span>
-                <span class="modal-text">Данные успешно сохранены!</span>
+                <span class="modal-text">Кейс успешно сохранен!</span>
             </div>
             <button class="modal-button" id="modal-ok-button">ОК</button>
+        </div>
+    </div>
+
+    <!-- Modal для просмотра кейса -->
+    <div id="view-case-modal" class="modal-overlay">
+        <div class="modal-content view-case-modal">
+            <div class="modal-header">Просмотр кейса</div>
+            <div class="modal-body view-case-content" id="view-case-content">
+                <!-- Case content will be loaded here -->
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button secondary" id="edit-case-button">Редактировать</button>
+                <button class="modal-button" id="close-view-modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal для подтверждения удаления -->
+    <div id="delete-confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">Удаление кейса</div>
+            <div class="modal-body">
+                <span class="modal-icon">⚠️</span>
+                <span class="modal-text">Вы уверены, что хотите удалить этот кейс?</span>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button secondary" id="cancel-delete">Отмена</button>
+                <button class="modal-button danger" id="confirm-delete">Удалить</button>
+            </div>
         </div>
     </div>
 

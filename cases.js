@@ -1,11 +1,13 @@
 // Cases Page JavaScript
 
+let currentEditingCaseId = null;
+
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Cases page loaded');
     
-    // Загружаем сохраненные данные
-    loadSavedData();
+    // Инициализация вкладок
+    initializeTabs();
     
     // Добавляем обработчик для кнопки назад
     const backButton = document.getElementById('back-button');
@@ -28,12 +30,54 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация обработчиков формы
     initializeFormHandlers();
     
-    // Инициализация модального окна
-    initializeModal();
+    // Инициализация модальных окон
+    initializeModals();
+    
+    // Загружаем список кейсов
+    loadCasesList();
     
     // Обновляем прогресс
     updateProgress();
 });
+
+// Инициализация вкладок
+function initializeTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const tabName = this.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+        
+        button.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            const tabName = this.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+}
+
+// Переключение вкладок
+function switchTab(tabName) {
+    // Обновляем активную вкладку
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    
+    // Показываем соответствующий контент
+    document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    document.getElementById(`${tabName}-tab`).classList.add('active');
+    
+    // Если переключаемся на список кейсов, обновляем его
+    if (tabName === 'list') {
+        loadCasesList();
+    }
+}
 
 // Инициализация обработчиков формы
 function initializeFormHandlers() {
@@ -121,131 +165,374 @@ function updateProgress() {
     }
 }
 
-// Сохранение данных
+// Сохранение кейса
 function saveData() {
+    const clientName = document.getElementById('question-1').value.trim();
+    
+    // Валидация - имя клиента обязательно
+    if (!clientName) {
+        alert('Пожалуйста, укажите имя клиента');
+        return;
+    }
+    
     const formData = {
-        client_name: document.getElementById('question-1').value,
-        source: document.getElementById('question-2').value,
+        id: currentEditingCaseId || Date.now(),
+        date: new Date().toLocaleDateString('ru-RU'),
+        clientName: clientName,
+        howFoundOut: document.getElementById('question-2').value,
         goals: document.getElementById('question-3').value,
-        problems_before: document.getElementById('question-4').value,
+        problems: document.getElementById('question-4').value,
         results: document.getElementById('question-5').value,
-        success_factors: document.getElementById('question-6').value,
+        whatHelped: document.getElementById('question-6').value,
         saved_at: new Date().toISOString()
     };
     
+    // Получаем существующие кейсы
+    const existingCases = getCases();
+    
+    if (currentEditingCaseId) {
+        // Обновляем существующий кейс
+        const index = existingCases.findIndex(case_ => case_.id === currentEditingCaseId);
+        if (index !== -1) {
+            existingCases[index] = formData;
+        }
+    } else {
+        // Добавляем новый кейс
+        existingCases.push(formData);
+    }
+    
     // Сохраняем в localStorage
-    localStorage.setItem('cases_data', JSON.stringify(formData));
+    localStorage.setItem('cases_data', JSON.stringify(existingCases));
+    
+    // Очищаем форму
+    clearForm();
+    
+    // Сбрасываем режим редактирования
+    currentEditingCaseId = null;
     
     // Показываем сообщение об успехе
     showSuccessMessage();
     
-    console.log('Data saved:', formData);
+    // Переключаемся на список кейсов
+    setTimeout(() => {
+        switchTab('list');
+    }, 1500);
+    
+    console.log('Case saved:', formData);
 }
 
-// Загрузка сохраненных данных
-function loadSavedData() {
-    const savedData = localStorage.getItem('cases_data');
+// Очистка формы
+function clearForm() {
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach((textarea, index) => {
+        textarea.value = '';
+        updateCharCounter(index + 1, 0);
+    });
+    updateProgress();
+}
+
+// Загрузка кейса в форму для редактирования
+function loadCaseForEditing(caseData) {
+    document.getElementById('question-1').value = caseData.clientName || '';
+    document.getElementById('question-2').value = caseData.howFoundOut || '';
+    document.getElementById('question-3').value = caseData.goals || '';
+    document.getElementById('question-4').value = caseData.problems || '';
+    document.getElementById('question-5').value = caseData.results || '';
+    document.getElementById('question-6').value = caseData.whatHelped || '';
     
+    // Обновляем счетчики
+    for (let i = 1; i <= 6; i++) {
+        const value = document.getElementById(`question-${i}`).value;
+        updateCharCounter(i, value.length);
+    }
+    
+    updateProgress();
+    
+    // Устанавливаем режим редактирования
+    currentEditingCaseId = caseData.id;
+    
+    // Переключаемся на вкладку создания
+    switchTab('create');
+}
+
+// Получение списка кейсов
+function getCases() {
+    const savedData = localStorage.getItem('cases_data');
     if (savedData) {
         try {
-            const data = JSON.parse(savedData);
-            
-            // Заполняем поля сохраненными данными
-            if (data.client_name) {
-                document.getElementById('question-1').value = data.client_name;
-                updateCharCounter(1, data.client_name.length);
-            }
-            
-            if (data.source) {
-                document.getElementById('question-2').value = data.source;
-                updateCharCounter(2, data.source.length);
-            }
-            
-            if (data.goals) {
-                document.getElementById('question-3').value = data.goals;
-                updateCharCounter(3, data.goals.length);
-            }
-            
-            if (data.problems_before) {
-                document.getElementById('question-4').value = data.problems_before;
-                updateCharCounter(4, data.problems_before.length);
-            }
-            
-            if (data.results) {
-                document.getElementById('question-5').value = data.results;
-                updateCharCounter(5, data.results.length);
-            }
-            
-            if (data.success_factors) {
-                document.getElementById('question-6').value = data.success_factors;
-                updateCharCounter(6, data.success_factors.length);
-            }
-            
-            console.log('Loaded saved data:', data);
+            return JSON.parse(savedData);
         } catch (error) {
-            console.error('Error loading saved data:', error);
+            console.error('Error parsing cases data:', error);
+            return [];
         }
     }
+    return [];
 }
 
-// Инициализация модального окна
-function initializeModal() {
-    const modal = document.getElementById('save-modal');
-    const okButton = document.getElementById('modal-ok-button');
+// Загрузка списка кейсов
+function loadCasesList() {
+    const cases = getCases();
+    const casesList = document.getElementById('cases-list');
+    const emptyState = document.getElementById('empty-state');
+    const casesCount = document.getElementById('cases-count');
     
-    console.log('Initializing modal:', modal);
-    console.log('OK button:', okButton);
+    // Обновляем счетчик
+    casesCount.textContent = `${cases.length} кейс${cases.length === 1 ? '' : cases.length < 5 ? 'а' : 'ов'}`;
     
-    // Гарантированно скрываем модальное окно при инициализации
-    if (modal) {
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-        modal.style.visibility = 'hidden';
-        modal.style.opacity = '0';
-        console.log('Modal hidden on initialization');
+    if (cases.length === 0) {
+        // Показываем пустое состояние
+        casesList.innerHTML = '';
+        emptyState.style.display = 'block';
+        return;
     }
     
-    if (okButton) {
-        okButton.addEventListener('click', function(e) {
+    // Скрываем пустое состояние
+    emptyState.style.display = 'none';
+    
+    // Сортируем кейсы по дате (новые сверху)
+    cases.sort((a, b) => new Date(b.saved_at) - new Date(a.saved_at));
+    
+    // Создаем HTML для каждого кейса
+    const casesHTML = cases.map(case_ => createCaseCard(case_)).join('');
+    casesList.innerHTML = casesHTML;
+    
+    // Добавляем обработчики для кнопок
+    addCaseCardHandlers();
+}
+
+// Создание карточки кейса
+function createCaseCard(case_) {
+    const description = case_.howFoundOut ? case_.howFoundOut.substring(0, 100) + (case_.howFoundOut.length > 100 ? '...' : '') : 'Описание не указано';
+    
+    return `
+        <div class="case-card" data-case-id="${case_.id}">
+            <div class="case-header">
+                <h4 class="case-title">${case_.clientName}</h4>
+                <span class="case-date">${case_.date}</span>
+            </div>
+            <div class="case-description">${description}</div>
+            <div class="case-actions">
+                <button class="case-action-btn view" data-action="view" data-case-id="${case_.id}">👁️ Просмотреть</button>
+                <button class="case-action-btn edit" data-action="edit" data-case-id="${case_.id}">✏️ Редактировать</button>
+                <button class="case-action-btn delete" data-action="delete" data-case-id="${case_.id}">🗑️ Удалить</button>
+            </div>
+        </div>
+    `;
+}
+
+// Добавление обработчиков для карточек кейсов
+function addCaseCardHandlers() {
+    const actionButtons = document.querySelectorAll('.case-action-btn');
+    
+    actionButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('OK button clicked');
-            hideModal();
+            const action = this.getAttribute('data-action');
+            const caseId = parseInt(this.getAttribute('data-case-id'));
+            const cases = getCases();
+            const caseData = cases.find(case_ => case_.id === caseId);
+            
+            if (!caseData) return;
+            
+            switch (action) {
+                case 'view':
+                    showCaseModal(caseData);
+                    break;
+                case 'edit':
+                    loadCaseForEditing(caseData);
+                    break;
+                case 'delete':
+                    showDeleteConfirmModal(caseId);
+                    break;
+            }
         });
         
-        okButton.addEventListener('touchstart', function(e) {
+        button.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('OK button touched');
-            hideModal();
+            const action = this.getAttribute('data-action');
+            const caseId = parseInt(this.getAttribute('data-case-id'));
+            const cases = getCases();
+            const caseData = cases.find(case_ => case_.id === caseId);
+            
+            if (!caseData) return;
+            
+            switch (action) {
+                case 'view':
+                    showCaseModal(caseData);
+                    break;
+                case 'edit':
+                    loadCaseForEditing(caseData);
+                    break;
+                case 'delete':
+                    showDeleteConfirmModal(caseId);
+                    break;
+            }
+        });
+    });
+}
+
+// Инициализация модальных окон
+function initializeModals() {
+    // Модальное окно сохранения
+    const saveModal = document.getElementById('save-modal');
+    const saveOkButton = document.getElementById('modal-ok-button');
+    
+    if (saveOkButton) {
+        saveOkButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideModal('save-modal');
+        });
+        
+        saveOkButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            hideModal('save-modal');
+        });
+    }
+    
+    // Модальное окно просмотра кейса
+    const viewModal = document.getElementById('view-case-modal');
+    const editCaseButton = document.getElementById('edit-case-button');
+    const closeViewModal = document.getElementById('close-view-modal');
+    
+    if (editCaseButton) {
+        editCaseButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideModal('view-case-modal');
+            const caseData = JSON.parse(this.getAttribute('data-case'));
+            loadCaseForEditing(caseData);
+        });
+        
+        editCaseButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            hideModal('view-case-modal');
+            const caseData = JSON.parse(this.getAttribute('data-case'));
+            loadCaseForEditing(caseData);
+        });
+    }
+    
+    if (closeViewModal) {
+        closeViewModal.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideModal('view-case-modal');
+        });
+        
+        closeViewModal.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            hideModal('view-case-modal');
+        });
+    }
+    
+    // Модальное окно подтверждения удаления
+    const deleteModal = document.getElementById('delete-confirm-modal');
+    const cancelDelete = document.getElementById('cancel-delete');
+    const confirmDelete = document.getElementById('confirm-delete');
+    
+    if (cancelDelete) {
+        cancelDelete.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideModal('delete-confirm-modal');
+        });
+        
+        cancelDelete.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            hideModal('delete-confirm-modal');
+        });
+    }
+    
+    if (confirmDelete) {
+        confirmDelete.addEventListener('click', function(e) {
+            e.preventDefault();
+            const caseId = parseInt(this.getAttribute('data-case-id'));
+            deleteCase(caseId);
+            hideModal('delete-confirm-modal');
+        });
+        
+        confirmDelete.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            const caseId = parseInt(this.getAttribute('data-case-id'));
+            deleteCase(caseId);
+            hideModal('delete-confirm-modal');
         });
     }
 }
 
 // Показ модального окна
-function showModal() {
-    const modal = document.getElementById('save-modal');
+function showModal(modalId) {
+    const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.add('show');
         modal.style.display = 'flex';
         modal.style.visibility = 'visible';
         modal.style.opacity = '1';
-        console.log('Modal shown');
     }
 }
 
 // Скрытие модального окна
-function hideModal() {
-    const modal = document.getElementById('save-modal');
+function hideModal(modalId) {
+    const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('show');
         modal.style.display = 'none';
         modal.style.visibility = 'hidden';
         modal.style.opacity = '0';
-        console.log('Modal hidden');
     }
+}
+
+// Показ модального окна кейса
+function showCaseModal(caseData) {
+    const modalContent = document.getElementById('view-case-content');
+    const editButton = document.getElementById('edit-case-button');
+    
+    const content = `
+        <div class="case-field">
+            <div class="case-field-label">Имя клиента:</div>
+            <div class="case-field-value">${caseData.clientName}</div>
+        </div>
+        <div class="case-field">
+            <div class="case-field-label">Как узнал о вас:</div>
+            <div class="case-field-value">${caseData.howFoundOut || 'Не указано'}</div>
+        </div>
+        <div class="case-field">
+            <div class="case-field-label">Основные цели:</div>
+            <div class="case-field-value">${caseData.goals || 'Не указано'}</div>
+        </div>
+        <div class="case-field">
+            <div class="case-field-label">Проблемы до работы:</div>
+            <div class="case-field-value">${caseData.problems || 'Не указано'}</div>
+        </div>
+        <div class="case-field">
+            <div class="case-field-label">Достигнутые результаты:</div>
+            <div class="case-field-value">${caseData.results || 'Не указано'}</div>
+        </div>
+        <div class="case-field">
+            <div class="case-field-label">Что помогло:</div>
+            <div class="case-field-value">${caseData.whatHelped || 'Не указано'}</div>
+        </div>
+    `;
+    
+    modalContent.innerHTML = content;
+    editButton.setAttribute('data-case', JSON.stringify(caseData));
+    
+    showModal('view-case-modal');
+}
+
+// Показ модального окна подтверждения удаления
+function showDeleteConfirmModal(caseId) {
+    const confirmButton = document.getElementById('confirm-delete');
+    confirmButton.setAttribute('data-case-id', caseId);
+    showModal('delete-confirm-modal');
+}
+
+// Удаление кейса
+function deleteCase(caseId) {
+    const cases = getCases();
+    const updatedCases = cases.filter(case_ => case_.id !== caseId);
+    localStorage.setItem('cases_data', JSON.stringify(updatedCases));
+    loadCasesList();
 }
 
 // Показ сообщения об успехе через модальное окно
 function showSuccessMessage() {
     console.log('Showing success message');
-    showModal();
+    showModal('save-modal');
 } 
