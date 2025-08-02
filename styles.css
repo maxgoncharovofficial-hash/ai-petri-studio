@@ -93,16 +93,16 @@ body {
 }
 
 .header-text h1 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 3px;
+    font-size: 28px !important;
+    font-weight: 700 !important;
+    margin-bottom: 4px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .header-text p {
-    font-size: 14px;
-    opacity: 0.8;
-    font-weight: 300;
+    font-size: 16px !important;
+    opacity: 0.9 !important;
+    font-weight: 400 !important;
 }
 
 /* Main Content */
@@ -381,7 +381,7 @@ body {
     }
     
     .header-text h1 {
-        font-size: 20px;
+        font-size: 24px !important;
     }
     
     .card {
