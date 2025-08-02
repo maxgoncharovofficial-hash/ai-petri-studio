@@ -98,7 +98,6 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 12px;
-    background: var(--tg-theme-button-color, #007bff);
     position: relative;
 }
 
