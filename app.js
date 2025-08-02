@@ -1,11 +1,24 @@
 // Инициализация Telegram Web App
-let tg = window.Telegram.WebApp;
+let tg = null;
 
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', function() {
-    // Настройка Telegram Web App
-    tg.ready();
-    tg.expand();
+    try {
+        // Проверяем доступность Telegram Web App
+        if (window.Telegram && window.Telegram.WebApp) {
+            tg = window.Telegram.WebApp;
+            
+            // Настройка Telegram Web App
+            tg.ready();
+            tg.expand();
+            
+            console.log('Telegram Web App инициализирован успешно');
+        } else {
+            console.warn('Telegram Web App недоступен');
+        }
+    } catch (error) {
+        console.error('Ошибка инициализации Telegram Web App:', error);
+    }
     
     // Инициализация обработчиков событий
     initializeCardHandlers();
@@ -137,8 +150,14 @@ function animateCards() {
 
 // Функция для отправки данных в Telegram
 function sendToTelegram(data) {
-    if (tg && tg.sendData) {
-        tg.sendData(JSON.stringify(data));
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify(data));
+        } else {
+            console.warn('Telegram Web App недоступен для отправки данных');
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных в Telegram:', error);
     }
 }
 
