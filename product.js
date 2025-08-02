@@ -254,8 +254,4 @@ function showSuccessMessage() {
     }, 2500);
 }
 
-// Тестовая функция для проверки модального окна
-function testModal() {
-    console.log('Testing modal');
-    showModal();
-} 
+ 
