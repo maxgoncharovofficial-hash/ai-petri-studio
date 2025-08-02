@@ -71,14 +71,16 @@ function handlePersonality() {
         action: 'personality',
         message: 'Открыт раздел РАСПАКОВКА ЛИЧНОСТИ'
     });
-    // Переход на страницу РАСПАКОВКА ЛИЧНОСТИ
-    try {
-        location.assign('personality.html');
-    } catch (error) {
-        console.error('Ошибка перехода:', error);
-        // Альтернативный способ перехода
-        location.replace('personality.html');
-    }
+    // Показываем уведомление вместо перехода
+    showNotification('Раздел "РАСПАКОВКА ЛИЧНОСТИ" будет доступен в следующем обновлении');
+    
+    // Временно отключаем переход
+    // try {
+    //     location.assign('personality.html');
+    // } catch (error) {
+    //     console.error('Ошибка перехода:', error);
+    //     location.replace('personality.html');
+    // }
 }
 
 function handleThreadsZavod() {
