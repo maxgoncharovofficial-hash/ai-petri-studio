@@ -29,21 +29,31 @@ body {
 .header-content {
     display: flex;
     align-items: center;
-    gap: 15px;
-    justify-content: flex-start;
-    padding: 10px 20px;
+    justify-content: center;
+    padding: 24px 20px;
+    flex-direction: column;
+    text-align: center;
 }
 
-.header-icon {
-    flex-shrink: 0;
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative;
 }
 
 .factory-icon {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     position: relative;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -94,16 +104,17 @@ body {
 }
 
 .header-text h1 {
-    font-size: 28px !important;
-    font-weight: 700 !important;
-    margin-bottom: 4px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--tg-theme-text-color);
 }
 
 .header-text p {
-    font-size: 16px !important;
-    opacity: 0.9 !important;
-    font-weight: 400 !important;
+    font-size: 16px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 16px;
+    opacity: 0.8;
 }
 
 /* Main Content */
@@ -378,11 +389,11 @@ body {
 @media (max-width: 480px) {
     .header-content {
         justify-content: center;
-        padding: 8px 15px;
+        padding: 20px 15px;
     }
     
     .header-text h1 {
-        font-size: 24px !important;
+        font-size: 20px;
     }
     
     .card {
