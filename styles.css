@@ -19,20 +19,10 @@ body {
 
 /* Header Styles */
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 8px 20px;
-    color: white;
-    position: relative;
-    overflow: hidden;
-}
-
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 20px;
-    flex-direction: column;
     text-align: center;
+    padding: 24px 20px;
+    background: var(--tg-theme-bg-color);
+    border-bottom: 1px solid var(--tg-theme-hint-color, rgba(255,255,255,0.1));
 }
 
 .avatar {
@@ -44,73 +34,19 @@ body {
     align-items: center;
     justify-content: center;
     margin: 0 auto 16px;
+    font-size: 32px;
+    color: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    position: relative;
 }
 
-.factory-icon {
-    width: 50px;
-    height: 50px;
-    position: relative;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.chimney {
-    width: 4px;
-    height: 10px;
-    background: #ff6b6b;
-    position: absolute;
-    bottom: 8px;
-    border-radius: 1px;
-}
-
-.chimney-1 { left: 10px; }
-.chimney-2 { left: 15px; }
-.chimney-3 { left: 20px; }
-
-.smoke {
-    width: 3px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.8);
-    position: absolute;
-    border-radius: 50%;
-    animation: smoke 3s infinite;
-}
-
-.smoke-1 { 
-    left: 11px; 
-    top: 4px;
-    animation-delay: 0s;
-}
-.smoke-2 { 
-    left: 16px; 
-    top: 5px;
-    animation-delay: 1s;
-}
-.smoke-3 { 
-    left: 21px; 
-    top: 4px;
-    animation-delay: 2s;
-}
-
-@keyframes smoke {
-    0% { opacity: 0; transform: translateY(0) scale(0.5); }
-    50% { opacity: 1; transform: translateY(-10px) scale(1); }
-    100% { opacity: 0; transform: translateY(-20px) scale(0.5); }
-}
-
-.header-text h1 {
+.bot-name {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 8px;
     color: var(--tg-theme-text-color);
 }
 
-.header-text p {
+.bot-description {
     font-size: 16px;
     color: var(--tg-theme-hint-color);
     margin-bottom: 16px;
