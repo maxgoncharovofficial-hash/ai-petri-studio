@@ -80,7 +80,27 @@ function handleCardClick(cardId) {
 // Обработчики для каждой карточки
 function handlePersonality() {
     console.log('РАСПАКОВКА ЛИЧНОСТИ clicked');
-    // Простая диагностика без лишнего кода
+    
+    // Haptic feedback
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    // Показываем уведомление
+    try {
+        if (tg && tg.showAlert) {
+            tg.showAlert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
+        } else {
+            alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
+        }
+    } catch (error) {
+        console.error('Ошибка показа уведомления:', error);
+        alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
+    }
 }
 
 function handleThreadsZavod() {
