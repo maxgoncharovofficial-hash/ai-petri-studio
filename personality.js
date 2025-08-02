@@ -105,7 +105,7 @@ function handleAudienceSection() {
 
 function handleCasesSection() {
     console.log('Распаковка кейсов clicked');
-    alert('Раздел "Распаковка кейсов" в разработке');
+    window.location.href = 'cases.html';
 }
 
 function handlePersonalityLiteSection() {

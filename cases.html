@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Распаковка кейсов - AiPetri Studio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="personality.css">
+    <link rel="stylesheet" href="cases.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-title-block">
+                <div class="header-title">РАСПАКОВКА КЕЙСОВ</div>
+                <div class="header-subtitle">Истории успеха ваших клиентов</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="cases-container">
+                <!-- Description -->
+                <div class="description-section">
+                    <p>Результаты ваших клиентов помогут найти точки соприкосновения с аудиторией. ИИ натинво встроит их в ваш контент.</p>
+                </div>
+
+                <!-- Progress -->
+                <div class="progress-section">
+                    <div class="progress-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-text">Заполнено: <span class="stat-value" id="filled-questions">0/6</span> вопросов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-text">Прогресс: <span class="stat-value" id="progress-percentage">0%</span></div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form class="cases-form" id="cases-form">
+                    <!-- Question 1 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>1. Имя клиента</h3>
+                            <div class="char-counter">
+                                <span id="char-count-1">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Как зовут вашего ученика или партнера?
+                        </div>
+                        <textarea 
+                            id="question-1" 
+                            name="client_name" 
+                            placeholder="Анна Иванова"
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>2. Источник привлечения</h3>
+                            <div class="char-counter">
+                                <span id="char-count-2">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Как он узнал о вашем курсе или бизнесе?
+                        </div>
+                        <textarea 
+                            id="question-2" 
+                            name="source" 
+                            placeholder="Анна узнала о нашем курсе через рекомендации друзей и отзывы в социальных сетях."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>3. Основные цели</h3>
+                            <div class="char-counter">
+                                <span id="char-count-3">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие основные цели он преследовал, когда пришел в команду/на курс или воспользовался вашим продуктом?
+                        </div>
+                        <textarea 
+                            id="question-3" 
+                            name="goals" 
+                            placeholder="Анна хотела улучшить свои навыки в цифровом маркетинге и увеличить продажи своего онлайн-магазина."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>4. Проблемы до работы</h3>
+                            <div class="char-counter">
+                                <span id="char-count-4">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            С какими проблемами и вызовами он столкнулся до начала работы с вами?
+                        </div>
+                        <textarea 
+                            id="question-4" 
+                            name="problems_before" 
+                            placeholder="До начала работы с нами Анна испытывала трудности с привлечением клиентов и не знала, как эффективно использовать социальные сети для продвижения."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>5. Достигнутые результаты</h3>
+                            <div class="char-counter">
+                                <span id="char-count-5">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие конкретные результаты он достиг и за какое время с вашей помощью?
+                        </div>
+                        <textarea 
+                            id="question-5" 
+                            name="results" 
+                            placeholder="С нашей помощью Анна за три месяца увеличила продажи на 50% и удвоила количество подписчиков в социальных сетях."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 6 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>6. Факторы успеха</h3>
+                            <div class="char-counter">
+                                <span id="char-count-6">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Что конкретно помогло ему достичь таких результатов?
+                        </div>
+                        <textarea 
+                            id="question-6" 
+                            name="success_factors" 
+                            placeholder="Анне помогли наши практические задания, индивидуальные консультации и доступ к закрытому сообществу экспертов."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="save-button" id="save-button">
+                            💾 Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal для уведомления о сохранении -->
+    <div id="save-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">AiPetri Studio</div>
+            <div class="modal-body">
+                <span class="modal-icon">✓</span>
+                <span class="modal-text">Данные успешно сохранены!</span>
+            </div>
+            <button class="modal-button" id="modal-ok-button">ОК</button>
+        </div>
+    </div>
+
+    <script src="cases.js?v=30.5"></script>
+</body>
+</html> 
