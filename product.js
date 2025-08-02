@@ -207,15 +207,7 @@ function initializeModal() {
         });
     }
     
-    // Закрытие по клику на overlay
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                console.log('Overlay clicked');
-                hideModal();
-            }
-        });
-    }
+
 }
 
 // Показ модального окна
@@ -246,12 +238,6 @@ function hideModal() {
 function showSuccessMessage() {
     console.log('Showing success message');
     showModal();
-    
-    // Автоматическое закрытие через 2.5 секунды
-    setTimeout(() => {
-        console.log('Auto-hiding modal');
-        hideModal();
-    }, 2500);
 }
 
  

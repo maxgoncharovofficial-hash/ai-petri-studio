@@ -144,7 +144,7 @@ textarea::placeholder {
 .modal-content {
     background: #ffffff !important;
     border-radius: 20px;
-    padding: 24px;
+    padding: 32px;
     width: 320px;
     max-width: 90%;
     text-align: center;
@@ -160,18 +160,31 @@ textarea::placeholder {
 }
 
 .modal-header {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: 800;
     color: #000000;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     line-height: 1.2;
 }
 
 .modal-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    line-height: 1.4;
+}
+
+.modal-icon {
+    font-size: 20px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.modal-text {
     font-size: 16px;
     color: #666666;
-    margin-bottom: 24px;
-    line-height: 1.4;
 }
 
 .modal-button {
@@ -179,13 +192,14 @@ textarea::placeholder {
     color: #ffffff !important;
     border: none;
     border-radius: 12px;
-    padding: 14px 24px;
+    padding: 16px 24px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     width: 100%;
     box-shadow: none;
+    min-height: 48px;
 }
 
 .modal-button:hover {
@@ -242,20 +256,30 @@ textarea::placeholder {
     }
     
     .modal-content {
-        padding: 20px;
+        padding: 24px;
         width: 280px;
     }
     
     .modal-header {
-        font-size: 16px;
+        font-size: 18px;
     }
     
     .modal-body {
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+    
+    .modal-icon {
+        font-size: 18px;
+    }
+    
+    .modal-text {
         font-size: 14px;
     }
     
     .modal-button {
-        padding: 12px 20px;
+        padding: 14px 20px;
         font-size: 15px;
+        min-height: 44px;
     }
 } 
