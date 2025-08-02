@@ -30,11 +30,9 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    max-width: 600px;
-    margin: 0 auto;
+    margin: 0;
     justify-content: flex-start;
     padding-left: 12px;
-    width: 100%;
 }
 
 .header-icon {
@@ -385,6 +383,7 @@ body {
         gap: 8px;
         justify-content: flex-start;
         padding-left: 12px;
+        margin: 0;
     }
     
     .header-text h1 {
