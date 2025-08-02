@@ -153,31 +153,18 @@ body {
 }
 
 .personality-icon::before {
-    content: '';
-    width: 42px;
-    height: 42px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    content: '👤';
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-}
-
-.personality-icon::after {
-    content: '';
-    position: absolute;
-    width: 24px;
-    height: 32px;
-    background: 
-        radial-gradient(ellipse 8px 4px at 12px 8px, white 0%, transparent 50%),
-        radial-gradient(ellipse 6px 3px at 10px 14px, white 0%, transparent 50%),
-        radial-gradient(ellipse 7px 3px at 14px 18px, white 0%, transparent 50%),
-        radial-gradient(ellipse 5px 2px at 8px 22px, white 0%, transparent 50%),
-        radial-gradient(ellipse 6px 2px at 16px 26px, white 0%, transparent 50%),
-        radial-gradient(ellipse 4px 1px at 12px 30px, white 0%, transparent 50%);
+    width: 42px;
+    height: 42px;
+    text-align: center;
+    line-height: 1;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 
