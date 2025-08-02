@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Распаковка аудитории - AiPetri Studio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="personality.css">
+    <link rel="stylesheet" href="audience.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-title-block">
+                <div class="header-title">РАСПАКОВКА АУДИТОРИИ</div>
+                <div class="header-subtitle">Анализ вашей целевой аудитории</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="audience-container">
+                <!-- Progress -->
+                <div class="progress-section">
+                    <div class="progress-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-text">Заполнено: <span class="stat-value" id="filled-questions">0/6</span> вопросов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-text">Прогресс: <span class="stat-value" id="progress-percentage">0%</span></div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form class="audience-form" id="audience-form">
+                    <!-- Question 1 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>1. Возраст и происхождение</h3>
+                            <div class="char-counter">
+                                <span id="char-count-1">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какой возраст и откуда ваша целевая аудитория?
+                        </div>
+                        <textarea 
+                            id="question-1" 
+                            name="age_location" 
+                            placeholder="Моя целевая аудитория в основном от 25 до 40 лет, и многие из них живут в крупных городах."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>2. Семейное положение</h3>
+                            <div class="char-counter">
+                                <span id="char-count-2">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какое семейное положение и есть ли дети у вашей целевой аудитории?
+                        </div>
+                        <textarea 
+                            id="question-2" 
+                            name="family_status" 
+                            placeholder="Большинство моей аудитории — молодые семьи или люди в длительных отношениях, у многих есть маленькие дети."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>3. Интересующие темы</h3>
+                            <div class="char-counter">
+                                <span id="char-count-3">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие темы больше всего интересуют вашу аудиторию?
+                        </div>
+                        <textarea 
+                            id="question-3" 
+                            name="interests" 
+                            placeholder="Моей аудитории интересны темы самосовершенствования, финансовой независимости и здорового образа жизни."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>4. Главные проблемы</h3>
+                            <div class="char-counter">
+                                <span id="char-count-4">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие 3 главные проблемы или задачи стоят перед вашей аудиторией?
+                        </div>
+                        <textarea 
+                            id="question-4" 
+                            name="main_problems" 
+                            placeholder="Моя аудитория сталкивается с проблемами управления временем, достижения карьерных целей и поддержания баланса между работой и личной жизнью."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>5. Шаги решения</h3>
+                            <div class="char-counter">
+                                <span id="char-count-5">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие шаги предпринимает ваша аудитория, чтобы решить свои главные проблемы?
+                        </div>
+                        <textarea 
+                            id="question-5" 
+                            name="solution_steps" 
+                            placeholder="Они часто читают книги по самосовершенствованию, посещают тренинги и ищут советы в интернете."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 6 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>6. Ваши решения</h3>
+                            <div class="char-counter">
+                                <span id="char-count-6">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Кому вы можете предложить свои решения или помощь, основываясь на ваших знаниях и опыте?
+                        </div>
+                        <textarea 
+                            id="question-6" 
+                            name="your_solutions" 
+                            placeholder="Я могу помочь молодым профессионалам и предпринимателям, которые хотят улучшить свои навыки управления временем и достичь большего баланса в жизни."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="save-button" id="save-button">
+                            💾 Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal для уведомления о сохранении -->
+    <div id="save-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">AiPetri Studio</div>
+            <div class="modal-body">
+                <span class="modal-icon">✓</span>
+                <span class="modal-text">Данные успешно сохранены!</span>
+            </div>
+            <button class="modal-button" id="modal-ok-button">ОК</button>
+        </div>
+    </div>
+
+    <script src="audience.js?v=30.3"></script>
+</body>
+</html> 

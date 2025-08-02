@@ -100,7 +100,7 @@ function handleProductSection() {
 
 function handleAudienceSection() {
     console.log('Распаковка аудитории clicked');
-    alert('Раздел "Распаковка аудитории" в разработке');
+    window.location.href = 'audience.html';
 }
 
 function handleCasesSection() {
