@@ -90,11 +90,11 @@ function handlePersonality() {
         console.error('Ошибка haptic feedback:', error);
     }
     
-    // Отправляем данные в бота
+    // Отправляем данные в бота для перехода в раздел распаковки личности
     try {
         if (tg && tg.sendData) {
             tg.sendData(JSON.stringify({
-                action: 'personality',
+                action: 'personality_unpack',
                 message: 'Открыт раздел РАСПАКОВКА ЛИЧНОСТИ'
             }));
         } else {
@@ -104,6 +104,117 @@ function handlePersonality() {
     } catch (error) {
         console.error('Ошибка отправки данных:', error);
         alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
+    }
+}
+
+// Обработчики для подразделов распаковки личности
+function handleProductSection() {
+    console.log('Распаковка продукта clicked');
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_product',
+                message: 'Открыт раздел Распаковка продукта'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
+    }
+}
+
+function handleAudienceSection() {
+    console.log('Распаковка аудитории clicked');
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_audience',
+                message: 'Открыт раздел Распаковка аудитории'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
+    }
+}
+
+function handleCasesSection() {
+    console.log('Распаковка кейсов clicked');
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_cases',
+                message: 'Открыт раздел Распаковка кейсов'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
+    }
+}
+
+function handlePersonalityLiteSection() {
+    console.log('Распаковка личности Lite clicked');
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_personality_lite',
+                message: 'Открыт раздел Распаковка личности Lite'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
+    }
+}
+
+function handlePersonalityProSection() {
+    console.log('Распаковка личности Pro clicked');
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_personality_pro',
+                message: 'Открыт раздел Распаковка личности Pro'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
     }
 }
 

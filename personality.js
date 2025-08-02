@@ -60,55 +60,115 @@ function handleSectionClick(sectionId) {
     }
 }
 
-// Обработчики для каждой секции
+// Обработчики для каждого раздела
 function handleProductSection() {
     console.log('Распаковка продукта clicked');
-    sendToTelegram({
-        action: 'product_section',
-        message: 'Открыт раздел Распаковка продукта'
-    });
-    // Здесь будет переход на страницу с вопросами
-    // window.location.href = 'product-questions.html';
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_product',
+                message: 'Открыт раздел Распаковка продукта'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
+    }
 }
 
 function handleAudienceSection() {
     console.log('Распаковка аудитории clicked');
-    sendToTelegram({
-        action: 'audience_section',
-        message: 'Открыт раздел Распаковка аудитории'
-    });
-    // Здесь будет переход на страницу с вопросами
-    // window.location.href = 'audience-questions.html';
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_audience',
+                message: 'Открыт раздел Распаковка аудитории'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
+    }
 }
 
 function handleCasesSection() {
     console.log('Распаковка кейсов clicked');
-    sendToTelegram({
-        action: 'cases_section',
-        message: 'Открыт раздел Распаковка кейсов'
-    });
-    // Здесь будет переход на страницу с вопросами
-    // window.location.href = 'cases-questions.html';
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_cases',
+                message: 'Открыт раздел Распаковка кейсов'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
+    }
 }
 
 function handlePersonalityLiteSection() {
     console.log('Распаковка личности Lite clicked');
-    sendToTelegram({
-        action: 'personality_lite_section',
-        message: 'Открыт раздел Распаковка личности Lite'
-    });
-    // Здесь будет переход на страницу с вопросами
-    // window.location.href = 'personality-lite-questions.html';
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_personality_lite',
+                message: 'Открыт раздел Распаковка личности Lite'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
+    }
 }
 
 function handlePersonalityProSection() {
     console.log('Распаковка личности Pro clicked');
-    sendToTelegram({
-        action: 'personality_pro_section',
-        message: 'Открыт раздел Распаковка личности Pro'
-    });
-    // Здесь будет переход на страницу с вопросами
-    // window.location.href = 'personality-pro-questions.html';
+    try {
+        if (tg && tg.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
+        }
+    } catch (error) {
+        console.error('Ошибка haptic feedback:', error);
+    }
+    
+    try {
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'unpack_personality_pro',
+                message: 'Открыт раздел Распаковка личности Pro'
+            }));
+        }
+    } catch (error) {
+        console.error('Ошибка отправки данных:', error);
+    }
 }
 
 // Функция возврата на главную страницу
