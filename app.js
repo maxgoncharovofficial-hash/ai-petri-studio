@@ -67,20 +67,7 @@ function handleCardClick(cardId) {
 // Обработчики для каждой карточки
 function handlePersonality() {
     console.log('РАСПАКОВКА ЛИЧНОСТИ clicked');
-    sendToTelegram({
-        action: 'personality',
-        message: 'Открыт раздел РАСПАКОВКА ЛИЧНОСТИ'
-    });
-    // Показываем уведомление вместо перехода
-    showNotification('Раздел "РАСПАКОВКА ЛИЧНОСТИ" будет доступен в следующем обновлении');
-    
-    // Временно отключаем переход
-    // try {
-    //     location.assign('personality.html');
-    // } catch (error) {
-    //     console.error('Ошибка перехода:', error);
-    //     location.replace('personality.html');
-    // }
+    // Простая диагностика без лишнего кода
 }
 
 function handleThreadsZavod() {
