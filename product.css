@@ -27,6 +27,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+    flex-wrap: nowrap;
 }
 
 .question-header h3 {
@@ -43,6 +44,8 @@
     padding: 4px 8px;
     border-radius: 8px;
     font-weight: 500;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 .question-text {
@@ -82,7 +85,7 @@ textarea::placeholder {
 .form-actions {
     display: flex;
     justify-content: center;
-    margin-top: 32px;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
