@@ -95,7 +95,7 @@ function handleSectionClick(sectionId) {
 // Обработчики для каждого раздела
 function handleProductSection() {
     console.log('Распаковка продукта clicked');
-    alert('Раздел "Распаковка продукта" в разработке');
+    window.location.href = 'product.html';
 }
 
 function handleAudienceSection() {

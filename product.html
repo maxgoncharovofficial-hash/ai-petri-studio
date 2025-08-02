@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Распаковка продукта - AiPetri Studio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="personality.css">
+    <link rel="stylesheet" href="product.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-title-block">
+                <div class="header-title">РАСПАКОВКА ПРОДУКТА</div>
+                <div class="header-subtitle">Расскажите о вашем продукте</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="product-container">
+                <!-- Progress -->
+                <div class="progress-section">
+                    <div class="progress-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-text">Заполнено: <span class="stat-value" id="filled-questions">0/4</span> вопросов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-text">Прогресс: <span class="stat-value" id="progress-percentage">0%</span></div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form class="product-form" id="product-form">
+                    <!-- Question 1 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>1. Главный продукт/услуга</h3>
+                            <div class="char-counter">
+                                <span id="char-count-1">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Расскажите коротко о вашем главном продукте/услуге: что это, для кого он и какие проблемы решает?
+                        </div>
+                        <textarea 
+                            id="question-1" 
+                            name="main_product" 
+                            placeholder="Наш главный продукт — онлайн-курс по цифровому маркетингу. Он предназначен для предпринимателей и маркетологов, помогая им улучшить свои навыки и увеличить продажи."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>2. Преимущества над конкурентами</h3>
+                            <div class="char-counter">
+                                <span id="char-count-2">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие три главных преимущества вашего продукта по сравнению с конкурентами?
+                        </div>
+                        <textarea 
+                            id="question-2" 
+                            name="advantages" 
+                            placeholder="Наш курс отличается практическими заданиями, поддержкой экспертов и актуальной информацией."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>3. Ценности для клиентов</h3>
+                            <div class="char-counter">
+                                <span id="char-count-3">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Какие особенности вашего продукта наиболее ценны для клиентов?
+                        </div>
+                        <textarea 
+                            id="question-3" 
+                            name="values" 
+                            placeholder="Клиенты особенно ценят наши интерактивные вебинары, доступ к закрытому сообществу и индивидуальные консультации."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <h3>4. Бесплатные материалы</h3>
+                            <div class="char-counter">
+                                <span id="char-count-4">0</span> / 2000
+                            </div>
+                        </div>
+                        <div class="question-text">
+                            Есть ли у вас дополнительные бесплатные материалы?
+                        </div>
+                        <textarea 
+                            id="question-4" 
+                            name="freebies" 
+                            placeholder="Да, у нас есть несколько бесплатных материалов: чек-листы по созданию контента, гайды по продвижению в соцсетях, бесплатные консультации для новых клиентов, вебинары и онлайн-семинары."
+                            maxlength="2000"
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="save-button" id="save-button">
+                            💾 Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="product.js"></script>
+</body>
+</html> 
