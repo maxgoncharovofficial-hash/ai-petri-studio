@@ -20,7 +20,7 @@ body {
 /* Header Styles */
 .header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 15px 20px;
+    padding: 10px 20px;
     color: white;
     position: relative;
     overflow: hidden;
@@ -29,11 +29,11 @@ body {
 .header-content {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     max-width: 600px;
     margin: 0 auto;
     justify-content: flex-start;
-    padding-left: 15px;
+    padding-left: 12px;
 }
 
 .header-icon {
@@ -41,32 +41,32 @@ body {
 }
 
 .factory-icon {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     position: relative;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .chimney {
-    width: 4px;
-    height: 10px;
+    width: 3px;
+    height: 8px;
     background: #ff6b6b;
     position: absolute;
-    bottom: 8px;
+    bottom: 6px;
     border-radius: 1px;
 }
 
-.chimney-1 { left: 10px; }
-.chimney-2 { left: 15px; }
-.chimney-3 { left: 20px; }
+.chimney-1 { left: 8px; }
+.chimney-2 { left: 12px; }
+.chimney-3 { left: 16px; }
 
 .smoke {
-    width: 3px;
-    height: 4px;
+    width: 2px;
+    height: 3px;
     background: rgba(255, 255, 255, 0.8);
     position: absolute;
     border-radius: 50%;
@@ -74,18 +74,18 @@ body {
 }
 
 .smoke-1 { 
-    left: 11px; 
-    top: 4px;
+    left: 9px; 
+    top: 3px;
     animation-delay: 0s;
 }
 .smoke-2 { 
-    left: 16px; 
-    top: 5px;
+    left: 13px; 
+    top: 4px;
     animation-delay: 1s;
 }
 .smoke-3 { 
-    left: 21px; 
-    top: 4px;
+    left: 17px; 
+    top: 3px;
     animation-delay: 2s;
 }
 
@@ -96,14 +96,14 @@ body {
 }
 
 .header-text h1 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    margin-bottom: 2px;
+    margin-bottom: 1px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .header-text p {
-    font-size: 11px;
+    font-size: 10px;
     opacity: 0.8;
     font-weight: 300;
 }
