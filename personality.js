@@ -2,12 +2,20 @@
 
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Personality page loaded');
+    
     // Добавляем обработчик для кнопки назад
     const backButton = document.getElementById('back-button');
+    console.log('Back button found:', backButton);
+    
     if (backButton) {
-        backButton.addEventListener('click', goBack);
+        backButton.addEventListener('click', function() {
+            console.log('Back button clicked via addEventListener');
+            goBack();
+        });
         backButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
+            console.log('Back button touched');
             goBack();
         });
     }
@@ -92,6 +100,7 @@ function handlePersonalityProSection() {
 // Функция возврата на главную страницу
 function goBack() {
     console.log('Back button clicked');
+    // Простой переход без дополнительной логики
     window.location.href = 'index.html';
 }
 
