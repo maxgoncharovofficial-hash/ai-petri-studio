@@ -8,19 +8,8 @@ function handlePersonality() {
     console.log('РАСПАКОВКА ЛИЧНОСТИ clicked');
     
     if (isTelegramMiniApp()) {
-        // В мини-аппе - отправляем данные в бота
-        try {
-            const tg = window.Telegram.WebApp;
-            tg.sendData(JSON.stringify({
-                action: 'personality_unpack',
-                message: 'Открыт раздел РАСПАКОВКА ЛИЧНОСТИ'
-            }));
-            console.log('Данные отправлены в бота');
-        } catch (error) {
-            console.error('Ошибка отправки в бота:', error);
-            // Fallback - показываем уведомление
-            alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
-        }
+        // В мини-аппе - просто показываем уведомление
+        alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
     } else {
         // В обычном браузере - переход на страницу
         window.location.href = 'personality.html';
