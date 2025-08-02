@@ -90,15 +90,19 @@ function handlePersonality() {
         console.error('Ошибка haptic feedback:', error);
     }
     
-    // Показываем уведомление
+    // Отправляем данные в бота
     try {
-        if (tg && tg.showAlert) {
-            tg.showAlert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
+        if (tg && tg.sendData) {
+            tg.sendData(JSON.stringify({
+                action: 'personality',
+                message: 'Открыт раздел РАСПАКОВКА ЛИЧНОСТИ'
+            }));
         } else {
+            console.log('sendData недоступен, показываем alert');
             alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
         }
     } catch (error) {
-        console.error('Ошибка показа уведомления:', error);
+        console.error('Ошибка отправки данных:', error);
         alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
     }
 }
