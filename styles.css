@@ -24,6 +24,7 @@ body {
     color: white;
     position: relative;
     overflow: hidden;
+    border-bottom: 3px solid #ff6b6b;
 }
 
 .header-content {
@@ -130,10 +131,10 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
     transition: all 0.3s ease;
     cursor: pointer;
-    border: 1px solid var(--tg-theme-hint-color, #e9ecef);
+    border: 2px solid #ff6b6b;
 }
 
 .card:hover {
