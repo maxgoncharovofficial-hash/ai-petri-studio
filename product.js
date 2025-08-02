@@ -181,14 +181,19 @@ function initializeModal() {
     const modal = document.getElementById('save-modal');
     const okButton = document.getElementById('modal-ok-button');
     
+    console.log('Initializing modal:', modal);
+    console.log('OK button:', okButton);
+    
     if (okButton) {
         okButton.addEventListener('click', function(e) {
             e.preventDefault();
+            console.log('OK button clicked');
             hideModal();
         });
         
         okButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
+            console.log('OK button touched');
             hideModal();
         });
     }
@@ -197,6 +202,7 @@ function initializeModal() {
     if (modal) {
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
+                console.log('Overlay clicked');
                 hideModal();
             }
         });
@@ -223,10 +229,18 @@ function hideModal() {
 
 // Показ сообщения об успехе через модальное окно
 function showSuccessMessage() {
+    console.log('Showing success message');
     showModal();
     
     // Автоматическое закрытие через 2.5 секунды
     setTimeout(() => {
+        console.log('Auto-hiding modal');
         hideModal();
     }, 2500);
+}
+
+// Тестовая функция для проверки модального окна
+function testModal() {
+    console.log('Testing modal');
+    showModal();
 } 
