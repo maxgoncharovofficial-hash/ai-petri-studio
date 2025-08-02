@@ -58,7 +58,7 @@ body {
 
 /* Main Content */
 .main-content {
-    padding: 30px 20px;
+    padding: 10px 20px;
     background: var(--tg-theme-bg-color, #f8f9fa);
     min-height: calc(100vh - 120px);
 }
@@ -330,7 +330,6 @@ body {
     align-items: center;
     padding: 12px 20px;
     background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
-    margin-bottom: 5px;
 }
 .header-factory-icon {
     margin-right: 20px;
