@@ -72,7 +72,13 @@ function handlePersonality() {
         message: 'Открыт раздел РАСПАКОВКА ЛИЧНОСТИ'
     });
     // Переход на страницу РАСПАКОВКА ЛИЧНОСТИ
-    window.location.href = 'personality.html';
+    try {
+        location.assign('personality.html');
+    } catch (error) {
+        console.error('Ошибка перехода:', error);
+        // Альтернативный способ перехода
+        location.replace('personality.html');
+    }
 }
 
 function handleThreadsZavod() {
