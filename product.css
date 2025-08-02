@@ -27,7 +27,8 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
-    flex-wrap: nowrap;
+    flex-wrap: nowrap !important;
+    min-width: 0;
 }
 
 .question-header h3 {
@@ -44,8 +45,12 @@
     padding: 4px 8px;
     border-radius: 8px;
     font-weight: 500;
-    white-space: nowrap;
-    display: inline-block;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    width: auto !important;
+    min-width: fit-content !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
 }
 
 .question-text {
@@ -85,7 +90,7 @@ textarea::placeholder {
 .form-actions {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 15px;
     margin-bottom: 20px;
 }
 
@@ -284,5 +289,21 @@ textarea::placeholder {
         padding: 14px 20px;
         font-size: 15px;
         min-height: 44px;
+    }
+    
+    .char-counter {
+        white-space: nowrap !important;
+        display: inline-block !important;
+        width: auto !important;
+        min-width: fit-content !important;
+        word-break: keep-all !important;
+        overflow-wrap: normal !important;
+        font-size: 11px !important;
+        padding: 3px 6px !important;
+    }
+    
+    .question-header {
+        flex-wrap: nowrap !important;
+        min-width: 0;
     }
 } 
