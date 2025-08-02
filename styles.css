@@ -39,32 +39,32 @@ body {
 }
 
 .factory-icon {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     position: relative;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .chimney {
-    width: 5px;
-    height: 12px;
+    width: 6px;
+    height: 15px;
     background: #ff6b6b;
     position: absolute;
-    bottom: 10px;
-    border-radius: 1px;
+    bottom: 12px;
+    border-radius: 2px;
 }
 
-.chimney-1 { left: 12px; }
-.chimney-2 { left: 18px; }
-.chimney-3 { left: 24px; }
+.chimney-1 { left: 15px; }
+.chimney-2 { left: 22px; }
+.chimney-3 { left: 29px; }
 
 .smoke {
-    width: 4px;
-    height: 5px;
+    width: 5px;
+    height: 6px;
     background: rgba(255, 255, 255, 0.8);
     position: absolute;
     border-radius: 50%;
@@ -72,18 +72,18 @@ body {
 }
 
 .smoke-1 { 
-    left: 13px; 
-    top: 5px;
+    left: 16px; 
+    top: 6px;
     animation-delay: 0s;
 }
 .smoke-2 { 
-    left: 19px; 
-    top: 6px;
+    left: 23px; 
+    top: 7px;
     animation-delay: 1s;
 }
 .smoke-3 { 
-    left: 25px; 
-    top: 5px;
+    left: 30px; 
+    top: 6px;
     animation-delay: 2s;
 }
 
@@ -177,17 +177,20 @@ body {
 
 .threads-icon::before {
     content: '@';
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 28px;
+    font-weight: 800;
     color: white;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     text-align: center;
     line-height: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 
