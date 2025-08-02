@@ -17,14 +17,13 @@ body {
     min-height: 100vh;
 }
 
-/* Header Styles */
+/* Header Section */
 .header {
     text-align: center;
     padding: 24px 20px;
     background: var(--tg-theme-bg-color);
     border-bottom: 1px solid var(--tg-theme-hint-color, rgba(255,255,255,0.1));
 }
-
 .avatar {
     width: 80px;
     height: 80px;
@@ -38,19 +37,23 @@ body {
     color: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
-
 .bot-name {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 8px;
     color: var(--tg-theme-text-color);
 }
-
 .bot-description {
     font-size: 16px;
     color: var(--tg-theme-hint-color);
     margin-bottom: 16px;
     opacity: 0.8;
+}
+.learn-more {
+    color: var(--tg-theme-button-color, #0088cc);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 /* Main Content */
