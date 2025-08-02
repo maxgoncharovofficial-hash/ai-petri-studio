@@ -4,6 +4,8 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 0 20px;
+    background: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #000000);
 }
 
 /* Form Styles */
@@ -20,6 +22,7 @@
     padding: 20px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     border: 1px solid var(--tg-theme-hint-color, #e9ecef);
+    color: var(--tg-theme-text-color, #000000);
 }
 
 .question-header {
@@ -150,7 +153,7 @@ textarea::placeholder {
 }
 
 .modal-content {
-    background: #ffffff !important;
+    background: var(--tg-theme-bg-color, #ffffff) !important;
     border-radius: 20px;
     padding: 32px;
     width: 320px;
@@ -170,7 +173,7 @@ textarea::placeholder {
 .modal-header {
     font-size: 20px;
     font-weight: 800;
-    color: #000000;
+    color: var(--tg-theme-text-color, #000000);
     margin-bottom: 20px;
     line-height: 1.2;
 }
@@ -192,12 +195,12 @@ textarea::placeholder {
 
 .modal-text {
     font-size: 16px;
-    color: #666666;
+    color: var(--tg-theme-hint-color, #666666);
 }
 
 .modal-button {
-    background: #007bff !important;
-    color: #ffffff !important;
+    background: var(--tg-theme-button-color, #007bff) !important;
+    color: var(--tg-theme-button-text-color, #ffffff) !important;
     border: none;
     border-radius: 12px;
     padding: 16px 24px;
@@ -211,13 +214,15 @@ textarea::placeholder {
 }
 
 .modal-button:hover {
-    background: #0056b3 !important;
+    background: var(--tg-theme-button-color, #0056b3) !important;
+    opacity: 0.9;
     transform: none;
     box-shadow: none;
 }
 
 .modal-button:active {
-    background: #004085 !important;
+    background: var(--tg-theme-button-color, #004085) !important;
+    opacity: 0.8;
     transform: none;
     box-shadow: none;
 }
