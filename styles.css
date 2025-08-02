@@ -34,6 +34,7 @@ body {
     margin: 0 auto;
     justify-content: flex-start;
     padding-left: 12px;
+    width: 100%;
 }
 
 .header-icon {
@@ -379,13 +380,15 @@ body {
 /* Responsive */
 @media (max-width: 480px) {
     .header-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 15px;
+        flex-direction: row;
+        text-align: left;
+        gap: 8px;
+        justify-content: flex-start;
+        padding-left: 12px;
     }
     
     .header-text h1 {
-        font-size: 20px;
+        font-size: 14px;
     }
     
     .card {
