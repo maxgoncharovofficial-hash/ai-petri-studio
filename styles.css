@@ -143,6 +143,30 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
+.personality-icon {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.personality-icon::before {
+    content: '🧠';
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    text-align: center;
+    line-height: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
 
 .zavod-icon {
     width: 30px;

@@ -38,6 +38,9 @@ function initializeCardHandlers() {
 // Обработка кликов по карточкам
 function handleCardClick(cardId) {
     switch(cardId) {
+        case 'personality-card':
+            handlePersonality();
+            break;
         case 'threads-zavod-card':
             handleThreadsZavod();
             break;
@@ -62,6 +65,14 @@ function handleCardClick(cardId) {
 }
 
 // Обработчики для каждой карточки
+function handlePersonality() {
+    console.log('РАСПАКОВКА ЛИЧНОСТИ clicked');
+    sendToTelegram({
+        action: 'personality',
+        message: 'Открыт раздел РАСПАКОВКА ЛИЧНОСТИ'
+    });
+}
+
 function handleThreadsZavod() {
     console.log('THREADS ZAVOD clicked');
     // Здесь будет логика для THREADS ZAVOD
@@ -150,6 +161,7 @@ function showConfirm(message, callback) {
 
 // Экспорт функций для использования в других модулях
 window.ThreadsZAVOD = {
+    handlePersonality,
     handleThreadsZavod,
     handleThreads,
     handleMidjourney,
