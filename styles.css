@@ -329,8 +329,7 @@ body {
     display: flex;
     align-items: center;
     padding: 24px 20px;
-    background: linear-gradient(90deg, #7b5cff 0%, #5df6ff 100%);
-    border-radius: 0 0 16px 16px;
+    background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
     margin-bottom: 24px;
 }
 .header-factory-icon {
