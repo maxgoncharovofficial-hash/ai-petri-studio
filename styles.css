@@ -164,6 +164,43 @@ body {
 }
 
 /* Icon Styles */
+.threads-icon {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.threads-icon::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 3px solid white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.threads-icon::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border: 2px solid white;
+    border-radius: 50%;
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    animation: threads-orbit 3s linear infinite;
+}
+
+@keyframes threads-orbit {
+    0% { transform: rotate(0deg) translateX(8px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(8px) rotate(-360deg); }
+}
 .zavod-icon {
     width: 30px;
     height: 30px;
