@@ -20,7 +20,7 @@ body {
 /* Header Styles */
 .header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 10px 20px;
+    padding: 8px 20px;
     color: white;
     position: relative;
     overflow: hidden;
@@ -93,14 +93,14 @@ body {
 }
 
 .header-text h1 {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .header-text p {
-    font-size: 10px;
+    font-size: 12px;
     opacity: 0.8;
     font-weight: 300;
 }
@@ -377,11 +377,11 @@ body {
 @media (max-width: 480px) {
     .header-content {
         justify-content: center;
-        padding: 10px 15px;
+        padding: 8px 15px;
     }
     
     .header-text h1 {
-        font-size: 16px;
+        font-size: 18px;
     }
     
     .card {
