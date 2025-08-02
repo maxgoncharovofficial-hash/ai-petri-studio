@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация обработчиков формы
     initializeFormHandlers();
     
+    // Инициализация модального окна
+    initializeModal();
+    
     // Обновляем прогресс
     updateProgress();
 });
@@ -173,27 +176,57 @@ function loadSavedData() {
     }
 }
 
-// Показ сообщения об успехе
-function showSuccessMessage() {
-    // Удаляем существующее сообщение
-    const existingMessage = document.querySelector('.success-message');
-    if (existingMessage) {
-        existingMessage.remove();
+// Инициализация модального окна
+function initializeModal() {
+    const modal = document.getElementById('save-modal');
+    const okButton = document.getElementById('modal-ok-button');
+    
+    if (okButton) {
+        okButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideModal();
+        });
+        
+        okButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            hideModal();
+        });
     }
     
-    // Создаем новое сообщение
-    const message = document.createElement('div');
-    message.className = 'success-message';
-    message.textContent = '✅ Данные успешно сохранены!';
+    // Закрытие по клику на overlay
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                hideModal();
+            }
+        });
+    }
+}
+
+// Показ модального окна
+function showModal() {
+    const modal = document.getElementById('save-modal');
+    if (modal) {
+        modal.classList.add('show');
+        console.log('Modal shown');
+    }
+}
+
+// Скрытие модального окна
+function hideModal() {
+    const modal = document.getElementById('save-modal');
+    if (modal) {
+        modal.classList.remove('show');
+        console.log('Modal hidden');
+    }
+}
+
+// Показ сообщения об успехе через модальное окно
+function showSuccessMessage() {
+    showModal();
     
-    // Вставляем сообщение перед формой
-    const form = document.getElementById('product-form');
-    form.parentNode.insertBefore(message, form);
-    
-    // Удаляем сообщение через 3 секунды
+    // Автоматическое закрытие через 2.5 секунды
     setTimeout(() => {
-        if (message.parentNode) {
-            message.remove();
-        }
-    }, 3000);
+        hideModal();
+    }, 2500);
 } 
