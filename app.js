@@ -86,34 +86,8 @@ function handleCardClick(cardId) {
 function handlePersonality() {
     console.log('РАСПАКОВКА ЛИЧНОСТИ clicked');
     
-    // Haptic feedback
-    try {
-        if (tg && tg.HapticFeedback) {
-            tg.HapticFeedback.impactOccurred('light');
-            console.log('Haptic feedback выполнен');
-        }
-    } catch (error) {
-        console.error('Ошибка haptic feedback:', error);
-    }
-    
-    // Отправляем данные в бота для перехода в раздел распаковки личности
-    try {
-        if (tg && tg.sendData) {
-            const data = {
-                action: 'personality_unpack',
-                message: 'Открыт раздел РАСПАКОВКА ЛИЧНОСТИ'
-            };
-            console.log('Отправляем данные в бота:', data);
-            tg.sendData(JSON.stringify(data));
-            console.log('Данные отправлены успешно');
-        } else {
-            console.log('sendData недоступен, показываем alert');
-            alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
-        }
-    } catch (error) {
-        console.error('Ошибка отправки данных:', error);
-        alert('Открываю раздел РАСПАКОВКА ЛИЧНОСТИ...');
-    }
+    // Простой переход на страницу распаковки личности
+    window.location.href = 'personality.html';
 }
 
 // Обработчики для подразделов распаковки личности
@@ -229,11 +203,7 @@ function handlePersonalityProSection() {
 
 function handleThreadsZavod() {
     console.log('THREADS ZAVOD clicked');
-    // Здесь будет логика для THREADS ZAVOD
-    sendToTelegram({
-        action: 'threads_zavod',
-        message: 'Открыт раздел THREADS ZAVOD'
-    });
+    alert('Раздел THREADS ZAVOD в разработке');
 }
 
 function handleThreads() {
