@@ -29,41 +29,60 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Инициализация обработчиков для секций
 function initializeSectionHandlers() {
+    console.log('Initializing section handlers');
+    
     const sections = document.querySelectorAll('.section-card');
+    console.log('Found sections:', sections.length);
     
     sections.forEach(section => {
-        section.addEventListener('click', function() {
+        console.log('Adding handlers for section:', section.id);
+        
+        section.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Section clicked:', this.id);
             const sectionId = this.id;
             handleSectionClick(sectionId);
         });
         
-        // Добавляем эффект при нажатии
-        section.addEventListener('touchstart', function() {
+        section.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            console.log('Section touched:', this.id);
             this.style.transform = 'scale(0.98)';
         });
         
-        section.addEventListener('touchend', function() {
+        section.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            console.log('Section touch ended:', this.id);
             this.style.transform = '';
+            const sectionId = this.id;
+            handleSectionClick(sectionId);
         });
     });
 }
 
 // Обработка кликов по секциям
 function handleSectionClick(sectionId) {
+    console.log('Handling section click:', sectionId);
+    
     switch(sectionId) {
         case 'product-section':
+            console.log('Calling handleProductSection');
             handleProductSection();
             break;
         case 'audience-section':
+            console.log('Calling handleAudienceSection');
             handleAudienceSection();
             break;
         case 'cases-section':
+            console.log('Calling handleCasesSection');
             handleCasesSection();
             break;
         case 'personality-lite-section':
+            console.log('Calling handlePersonalityLiteSection');
             handlePersonalityLiteSection();
             break;
         case 'personality-pro-section':
+            console.log('Calling handlePersonalityProSection');
             handlePersonalityProSection();
             break;
         default:
