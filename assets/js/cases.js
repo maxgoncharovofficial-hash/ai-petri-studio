@@ -135,14 +135,6 @@ function initializeFormHandlers() {
             console.log('Save button touched (mobile), calling saveData()');
             saveData();
         });
-        
-        // Дополнительный обработчик для touchend (mobile)
-        saveButton.addEventListener('touchend', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Save button touch ended (mobile), calling saveData()');
-            saveData();
-        });
     } else {
         console.error('Save button not found!');
     }
@@ -209,20 +201,12 @@ function updateProgress() {
     const progressPercentage = document.getElementById('progress-percentage');
     const progressFill = document.getElementById('progress-fill');
     
-    if (filledQuestions) {
-        filledQuestions.textContent = `${filledCount}/6`;
-    }
-    
-    if (progressPercentage) {
-        progressPercentage.textContent = `${percentage}%`;
-    }
-    
-    if (progressFill) {
-        progressFill.style.width = `${percentage}%`;
-    }
+    if (filledQuestions) filledQuestions.textContent = `${filledCount}/6`;
+    if (progressPercentage) progressPercentage.textContent = `${percentage}%`;
+    if (progressFill) progressFill.style.width = `${percentage}%`;
 }
 
-// Сохранение кейса
+// Сохранение данных
 function saveData() {
     console.log('=== saveData() called ===');
     
@@ -548,15 +532,17 @@ function initializeModals() {
     if (editCaseButton) {
         editCaseButton.addEventListener('click', function(e) {
             e.preventDefault();
-            hideModal('view-case-modal');
+            console.log('Edit case button clicked');
             const caseData = JSON.parse(this.getAttribute('data-case'));
+            hideModal('view-case-modal');
             loadCaseForEditing(caseData);
         });
         
         editCaseButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            hideModal('view-case-modal');
+            console.log('Edit case button touched');
             const caseData = JSON.parse(this.getAttribute('data-case'));
+            hideModal('view-case-modal');
             loadCaseForEditing(caseData);
         });
     }
@@ -564,48 +550,54 @@ function initializeModals() {
     if (closeViewModal) {
         closeViewModal.addEventListener('click', function(e) {
             e.preventDefault();
+            console.log('Close view modal clicked');
             hideModal('view-case-modal');
         });
         
         closeViewModal.addEventListener('touchstart', function(e) {
             e.preventDefault();
+            console.log('Close view modal touched');
             hideModal('view-case-modal');
         });
     }
     
     // Модальное окно подтверждения удаления
-    const deleteModal = document.getElementById('delete-confirm-modal');
-    const cancelDelete = document.getElementById('cancel-delete');
-    const confirmDelete = document.getElementById('confirm-delete');
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+    const confirmDeleteButton = document.getElementById('confirm-delete');
+    const cancelDeleteButton = document.getElementById('cancel-delete');
     
-    console.log('Delete modal found:', deleteModal);
-    console.log('Cancel delete found:', cancelDelete);
-    console.log('Confirm delete found:', confirmDelete);
+    console.log('Delete confirm modal found:', deleteConfirmModal);
+    console.log('Confirm delete button found:', confirmDeleteButton);
+    console.log('Cancel delete button found:', cancelDeleteButton);
     
-    if (cancelDelete) {
-        cancelDelete.addEventListener('click', function(e) {
+    if (confirmDeleteButton) {
+        confirmDeleteButton.addEventListener('click', function(e) {
             e.preventDefault();
+            console.log('Confirm delete button clicked');
+            const caseId = parseInt(this.getAttribute('data-case-id'));
+            deleteCase(caseId);
             hideModal('delete-confirm-modal');
         });
         
-        cancelDelete.addEventListener('touchstart', function(e) {
+        confirmDeleteButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
+            console.log('Confirm delete button touched');
+            const caseId = parseInt(this.getAttribute('data-case-id'));
+            deleteCase(caseId);
             hideModal('delete-confirm-modal');
         });
     }
     
-    if (confirmDelete) {
-        confirmDelete.addEventListener('click', function(e) {
+    if (cancelDeleteButton) {
+        cancelDeleteButton.addEventListener('click', function(e) {
             e.preventDefault();
-            const caseId = parseInt(this.getAttribute('data-case-id'));
-            deleteCase(caseId);
+            console.log('Cancel delete button clicked');
             hideModal('delete-confirm-modal');
         });
         
-        confirmDelete.addEventListener('touchstart', function(e) {
+        cancelDeleteButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            const caseId = parseInt(this.getAttribute('data-case-id'));
-            deleteCase(caseId);
+            console.log('Cancel delete button touched');
             hideModal('delete-confirm-modal');
         });
     }
@@ -618,7 +610,6 @@ function showModal(modalId) {
     console.log('Showing modal:', modalId);
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.add('show');
         modal.style.display = 'flex';
         modal.style.visibility = 'visible';
         modal.style.opacity = '1';
@@ -633,7 +624,6 @@ function hideModal(modalId) {
     console.log('Hiding modal:', modalId);
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.remove('show');
         modal.style.display = 'none';
         modal.style.visibility = 'hidden';
         modal.style.opacity = '0';
