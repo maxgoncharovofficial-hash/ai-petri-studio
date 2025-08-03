@@ -1,0 +1,48 @@
+name: Deploy Fallback
+
+on:
+  workflow_dispatch:
+  
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy-fallback:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Create deployment directory
+        run: |
+          echo "🔨 Creating deployment structure..."
+          mkdir -p _site
+          
+          # Copy all files to _site
+          cp -r * _site/ 2>/dev/null || true
+          
+          # Remove git and github directories from deployment
+          rm -rf _site/.git _site/.github
+          
+          echo "📁 Deployment directory contents:"
+          ls -la _site/
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: Success
+        run: |
+          echo "🎉 Fallback deployment successful!"
+          echo "URL: ${{ steps.deployment.outputs.page_url }}"

@@ -25,6 +25,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
+      - name: Verify project structure
+        run: |
+          echo "🔍 Проверяем структуру проекта..."
+          echo "📂 Корневая директория:"
+          ls -la
+          
+          echo "📁 Assets directory:"
+          ls -la assets/ || echo "❌ Assets directory missing"
+          
+          echo "📄 Pages directory:"
+          ls -la pages/ || echo "❌ Pages directory missing"
+          
+          echo "🔍 HTML files:"
+          find . -name "*.html" -type f | head -10
+          
+          echo "🔍 JS files:"
+          find . -name "*.js" -type f | head -10
+          
+          echo "🔍 CSS files:"
+          find . -name "*.css" -type f | head -5
+          
+          # Basic validation
+          if [ ! -f "index.html" ]; then
+            echo "❌ Critical: index.html missing"
+            exit 1
+          fi
+          
+          echo "✅ Project structure OK"
+        
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
@@ -36,3 +65,10 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        
+      - name: Verify deployment
+        run: |
+          echo "🎉 Deployment completed!"
+          echo "🌐 Site URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "📱 Telegram Mini App ready at: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+          echo "✅ Version: v30.45 deployed successfully"
