@@ -1,28 +1,61 @@
-// Cases Page JavaScript
+// Cases Page JavaScript - ПОЛНОСТЬЮ ПЕРЕПИСАН С МАКСИМАЛЬНОЙ ОТЛАДКОЙ
 
 let currentEditingCaseId = null;
 
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Cases page loaded');
+    console.log('🚀 === DOMContentLoaded - Cases page initialization started ===');
+    
+    // Проверяем что все основные элементы существуют
+    const form = document.getElementById('cases-form');
+    const saveButton = document.getElementById('save-button');
+    const saveModal = document.getElementById('save-modal');
+    const modalOkButton = document.getElementById('modal-ok-button');
+    
+    console.log('📋 Form found:', form);
+    console.log('💾 Save button found:', saveButton);
+    console.log('📱 Save modal found:', saveModal);
+    console.log('✅ Modal OK button found:', modalOkButton);
+    
+    if (!form) {
+        console.error('❌ CRITICAL ERROR: Form not found!');
+        return;
+    }
+    
+    if (!saveButton) {
+        console.error('❌ CRITICAL ERROR: Save button not found!');
+        return;
+    }
+    
+    if (!saveModal) {
+        console.error('❌ CRITICAL ERROR: Save modal not found!');
+        return;
+    }
+    
+    if (!modalOkButton) {
+        console.error('❌ CRITICAL ERROR: Modal OK button not found!');
+        return;
+    }
+    
+    console.log('✅ All critical elements found successfully');
     
     // Инициализация вкладок
     initializeTabs();
     
     // Добавляем обработчик для кнопки назад
     const backButton = document.getElementById('back-button');
-    console.log('Back button found:', backButton);
+    console.log('⬅️ Back button found:', backButton);
     
     if (backButton) {
         backButton.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Back button clicked');
+            console.log('⬅️ Back button clicked');
             window.location.href = 'personality.html';
         });
         
         backButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('Back button touched');
+            console.log('⬅️ Back button touched');
             window.location.href = 'personality.html';
         });
     }
@@ -38,33 +71,40 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Обновляем прогресс
     updateProgress();
+    
+    console.log('🚀 === Cases page initialization completed successfully ===');
 });
 
 // Инициализация вкладок
 function initializeTabs() {
+    console.log('📑 === Initializing tabs ===');
     const tabButtons = document.querySelectorAll('.tab-button');
-    console.log('Found tab buttons:', tabButtons.length);
+    console.log('📑 Found tab buttons:', tabButtons.length);
     
-    tabButtons.forEach(button => {
+    tabButtons.forEach((button, index) => {
+        console.log(`📑 Tab button ${index + 1}:`, button);
+        console.log(`📑 Tab button ${index + 1} data-tab:`, button.getAttribute('data-tab'));
+        
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const tabName = this.getAttribute('data-tab');
-            console.log('Tab button clicked:', tabName);
+            console.log('📑 Tab button clicked:', tabName);
             switchTab(tabName);
         });
         
         button.addEventListener('touchstart', function(e) {
             e.preventDefault();
             const tabName = this.getAttribute('data-tab');
-            console.log('Tab button touched:', tabName);
+            console.log('📑 Tab button touched:', tabName);
             switchTab(tabName);
         });
     });
+    console.log('📑 === Tabs initialization completed ===');
 }
 
 // Переключение вкладок
 function switchTab(tabName) {
-    console.log('switchTab() called with tabName:', tabName);
+    console.log('🔄 === switchTab() called with tabName:', tabName, '===');
     
     // Обновляем активную вкладку
     document.querySelectorAll('.tab-button').forEach(btn => {
@@ -73,9 +113,9 @@ function switchTab(tabName) {
     const activeTabButton = document.querySelector(`[data-tab="${tabName}"]`);
     if (activeTabButton) {
         activeTabButton.classList.add('active');
-        console.log('Active tab button updated');
+        console.log('✅ Active tab button updated');
     } else {
-        console.error('Tab button not found for:', tabName);
+        console.error('❌ Tab button not found for:', tabName);
     }
     
     // Показываем соответствующий контент
@@ -85,46 +125,53 @@ function switchTab(tabName) {
     const activeTabPanel = document.getElementById(`${tabName}-tab`);
     if (activeTabPanel) {
         activeTabPanel.classList.add('active');
-        console.log('Active tab panel updated');
+        console.log('✅ Active tab panel updated');
     } else {
-        console.error('Tab panel not found for:', tabName);
+        console.error('❌ Tab panel not found for:', tabName);
     }
     
     // Если переключаемся на список кейсов, обновляем его
     if (tabName === 'list') {
-        console.log('Switching to list tab, loading cases list...');
+        console.log('📋 Switching to list tab, loading cases list...');
         loadCasesList();
     }
     
-    console.log('Tab switched successfully to:', tabName);
+    console.log('🔄 === Tab switched successfully to:', tabName, '===');
 }
 
 // Инициализация обработчиков формы
 function initializeFormHandlers() {
+    console.log('📝 === Initializing form handlers ===');
+    
     const form = document.getElementById('cases-form');
     const textareas = document.querySelectorAll('textarea');
     const saveButton = document.getElementById('save-button');
     
-    console.log('Form found:', form);
-    console.log('Save button found:', saveButton);
-    console.log('Textareas found:', textareas.length);
+    console.log('📝 Form found:', form);
+    console.log('💾 Save button found:', saveButton);
+    console.log('📝 Textareas found:', textareas.length);
     
     // Обработчик отправки формы
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('Form submitted, calling saveData()');
+            console.log('📝 Form submitted, calling saveData()');
             saveData();
         });
     }
     
     // Универсальный обработчик для кнопки сохранения (работает на всех устройствах)
     if (saveButton) {
+        console.log('💾 Setting up save button handlers...');
+        
         // Обработчик для клика (desktop)
         saveButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Save button clicked (desktop), calling saveData()');
+            console.log('💾 === SAVE BUTTON CLICKED (DESKTOP) ===');
+            console.log('💾 Event type:', e.type);
+            console.log('💾 Target:', e.target);
+            console.log('💾 Current target:', e.currentTarget);
             saveData();
         });
         
@@ -132,16 +179,22 @@ function initializeFormHandlers() {
         saveButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Save button touched (mobile), calling saveData()');
+            console.log('💾 === SAVE BUTTON TOUCHED (MOBILE) ===');
+            console.log('💾 Event type:', e.type);
+            console.log('💾 Target:', e.target);
+            console.log('💾 Current target:', e.currentTarget);
             saveData();
         });
+        
+        console.log('✅ Save button handlers set up successfully');
     } else {
-        console.error('Save button not found!');
+        console.error('❌ CRITICAL ERROR: Save button not found!');
     }
     
     // Обработчики для каждого textarea
     textareas.forEach((textarea, index) => {
         const questionNumber = index + 1;
+        console.log(`📝 Setting up handlers for textarea ${questionNumber}:`, textarea);
         
         // Обработчик изменения текста
         textarea.addEventListener('input', function() {
@@ -164,6 +217,8 @@ function initializeFormHandlers() {
             e.stopPropagation();
         });
     });
+    
+    console.log('📝 === Form handlers initialization completed ===');
 }
 
 // Обновление счетчика символов
@@ -206,68 +261,99 @@ function updateProgress() {
     if (progressFill) progressFill.style.width = `${percentage}%`;
 }
 
-// Сохранение данных - ПОЛНОСТЬЮ ПЕРЕПИСАНА С ОТЛАДКОЙ
+// Сохранение данных - ПОЛНОСТЬЮ ПЕРЕПИСАНА С МАКСИМАЛЬНОЙ ОТЛАДКОЙ
 function saveData() {
-    console.log('=== НАЧАЛО СОХРАНЕНИЯ КЕЙСА ===');
+    console.log('💾 === НАЧАЛО СОХРАНЕНИЯ КЕЙСА ===');
+    console.log('💾 Function saveData() called at:', new Date().toISOString());
     
     // Проверяем что форма существует
     const form = document.getElementById('cases-form');
     if (!form) {
-        console.error('Форма не найдена!');
+        console.error('❌ CRITICAL ERROR: Form not found!');
+        alert('Ошибка: форма не найдена');
+        return;
+    }
+    console.log('✅ Form found successfully');
+    
+    // Проверяем все элементы формы
+    const question1 = document.getElementById('question-1');
+    const question2 = document.getElementById('question-2');
+    const question3 = document.getElementById('question-3');
+    const question4 = document.getElementById('question-4');
+    const question5 = document.getElementById('question-5');
+    const question6 = document.getElementById('question-6');
+    
+    console.log('📝 Question 1 element:', question1);
+    console.log('📝 Question 2 element:', question2);
+    console.log('📝 Question 3 element:', question3);
+    console.log('📝 Question 4 element:', question4);
+    console.log('📝 Question 5 element:', question5);
+    console.log('📝 Question 6 element:', question6);
+    
+    if (!question1 || !question2 || !question3 || !question4 || !question5 || !question6) {
+        console.error('❌ CRITICAL ERROR: One or more form elements not found!');
+        alert('Ошибка: элементы формы не найдены');
         return;
     }
     
     // Собираем данные из формы
-    const clientName = document.getElementById('question-1').value.trim();
-    console.log('Имя клиента:', clientName);
+    const clientName = question1.value.trim();
+    console.log('👤 Имя клиента:', clientName);
+    console.log('👤 Имя клиента length:', clientName.length);
     
     // Валидация - имя клиента обязательно
     if (!clientName) {
-        console.log('Validation failed: client name is empty');
+        console.log('❌ Validation failed: client name is empty');
         alert('Пожалуйста, укажите имя клиента');
         return;
     }
+    console.log('✅ Client name validation passed');
     
     // Собираем все данные из формы
     const formData = {
         id: currentEditingCaseId || Date.now(),
         date: new Date().toLocaleDateString('ru-RU'),
         clientName: clientName,
-        howFoundOut: document.getElementById('question-2').value.trim(),
-        goals: document.getElementById('question-3').value.trim(),
-        problems: document.getElementById('question-4').value.trim(),
-        results: document.getElementById('question-5').value.trim(),
-        whatHelped: document.getElementById('question-6').value.trim(),
+        howFoundOut: question2.value.trim(),
+        goals: question3.value.trim(),
+        problems: question4.value.trim(),
+        results: question5.value.trim(),
+        whatHelped: question6.value.trim(),
         saved_at: new Date().toISOString()
     };
-    console.log('Данные формы:', formData);
+    console.log('📊 Данные формы:', formData);
+    console.log('📊 Form data JSON:', JSON.stringify(formData));
     
     // Получаем существующие кейсы из localStorage
     let existingCases = [];
     try {
+        console.log('💾 Reading from localStorage...');
         const savedData = localStorage.getItem('cases_data');
-        console.log('Raw localStorage data:', savedData);
+        console.log('💾 Raw localStorage data:', savedData);
+        console.log('💾 Raw localStorage data type:', typeof savedData);
         
         if (savedData) {
             existingCases = JSON.parse(savedData);
-            console.log('Parsed existing cases:', existingCases);
+            console.log('💾 Parsed existing cases:', existingCases);
+            console.log('💾 Parsed cases type:', typeof existingCases);
+            console.log('💾 Is array:', Array.isArray(existingCases));
         } else {
-            console.log('No existing cases found, starting with empty array');
+            console.log('💾 No existing cases found, starting with empty array');
         }
         
         // Убеждаемся что это массив
         if (!Array.isArray(existingCases)) {
-            console.log('Existing cases is not array, resetting to empty array');
+            console.log('💾 Existing cases is not array, resetting to empty array');
             existingCases = [];
         }
         
     } catch (error) {
-        console.error('Error parsing existing cases:', error);
+        console.error('❌ Error parsing existing cases:', error);
         existingCases = [];
     }
     
-    console.log('Существующие кейсы перед сохранением:', existingCases);
-    console.log('Количество существующих кейсов:', existingCases.length);
+    console.log('📋 Существующие кейсы перед сохранением:', existingCases);
+    console.log('📋 Количество существующих кейсов:', existingCases.length);
     
     // Добавляем или обновляем кейс
     if (currentEditingCaseId) {
@@ -275,64 +361,83 @@ function saveData() {
         const index = existingCases.findIndex(case_ => case_.id === currentEditingCaseId);
         if (index !== -1) {
             existingCases[index] = formData;
-            console.log('Updated existing case at index:', index);
+            console.log('✏️ Updated existing case at index:', index);
         } else {
-            console.log('Case not found for editing, adding as new');
+            console.log('✏️ Case not found for editing, adding as new');
             existingCases.push(formData);
         }
     } else {
         // Добавляем новый кейс
         existingCases.push(formData);
-        console.log('Added new case, total cases now:', existingCases.length);
+        console.log('➕ Added new case, total cases now:', existingCases.length);
     }
     
-    console.log('Кейсы после добавления/обновления:', existingCases);
+    console.log('📋 Кейсы после добавления/обновления:', existingCases);
+    console.log('📋 Кейсы JSON:', JSON.stringify(existingCases));
     
     // Сохраняем в localStorage
     try {
-        localStorage.setItem('cases_data', JSON.stringify(existingCases));
-        console.log('Data saved to localStorage successfully');
+        console.log('💾 Attempting to save to localStorage...');
+        const dataToSave = JSON.stringify(existingCases);
+        console.log('💾 Data to save:', dataToSave);
+        console.log('💾 Data to save length:', dataToSave.length);
+        
+        localStorage.setItem('cases_data', dataToSave);
+        console.log('✅ Data saved to localStorage successfully');
         
         // Проверяем что сохранилось
         const saved = localStorage.getItem('cases_data');
-        console.log('Проверка сохранения:', saved);
+        console.log('💾 Verification - saved data:', saved);
+        console.log('💾 Verification - saved data length:', saved ? saved.length : 0);
         
-        // Сразу обновляем список кейсов
-        loadCasesList();
-        console.log('Cases list updated immediately');
+        if (saved === dataToSave) {
+            console.log('✅ Data verification successful - saved data matches');
+        } else {
+            console.error('❌ Data verification failed - saved data does not match');
+        }
         
     } catch (error) {
-        console.error('Error saving to localStorage:', error);
-        alert('Ошибка при сохранении данных');
+        console.error('❌ Error saving to localStorage:', error);
+        alert('Ошибка при сохранении данных: ' + error.message);
         return;
     }
     
     // Очищаем форму
+    console.log('🧹 Clearing form...');
     clearForm();
-    console.log('Form cleared');
+    console.log('✅ Form cleared');
     
     // Сбрасываем режим редактирования
     currentEditingCaseId = null;
+    console.log('🔄 Editing mode reset');
     
     // Показываем сообщение об успехе
+    console.log('📱 Showing success message...');
     showSuccessMessage();
-    console.log('Success message shown');
+    console.log('✅ Success message shown');
     
-    console.log('=== КОНЕЦ СОХРАНЕНИЯ КЕЙСА ===');
+    console.log('💾 === КОНЕЦ СОХРАНЕНИЯ КЕЙСА ===');
 }
 
 // Очистка формы
 function clearForm() {
+    console.log('🧹 === Clearing form ===');
     const textareas = document.querySelectorAll('textarea');
+    console.log('🧹 Found textareas to clear:', textareas.length);
+    
     textareas.forEach((textarea, index) => {
+        console.log(`🧹 Clearing textarea ${index + 1}:`, textarea);
         textarea.value = '';
         updateCharCounter(index + 1, 0);
     });
     updateProgress();
+    console.log('🧹 === Form cleared successfully ===');
 }
 
 // Загрузка кейса в форму для редактирования
 function loadCaseForEditing(caseData) {
+    console.log('✏️ === Loading case for editing:', caseData, '===');
+    
     document.getElementById('question-1').value = caseData.clientName || '';
     document.getElementById('question-2').value = caseData.howFoundOut || '';
     document.getElementById('question-3').value = caseData.goals || '';
@@ -350,108 +455,116 @@ function loadCaseForEditing(caseData) {
     
     // Устанавливаем режим редактирования
     currentEditingCaseId = caseData.id;
+    console.log('✏️ Editing mode set for case ID:', currentEditingCaseId);
     
     // Переключаемся на вкладку создания
     switchTab('create');
+    console.log('✏️ === Case loaded for editing successfully ===');
 }
 
 // Получение списка кейсов - ИСПРАВЛЕНА
 function getCases() {
-    console.log('=== getCases() called ===');
+    console.log('📋 === getCases() called ===');
     
     try {
         const savedData = localStorage.getItem('cases_data');
-        console.log('Raw localStorage data in getCases:', savedData);
+        console.log('📋 Raw localStorage data in getCases:', savedData);
+        console.log('📋 Raw localStorage data type:', typeof savedData);
         
         if (savedData) {
             const parsed = JSON.parse(savedData);
-            console.log('Parsed cases data in getCases:', parsed);
+            console.log('📋 Parsed cases data in getCases:', parsed);
+            console.log('📋 Parsed data type:', typeof parsed);
+            console.log('📋 Is array:', Array.isArray(parsed));
             
             if (Array.isArray(parsed)) {
-                console.log('Returning array of cases:', parsed);
+                console.log('📋 Returning array of cases:', parsed);
+                console.log('📋 Cases count:', parsed.length);
                 return parsed;
             } else {
-                console.log('Parsed data is not array, returning empty array');
+                console.log('📋 Parsed data is not array, returning empty array');
                 return [];
             }
         } else {
-            console.log('No data in localStorage, returning empty array');
+            console.log('📋 No data in localStorage, returning empty array');
             return [];
         }
     } catch (error) {
-        console.error('Error in getCases:', error);
+        console.error('❌ Error in getCases:', error);
         return [];
     }
 }
 
 // Загрузка списка кейсов - ИСПРАВЛЕНА
 function loadCasesList() {
-    console.log('=== loadCasesList() called ===');
+    console.log('📋 === loadCasesList() called ===');
     
     const cases = getCases();
-    console.log('Loaded cases from localStorage:', cases);
-    console.log('Cases count:', cases.length);
+    console.log('📋 Loaded cases from localStorage:', cases);
+    console.log('📋 Cases count:', cases.length);
     
     const casesList = document.getElementById('cases-list');
     const emptyState = document.getElementById('empty-state');
     const casesCount = document.getElementById('cases-count');
     
-    console.log('Cases list element:', casesList);
-    console.log('Empty state element:', emptyState);
-    console.log('Cases count element:', casesCount);
+    console.log('📋 Cases list element:', casesList);
+    console.log('📋 Empty state element:', emptyState);
+    console.log('📋 Cases count element:', casesCount);
     
     if (!casesList) {
-        console.error('Cases list element not found!');
+        console.error('❌ CRITICAL ERROR: Cases list element not found!');
         return;
     }
     
     if (!emptyState) {
-        console.error('Empty state element not found!');
+        console.error('❌ CRITICAL ERROR: Empty state element not found!');
         return;
     }
     
     if (!casesCount) {
-        console.error('Cases count element not found!');
+        console.error('❌ CRITICAL ERROR: Cases count element not found!');
         return;
     }
     
     // Обновляем счетчик
-    casesCount.textContent = `${cases.length} кейс${cases.length === 1 ? '' : cases.length < 5 ? 'а' : 'ов'}`;
-    console.log('Cases count updated:', casesCount.textContent);
+    const countText = `${cases.length} кейс${cases.length === 1 ? '' : cases.length < 5 ? 'а' : 'ов'}`;
+    casesCount.textContent = countText;
+    console.log('📋 Cases count updated:', countText);
     
     if (cases.length === 0) {
         // Показываем пустое состояние
         casesList.innerHTML = '';
         emptyState.style.display = 'block';
-        console.log('Showing empty state');
+        console.log('📋 Showing empty state');
         return;
     }
     
     // Скрываем пустое состояние
     emptyState.style.display = 'none';
-    console.log('Hiding empty state');
+    console.log('📋 Hiding empty state');
     
     // Сортируем кейсы по дате (новые сверху)
     cases.sort((a, b) => new Date(b.saved_at) - new Date(a.saved_at));
-    console.log('Cases sorted by date');
+    console.log('📋 Cases sorted by date');
     
     // Создаем HTML для каждого кейса
     const casesHTML = cases.map(case_ => createCaseCard(case_)).join('');
-    console.log('Generated HTML:', casesHTML);
+    console.log('📋 Generated HTML length:', casesHTML.length);
+    console.log('📋 Generated HTML preview:', casesHTML.substring(0, 200) + '...');
     
     casesList.innerHTML = casesHTML;
-    console.log('Cases HTML inserted into DOM');
+    console.log('📋 Cases HTML inserted into DOM');
     
     // Добавляем обработчики для кнопок
     addCaseCardHandlers();
-    console.log('Case card handlers added');
+    console.log('📋 Case card handlers added');
     
-    console.log('=== loadCasesList() completed successfully ===');
+    console.log('📋 === loadCasesList() completed successfully ===');
 }
 
 // Создание карточки кейса
 function createCaseCard(case_) {
-    console.log('Creating card for case:', case_);
+    console.log('🎴 Creating card for case:', case_);
     const description = case_.howFoundOut ? case_.howFoundOut.substring(0, 100) + (case_.howFoundOut.length > 100 ? '...' : '') : 'Описание не указано';
     
     const cardHTML = `
@@ -469,16 +582,21 @@ function createCaseCard(case_) {
         </div>
     `;
     
-    console.log('Generated card HTML:', cardHTML);
+    console.log('🎴 Generated card HTML:', cardHTML);
     return cardHTML;
 }
 
 // Добавление обработчиков для карточек кейсов
 function addCaseCardHandlers() {
+    console.log('🎴 === Adding case card handlers ===');
     const actionButtons = document.querySelectorAll('.case-action-btn');
-    console.log('Found action buttons:', actionButtons.length);
+    console.log('🎴 Found action buttons:', actionButtons.length);
     
-    actionButtons.forEach(button => {
+    actionButtons.forEach((button, index) => {
+        console.log(`🎴 Setting up handler for button ${index + 1}:`, button);
+        console.log(`🎴 Button action:`, button.getAttribute('data-action'));
+        console.log(`🎴 Button case ID:`, button.getAttribute('data-case-id'));
+        
         // Обработчик для клика (desktop)
         button.addEventListener('click', function(e) {
             e.preventDefault();
@@ -488,10 +606,10 @@ function addCaseCardHandlers() {
             const cases = getCases();
             const caseData = cases.find(case_ => case_.id === caseId);
             
-            console.log('Action button clicked:', action, 'for case:', caseId);
+            console.log('🎴 Action button clicked:', action, 'for case:', caseId);
             
             if (!caseData) {
-                console.error('Case data not found for ID:', caseId);
+                console.error('❌ Case data not found for ID:', caseId);
                 return;
             }
             
@@ -517,10 +635,10 @@ function addCaseCardHandlers() {
             const cases = getCases();
             const caseData = cases.find(case_ => case_.id === caseId);
             
-            console.log('Action button touched:', action, 'for case:', caseId);
+            console.log('🎴 Action button touched:', action, 'for case:', caseId);
             
             if (!caseData) {
-                console.error('Case data not found for ID:', caseId);
+                console.error('❌ Case data not found for ID:', caseId);
                 return;
             }
             
@@ -537,41 +655,48 @@ function addCaseCardHandlers() {
             }
         });
     });
+    console.log('🎴 === Case card handlers added successfully ===');
 }
 
 // Инициализация модальных окон
 function initializeModals() {
-    console.log('Initializing modals...');
+    console.log('📱 === Initializing modals ===');
     
     // Модальное окно сохранения
     const saveModal = document.getElementById('save-modal');
     const saveOkButton = document.getElementById('modal-ok-button');
     
-    console.log('Save modal found:', saveModal);
-    console.log('Save OK button found:', saveOkButton);
+    console.log('📱 Save modal found:', saveModal);
+    console.log('📱 Save OK button found:', saveOkButton);
     
     if (saveOkButton) {
+        console.log('📱 Setting up save OK button handlers...');
+        
         saveOkButton.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Save OK button clicked');
+            console.log('📱 Save OK button clicked');
             hideModal('save-modal');
             // Переключаемся на список кейсов после закрытия модального окна
             setTimeout(() => {
                 switchTab('list');
-                console.log('Switched to list tab after save');
+                console.log('📱 Switched to list tab after save');
             }, 100);
         });
         
         saveOkButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('Save OK button touched');
+            console.log('📱 Save OK button touched');
             hideModal('save-modal');
             // Переключаемся на список кейсов после закрытия модального окна
             setTimeout(() => {
                 switchTab('list');
-                console.log('Switched to list tab after save');
+                console.log('📱 Switched to list tab after save');
             }, 100);
         });
+        
+        console.log('✅ Save OK button handlers set up successfully');
+    } else {
+        console.error('❌ CRITICAL ERROR: Save OK button not found!');
     }
     
     // Модальное окно просмотра кейса
@@ -579,14 +704,14 @@ function initializeModals() {
     const editCaseButton = document.getElementById('edit-case-button');
     const closeViewModal = document.getElementById('close-view-modal');
     
-    console.log('View modal found:', viewModal);
-    console.log('Edit case button found:', editCaseButton);
-    console.log('Close view modal found:', closeViewModal);
+    console.log('📱 View modal found:', viewModal);
+    console.log('📱 Edit case button found:', editCaseButton);
+    console.log('📱 Close view modal found:', closeViewModal);
     
     if (editCaseButton) {
         editCaseButton.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Edit case button clicked');
+            console.log('📱 Edit case button clicked');
             const caseData = JSON.parse(this.getAttribute('data-case'));
             hideModal('view-case-modal');
             loadCaseForEditing(caseData);
@@ -594,7 +719,7 @@ function initializeModals() {
         
         editCaseButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('Edit case button touched');
+            console.log('📱 Edit case button touched');
             const caseData = JSON.parse(this.getAttribute('data-case'));
             hideModal('view-case-modal');
             loadCaseForEditing(caseData);
@@ -604,13 +729,13 @@ function initializeModals() {
     if (closeViewModal) {
         closeViewModal.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Close view modal clicked');
+            console.log('📱 Close view modal clicked');
             hideModal('view-case-modal');
         });
         
         closeViewModal.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('Close view modal touched');
+            console.log('📱 Close view modal touched');
             hideModal('view-case-modal');
         });
     }
@@ -620,14 +745,14 @@ function initializeModals() {
     const confirmDeleteButton = document.getElementById('confirm-delete');
     const cancelDeleteButton = document.getElementById('cancel-delete');
     
-    console.log('Delete confirm modal found:', deleteConfirmModal);
-    console.log('Confirm delete button found:', confirmDeleteButton);
-    console.log('Cancel delete button found:', cancelDeleteButton);
+    console.log('📱 Delete confirm modal found:', deleteConfirmModal);
+    console.log('📱 Confirm delete button found:', confirmDeleteButton);
+    console.log('📱 Cancel delete button found:', cancelDeleteButton);
     
     if (confirmDeleteButton) {
         confirmDeleteButton.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Confirm delete button clicked');
+            console.log('📱 Confirm delete button clicked');
             const caseId = parseInt(this.getAttribute('data-case-id'));
             deleteCase(caseId);
             hideModal('delete-confirm-modal');
@@ -635,7 +760,7 @@ function initializeModals() {
         
         confirmDeleteButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('Confirm delete button touched');
+            console.log('📱 Confirm delete button touched');
             const caseId = parseInt(this.getAttribute('data-case-id'));
             deleteCase(caseId);
             hideModal('delete-confirm-modal');
@@ -645,51 +770,62 @@ function initializeModals() {
     if (cancelDeleteButton) {
         cancelDeleteButton.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Cancel delete button clicked');
+            console.log('📱 Cancel delete button clicked');
             hideModal('delete-confirm-modal');
         });
         
         cancelDeleteButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('Cancel delete button touched');
+            console.log('📱 Cancel delete button touched');
             hideModal('delete-confirm-modal');
         });
     }
     
-    console.log('Modals initialized successfully');
+    console.log('📱 === Modals initialized successfully ===');
 }
 
 // Показ модального окна
 function showModal(modalId) {
-    console.log('Showing modal:', modalId);
+    console.log('📱 === Showing modal:', modalId, '===');
     const modal = document.getElementById(modalId);
     if (modal) {
+        console.log('📱 Modal element found:', modal);
+        console.log('📱 Modal current display:', modal.style.display);
+        console.log('📱 Modal current visibility:', modal.style.visibility);
+        console.log('📱 Modal current opacity:', modal.style.opacity);
+        
         modal.style.display = 'flex';
         modal.style.visibility = 'visible';
         modal.style.opacity = '1';
-        console.log('Modal shown successfully');
+        
+        console.log('📱 Modal display set to:', modal.style.display);
+        console.log('📱 Modal visibility set to:', modal.style.visibility);
+        console.log('📱 Modal opacity set to:', modal.style.opacity);
+        
+        console.log('✅ Modal shown successfully');
     } else {
-        console.error('Modal not found:', modalId);
+        console.error('❌ Modal not found:', modalId);
     }
 }
 
 // Скрытие модального окна
 function hideModal(modalId) {
-    console.log('Hiding modal:', modalId);
+    console.log('📱 === Hiding modal:', modalId, '===');
     const modal = document.getElementById(modalId);
     if (modal) {
+        console.log('📱 Modal element found:', modal);
         modal.style.display = 'none';
         modal.style.visibility = 'hidden';
         modal.style.opacity = '0';
-        console.log('Modal hidden successfully');
+        console.log('✅ Modal hidden successfully');
     } else {
-        console.error('Modal not found:', modalId);
+        console.error('❌ Modal not found:', modalId);
     }
 }
 
 // Показ модального окна кейса
 function showCaseModal(caseData) {
-    console.log('Showing case modal for:', caseData);
+    console.log('📱 === Showing case modal for:', caseData, '===');
     const modalContent = document.getElementById('view-case-content');
     const editButton = document.getElementById('edit-case-button');
     
@@ -728,7 +864,7 @@ function showCaseModal(caseData) {
 
 // Показ модального окна подтверждения удаления
 function showDeleteConfirmModal(caseId) {
-    console.log('Showing delete confirm modal for case:', caseId);
+    console.log('📱 === Showing delete confirm modal for case:', caseId, '===');
     const confirmButton = document.getElementById('confirm-delete');
     confirmButton.setAttribute('data-case-id', caseId);
     showModal('delete-confirm-modal');
@@ -736,16 +872,18 @@ function showDeleteConfirmModal(caseId) {
 
 // Удаление кейса
 function deleteCase(caseId) {
-    console.log('Deleting case:', caseId);
+    console.log('🗑️ === Deleting case:', caseId, '===');
     const cases = getCases();
     const updatedCases = cases.filter(case_ => case_.id !== caseId);
     localStorage.setItem('cases_data', JSON.stringify(updatedCases));
     loadCasesList();
-    console.log('Case deleted successfully');
+    console.log('✅ Case deleted successfully');
 }
 
 // Показ сообщения об успехе через модальное окно
 function showSuccessMessage() {
-    console.log('Showing success message');
+    console.log('📱 === Showing success message ===');
+    console.log('📱 About to show save-modal');
     showModal('save-modal');
+    console.log('📱 Success message modal should be visible now');
 }
