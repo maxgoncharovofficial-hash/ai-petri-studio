@@ -401,7 +401,7 @@ function saveData() {
     let existingCases = [];
     try {
         console.log('💾 Reading from localStorage...');
-        const savedData = localStorage.getItem('cases_data');
+        const savedData = localStorage.getItem('cases');
         console.log('💾 Raw localStorage data:', savedData);
         console.log('💾 Raw localStorage data type:', typeof savedData);
         
@@ -410,6 +410,11 @@ function saveData() {
             console.log('💾 Parsed existing cases:', existingCases);
             console.log('💾 Parsed cases type:', typeof existingCases);
             console.log('💾 Is array:', Array.isArray(existingCases));
+            
+            if (!Array.isArray(existingCases)) {
+                console.log('💾 Data is not array, resetting to empty array');
+                existingCases = [];
+            }
         } else {
             console.log('💾 No existing cases found, starting with empty array');
         }
@@ -455,11 +460,11 @@ function saveData() {
         console.log('💾 Data to save:', dataToSave);
         console.log('💾 Data to save length:', dataToSave.length);
         
-        localStorage.setItem('cases_data', dataToSave);
+        localStorage.setItem('cases', dataToSave);
         console.log('✅ Data saved to localStorage successfully');
         
         // Проверяем что сохранилось
-        const saved = localStorage.getItem('cases_data');
+        const saved = localStorage.getItem('cases');
         console.log('💾 Verification - saved data:', saved);
         console.log('💾 Verification - saved data length:', saved ? saved.length : 0);
         
@@ -540,7 +545,7 @@ function getCases() {
     console.log('📋 === getCases() called ===');
     
     try {
-        const savedData = localStorage.getItem('cases_data');
+        const savedData = localStorage.getItem('cases');
         console.log('📋 Raw localStorage data in getCases:', savedData);
         console.log('📋 Raw localStorage data type:', typeof savedData);
         
