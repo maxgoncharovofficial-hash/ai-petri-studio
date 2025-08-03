@@ -47,6 +47,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    const threadsZavodCard = document.getElementById('threads-zavod-card');
+    if (threadsZavodCard) {
+        threadsZavodCard.addEventListener('click', handleThreadsZavod);
+        threadsZavodCard.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            handleThreadsZavod();
+        });
+    }
+    
     // Добавляем анимацию для карточек
     const cards = document.querySelectorAll('.card');
     cards.forEach((card, index) => {
