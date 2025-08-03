@@ -682,20 +682,10 @@ async function connectOpenAI() {
             
             connectBtn.textContent = '✅ Подключено';
             connectBtn.style.background = '#28a745';
-            
-            // Убираем старое сообщение
-            const resultDiv = document.getElementById('openai-result');
-            if (resultDiv) {
-                resultDiv.style.display = 'none';
-            }
+            connectBtn.disabled = true;
             
             // Добавляем кнопку настроек
-            setTimeout(() => {
-                addPromptSettingsButton();
-            }, 100);
-            
-            // Показываем модальное окно успеха
-            showSuccessModal('OpenAI успешно подключен! Теперь можно настроить промпт для генерации постов.');
+            addPromptSettingsButton();
             
         } else {
             throw new Error(result.error || 'Не удалось подключить OpenAI');
@@ -728,19 +718,26 @@ function showOpenAIResult(type, message) {
 }
 
 function addPromptSettingsButton() {
-    const resultDiv = document.getElementById('openai-result');
-    if (!resultDiv) return;
+    // Ищем контейнер кнопки подключения
+    const connectBtn = document.getElementById('connect-openai');
+    if (!connectBtn) return;
     
-    const existingButton = resultDiv.querySelector('.prompt-settings-btn');
-    if (existingButton) return; // Кнопка уже добавлена
+    const formContainer = connectBtn.parentElement;
+    if (!formContainer) return;
     
+    // Проверяем, есть ли уже кнопка
+    const existingButton = formContainer.querySelector('.prompt-settings-btn');
+    if (existingButton) return;
+    
+    // Создаем кнопку настроек
     const settingsButton = document.createElement('button');
     settingsButton.className = 'threads-button secondary prompt-settings-btn';
     settingsButton.style.marginTop = '12px';
     settingsButton.innerHTML = '⚙️ Настроить промпт';
     settingsButton.onclick = openPromptSettings;
     
-    resultDiv.appendChild(settingsButton);
+    // Добавляем после кнопки подключения
+    formContainer.appendChild(settingsButton);
 }
 
 function openPromptSettings() {
@@ -749,7 +746,7 @@ function openPromptSettings() {
 }
 
 function checkSavedOpenAI() {
-    if (window.openAIService.isServiceConnected()) {
+    if (window.openAIService && window.openAIService.isServiceConnected()) {
         const connectBtn = document.getElementById('connect-openai');
         if (connectBtn) {
             connectBtn.textContent = '✅ Подключено';
@@ -757,7 +754,7 @@ function checkSavedOpenAI() {
             connectBtn.disabled = true;
         }
         
-        showOpenAIResult('success', 'OpenAI подключен');
+        // Добавляем кнопку настроек при загрузке
         addPromptSettingsButton();
     }
 }

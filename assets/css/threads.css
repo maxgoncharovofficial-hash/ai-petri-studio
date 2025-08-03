@@ -1507,8 +1507,8 @@
 
 .queue-item {
     display: flex;
-    align-items: center;
-    gap: 16px;
+    align-items: flex-start;
+    gap: 12px;
     padding: 16px;
     background: #f8f9fa;
     border: 1px solid #e9ecef;
@@ -1524,13 +1524,15 @@
     background: #2196f3;
     color: white;
     border-radius: 50%;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 .queue-content {
@@ -1538,22 +1540,31 @@
     font-size: 14px;
     line-height: 1.4;
     color: #2c3e50;
+    word-wrap: break-word;
+    min-width: 0;
 }
 
 .queue-actions {
     display: flex;
-    gap: 8px;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
 }
 
 .queue-action-btn {
-    padding: 6px 12px;
+    padding: 4px 8px;
     border: 1px solid #dee2e6;
-    border-radius: 6px;
+    border-radius: 4px;
     background: white;
     color: #495057;
-    font-size: 12px;
+    font-size: 11px;
     cursor: pointer;
     transition: all 0.3s ease;
+    min-width: 32px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .queue-action-btn:hover {
@@ -1578,6 +1589,24 @@
 .queue-action-btn.move-down {
     border-color: #ffc107;
     color: #856404;
+}
+
+/* Mobile responsive для очереди */
+@media (max-width: 480px) {
+    .queue-item {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .queue-number {
+        align-self: flex-start;
+    }
+    
+    .queue-actions {
+        flex-direction: row;
+        gap: 8px;
+        justify-content: flex-end;
+    }
 }
 
 /* OpenAI Form Styling */
@@ -1720,7 +1749,8 @@
 .api-form .form-help {
     font-size: 12px;
     color: #6c757d;
-    margin-top: 4px;
+    margin-top: 8px;
+    margin-bottom: 16px;
     line-height: 1.4;
     display: block;
     word-wrap: break-word;

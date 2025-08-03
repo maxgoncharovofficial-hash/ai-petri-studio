@@ -128,7 +128,8 @@ class OpenAIService {
             return customPrompt;
         }
         
-        let prompt = this.defaultPrompt;
+        // Используем сохраненный кастомный промпт или дефолтный
+        let prompt = this.getCustomPrompt();
         
         // Заменяем тему на основе данных пользователя
         let topic = 'общие советы по развитию';
