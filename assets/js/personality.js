@@ -169,12 +169,22 @@ function countFilledFields(dataObject, fieldNames) {
 
 // Функция обновления конкретного счетчика
 function updateSectionCounter(counterId, filled, total) {
+    console.log(`🔧 updateSectionCounter called: ${counterId} = [${filled}/${total}]`);
     const counterElement = document.getElementById(counterId);
     if (counterElement) {
         counterElement.textContent = `[${filled}/${total}]`;
-        console.log(`Updated ${counterId}: [${filled}/${total}]`);
+        console.log(`✅ Updated ${counterId}: [${filled}/${total}]`);
+        
+        // Дополнительная проверка для проблемных счетчиков
+        if (counterId === 'product-counter' || counterId === 'audience-counter') {
+            console.log(`🔍 СПЕЦИАЛЬНАЯ ПРОВЕРКА ${counterId}:`);
+            console.log(`🔍 Element found:`, counterElement);
+            console.log(`🔍 Element textContent:`, counterElement.textContent);
+            console.log(`🔍 Element innerHTML:`, counterElement.innerHTML);
+        }
     } else {
-        console.error(`Counter element not found: ${counterId}`);
+        console.error(`❌ Counter element not found: ${counterId}`);
+        console.log(`🔍 All elements with class section-counter:`, document.querySelectorAll('.section-counter'));
     }
 }
 
@@ -198,14 +208,18 @@ function updateAllSectionCounters() {
     
     // Продукт (4 поля)
     try {
-        console.log('📦 Проверяем продукт...');
+        console.log('📦 === ДЕТАЛЬНАЯ ПРОВЕРКА ПРОДУКТА ===');
         const productData = JSON.parse(localStorage.getItem('product_data') || '{}');
-        const productFields = ['title', 'description', 'target_audience', 'value_proposition'];
+        console.log('📦 Raw product data:', productData);
+        const productFields = ['main_product', 'advantages', 'values', 'freebies'];
+        console.log('📦 Checking fields:', productFields);
         const productFilled = countFilledFields(productData, productFields);
+        console.log('📦 Filled count:', productFilled);
         updateSectionCounter('product-counter', productFilled, 4);
+        console.log('📦 Called updateSectionCounter(product-counter,', productFilled, ', 4)');
         progressResults.product = `${productFilled}/4`;
         totalFilled += productFilled;
-        console.log('✅ Продукт:', productFilled, '/ 4');
+        console.log('✅ Продукт итог:', productFilled, '/ 4');
     } catch (error) {
         console.error('❌ Ошибка обновления счетчика продукта:', error);
         updateSectionCounter('product-counter', 0, 4);
@@ -214,14 +228,18 @@ function updateAllSectionCounters() {
     
     // Аудитория (6 полей)
     try {
-        console.log('👥 Проверяем аудиторию...');
+        console.log('👥 === ДЕТАЛЬНАЯ ПРОВЕРКА АУДИТОРИИ ===');
         const audienceData = JSON.parse(localStorage.getItem('audience_data') || '{}');
-        const audienceFields = ['demographic', 'interests', 'pain_points', 'goals', 'behavior', 'preferred_content'];
+        console.log('👥 Raw audience data:', audienceData);
+        const audienceFields = ['age_location', 'family_status', 'interests', 'main_problems', 'solution_steps', 'your_solutions'];
+        console.log('👥 Checking fields:', audienceFields);
         const audienceFilled = countFilledFields(audienceData, audienceFields);
+        console.log('👥 Filled count:', audienceFilled);
         updateSectionCounter('audience-counter', audienceFilled, 6);
+        console.log('👥 Called updateSectionCounter(audience-counter,', audienceFilled, ', 6)');
         progressResults.audience = `${audienceFilled}/6`;
         totalFilled += audienceFilled;
-        console.log('✅ Аудитория:', audienceFilled, '/ 6');
+        console.log('✅ Аудитория итог:', audienceFilled, '/ 6');
     } catch (error) {
         console.error('❌ Ошибка обновления счетчика аудитории:', error);
         updateSectionCounter('audience-counter', 0, 6);
