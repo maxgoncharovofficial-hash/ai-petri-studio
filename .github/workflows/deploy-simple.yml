@@ -1,0 +1,97 @@
+name: Deploy to GitHub Pages (Simple)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Show directory structure
+        run: |
+          echo "📁 Current directory structure:"
+          ls -la
+          echo "📁 Assets:"
+          ls -la assets/ || echo "No assets directory"
+          echo "📁 Pages:"
+          ls -la pages/ || echo "No pages directory"
+          
+      - name: Create simple deployment
+        run: |
+          echo "🚀 Creating simple deployment structure..."
+          
+          # Создаем временную папку
+          mkdir -p deploy
+          
+          # Копируем все необходимые файлы
+          cp index.html deploy/
+          cp -r assets deploy/
+          cp pages/*.html deploy/
+          
+          echo "✅ Files copied to deploy directory"
+          ls -la deploy/
+          
+      - name: Update paths
+        run: |
+          echo "🔧 Updating file paths..."
+          
+          # Обновляем пути в HTML файлах
+          for file in deploy/*.html; do
+            if [ -f "$file" ]; then
+              echo "Processing: $(basename "$file")"
+              # Заменяем ../assets/ на assets/
+              sed -i 's|../assets/|assets/|g' "$file"
+              # Убираем pages/ из навигации
+              sed -i 's|pages/||g' "$file"
+              sed -i 's|../index.html|index.html|g' "$file"
+            fi
+          done
+          
+          # Обновляем JS файлы
+          if [ -d "deploy/assets/js" ]; then
+            for file in deploy/assets/js/*.js; do
+              if [ -f "$file" ]; then
+                echo "Processing JS: $(basename "$file")"
+                sed -i 's|pages/||g' "$file"
+                sed -i 's|../index.html|index.html|g' "$file"
+              fi
+            done
+          fi
+          
+          echo "✅ Paths updated successfully"
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./deploy
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: Cleanup
+        run: |
+          rm -rf deploy
+          echo "✅ Cleanup completed"
+          
+      - name: Success
+        run: |
+          echo "🎉 Deployment successful!"
+          echo "URL: ${{ steps.deployment.outputs.page_url }}" 

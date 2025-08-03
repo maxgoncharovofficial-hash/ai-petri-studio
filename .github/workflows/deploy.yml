@@ -5,25 +5,23 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
           
       - name: Debug - Show current directory structure
         run: |
@@ -210,4 +208,4 @@ jobs:
           echo "🌐 Your Telegram Mini App is now available at:"
           echo "https://${{ github.repository_owner }}.github.io/$(echo ${{ github.repository }} | cut -d'/' -f2)/"
           echo "📱 Ready for Telegram Mini App integration!"
-          echo "📊 Deployment URL: ${{ steps.deployment.outputs.url }}" 
+          echo "📊 Deployment URL: ${{ steps.deployment.outputs.page_url }}" 
