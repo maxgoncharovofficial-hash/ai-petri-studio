@@ -3,9 +3,9 @@
 
 class OpenAIService {
     constructor() {
-        this.apiKey = null;
+        this.apiKey = localStorage.getItem('openai_api_key') || null;
         this.baseURL = 'https://api.openai.com/v1';
-        this.isConnected = false;
+        this.isConnected = !!this.apiKey; // true если есть ключ
         this.defaultPrompt = `Ты профессиональный копирайтер для социальных сетей. Создай увлекательный пост для Threads.
         
 Требования:
@@ -68,6 +68,11 @@ class OpenAIService {
                 error: 'Не удалось подключиться к OpenAI API' 
             };
         }
+    }
+    
+    // Проверка подключения
+    isServiceConnected() {
+        return this.isConnected && !!this.apiKey;
     }
     
     // Генерация поста

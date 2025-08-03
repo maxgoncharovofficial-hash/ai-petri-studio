@@ -1404,7 +1404,8 @@ function updateTodayPosts() {
     if (!container) return;
     
     const scheduleData = getFromStorage('threads_schedule');
-    if (!scheduleData || !scheduleData.postingTimes) {
+    
+    if (!scheduleData || !scheduleData.postingTimes || scheduleData.postingTimes.length === 0) {
         container.innerHTML = '<p style="color: #6c757d; text-align: center; padding: 20px;">Расписание не настроено</p>';
         return;
     }

@@ -746,12 +746,20 @@ function openPromptSettings() {
 }
 
 function checkSavedOpenAI() {
-    if (window.openAIService && window.openAIService.isServiceConnected()) {
+    // Проверяем есть ли сохраненный ключ
+    const savedKey = localStorage.getItem('openai_api_key');
+    if (savedKey && savedKey.startsWith('sk-')) {
         const connectBtn = document.getElementById('connect-openai');
         if (connectBtn) {
             connectBtn.textContent = '✅ Подключено';
             connectBtn.style.background = '#28a745';
             connectBtn.disabled = true;
+        }
+        
+        // Загружаем сохраненный ключ в поле
+        const keyInput = document.getElementById('openai-api-key');
+        if (keyInput) {
+            keyInput.value = savedKey;
         }
         
         // Добавляем кнопку настроек при загрузке
