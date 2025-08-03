@@ -103,13 +103,11 @@ function initializeFormHandlers() {
     const saveButton = document.getElementById('save-button');
     
     // Обработчик отправки формы
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            console.log('Form submitted, calling saveData()');
-            saveData();
-        });
-    }
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Form submitted, calling saveData()');
+        saveData();
+    });
     
     // Дополнительный обработчик для кнопки сохранения
     if (saveButton) {
@@ -609,4 +607,4 @@ function deleteCase(caseId) {
 function showSuccessMessage() {
     console.log('Showing success message');
     showModal('save-modal');
-}
+} 

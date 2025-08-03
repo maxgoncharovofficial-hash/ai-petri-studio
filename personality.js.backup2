@@ -170,17 +170,6 @@ function updateSectionCounter(counterId, filled, total) {
     }
 }
 
-// Функция обновления счетчика кейсов (показывает количество кейсов)
-function updateCasesCounter(counterId, casesCount) {
-    const counterElement = document.getElementById(counterId);
-    if (counterElement) {
-        counterElement.textContent = casesCount.toString();
-        console.log(`Updated ${counterId}: ${casesCount} cases`);
-    } else {
-        console.error(`Counter element not found: ${counterId}`);
-    }
-}
-
 // Функция обновления всех счетчиков разделов
 function updateAllSectionCounters() {
     console.log('Updating all section counters...');
@@ -209,15 +198,15 @@ function updateAllSectionCounters() {
         updateSectionCounter('audience-counter', 0, 6);
     }
     
-    // Кейсы (показываем количество сохраненных кейсов)
+    // Кейсы (проверяем наличие кейсов)
     try {
         const casesData = JSON.parse(localStorage.getItem('cases_data') || '[]');
-        const casesCount = casesData.length;
-        updateCasesCounter('cases-counter', casesCount);
-        console.log('Cases counter updated:', casesCount, 'cases');
+        const casesFilled = casesData.length > 0 ? 6 : 0; // Если есть кейсы, считаем 6/6
+        updateSectionCounter('cases-counter', casesFilled, 6);
+        console.log('Cases counter updated:', casesFilled, '/ 6');
     } catch (error) {
         console.error('Error updating cases counter:', error);
-        updateCasesCounter('cases-counter', 0);
+        updateSectionCounter('cases-counter', 0, 6);
     }
     
     // Личность Lite (6 полей)
@@ -268,7 +257,7 @@ function updateOverallProgress() {
         totalFilled += countFilledFields(audienceData, audienceFields);
         totalFields += 6;
         
-        // Кейсы (считаем как заполненные если есть кейсы)
+        // Кейсы
         const casesData = JSON.parse(localStorage.getItem('cases_data') || '[]');
         if (casesData.length > 0) {
             totalFilled += 6; // Если есть кейсы, считаем как заполненные
