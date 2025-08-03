@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <title>Автопилот - THREADS ZAVOD</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/threads.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-title-block">
+                <div class="header-title">🤖 АВТОПИЛОТ</div>
+                <div class="header-subtitle">Управление автоматическими публикациями</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="autopilot-container">
+                
+                <!-- Status Section -->
+                <div class="status-section">
+                    <div class="status-card">
+                        <div class="status-indicator">
+                            <span class="status-dot" id="autopilot-dot">🔴</span>
+                            <span class="status-text" id="autopilot-status">Неактивен</span>
+                        </div>
+                        <div class="account-info">
+                            <span>Аккаунт: <span id="autopilot-account">Не подключен</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Setup Required (shown when not configured) -->
+                <div class="setup-required" id="setup-required">
+                    <div class="setup-card">
+                        <div class="setup-icon">⚙️</div>
+                        <div class="setup-content">
+                            <h3>Автопилот не настроен</h3>
+                            <p>Для работы автопилота необходимо:</p>
+                            <ul>
+                                <li>✅ Подключить аккаунт Threads</li>
+                                <li>✅ Настроить расписание публикаций</li>
+                                <li>✅ Заполнить данные для ИИ-генерации</li>
+                            </ul>
+                            <button class="threads-button primary" id="setup-autopilot">
+                                ⚙️ НАСТРОИТЬ АВТОПИЛОТ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Autopilot (shown when configured) -->
+                <div class="active-autopilot" id="active-autopilot" style="display: none;">
+                    
+                    <!-- Schedule Today/Tomorrow -->
+                    <div class="schedule-section">
+                        <div class="schedule-day">
+                            <h4>📅 Сегодня</h4>
+                            <div class="posts-list" id="today-posts">
+                                <div class="post-item">
+                                    <span class="post-time">10:00</span>
+                                    <span class="post-status">⏳ Ожидание</span>
+                                    <span class="post-content">Пост готов к публикации</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="schedule-day">
+                            <h4>📅 Завтра</h4>
+                            <div class="posts-list" id="tomorrow-posts">
+                                <div class="post-item">
+                                    <span class="post-time">10:00</span>
+                                    <span class="post-status">⏳ Ожидание</span>
+                                    <span class="post-content">Пост готов к публикации</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Queue Info -->
+                    <div class="queue-section">
+                        <div class="queue-info">
+                            📝 В очереди: <span id="queue-count">0</span> постов готовы
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="controls-section">
+                        <h4>🎛️ Управление:</h4>
+                        <div class="control-buttons">
+                            <button class="control-button pause" id="pause-autopilot">
+                                ⏸️ Приостановить автопилот
+                            </button>
+                            <button class="control-button skip" id="skip-post">
+                                ⏭️ Пропустить следующий пост
+                            </button>
+                            <button class="control-button create" id="create-now">
+                                🔄 Создать новый пост сейчас
+                            </button>
+                            <button class="control-button calendar" id="view-calendar">
+                                🗓️ Просмотреть календарь
+                            </button>
+                            <button class="control-button settings" id="modify-settings">
+                                ⚙️ Изменить настройки
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Publishing Calendar -->
+                    <div class="calendar-section" id="calendar-section" style="display: none;">
+                        <h4>🗓️ КАЛЕНДАРЬ ПУБЛИКАЦИЙ</h4>
+                        <div class="publishing-calendar" id="publishing-calendar">
+                            <!-- Calendar will be generated here -->
+                        </div>
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <span class="legend-dot active">●</span>
+                                <span>Активные дни публикаций</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot published">✅</span>
+                                <span>Опубликованные посты</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot scheduled">⏳</span>
+                                <span>Запланированные посты</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Requirements Section -->
+                <div class="ai-section">
+                    <h4>🧠 ИИ создает посты на основе вашей распаковки:</h4>
+                    <div class="ai-requirements">
+                        <div class="requirement-item" id="req-product">
+                            <span class="req-status">❌</span>
+                            <span class="req-text">Ваш продукт/услуга</span>
+                            <button class="req-button" onclick="goToSection('product')">Заполнить</button>
+                        </div>
+                        <div class="requirement-item" id="req-audience">
+                            <span class="req-status">❌</span>
+                            <span class="req-text">Целевая аудитория</span>
+                            <button class="req-button" onclick="goToSection('audience')">Заполнить</button>
+                        </div>
+                        <div class="requirement-item" id="req-style">
+                            <span class="req-status">❌</span>
+                            <span class="req-text">Стиль общения</span>
+                            <button class="req-button" onclick="goToSection('personality-lite')">Заполнить</button>
+                        </div>
+                        <div class="requirement-item" id="req-expertise">
+                            <span class="req-status">❌</span>
+                            <span class="req-text">Экспертная область</span>
+                            <button class="req-button" onclick="goToSection('personality-pro')">Заполнить</button>
+                        </div>
+                    </div>
+                    
+                    <div class="ai-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="ai-progress-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-text">
+                            Готовность ИИ: <span id="ai-progress-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Section -->
+                <div class="stats-section">
+                    <h4>📊 Статистика автопилота:</h4>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value" id="total-published">0</div>
+                            <div class="stat-label">Опубликовано всего</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="today-published">0</div>
+                            <div class="stat-label">Сегодня</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="scheduled-posts">0</div>
+                            <div class="stat-label">Запланировано</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="success-rate">0%</div>
+                            <div class="stat-label">Успешность</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation to other sections -->
+                <div class="navigation-section">
+                    <h4>🚀 Быстрые действия:</h4>
+                    <div class="nav-buttons">
+                        <button class="nav-button" id="go-to-connection">
+                            📋 Настройки подключения
+                        </button>
+                        <button class="nav-button" id="go-to-create">
+                            📝 Создать пост вручную
+                        </button>
+                        <button class="nav-button" id="go-to-personality">
+                            🧠 Распаковка личности
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="../assets/js/threads-autopilot.js"></script>
+</body>
+</html>

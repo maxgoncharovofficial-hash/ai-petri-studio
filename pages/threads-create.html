@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <title>Создать пост - THREADS ZAVOD</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/threads.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-title-block">
+                <div class="header-title">📝 СОЗДАТЬ ПОСТ</div>
+                <div class="header-subtitle">Создание и планирование контента</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="create-container">
+                
+                <!-- Creation Methods -->
+                <div class="creation-section">
+                    <h4>🚀 Способы создания:</h4>
+                    <div class="creation-methods">
+                        <button class="method-button" id="ai-generate">
+                            <div class="method-icon">🤖</div>
+                            <div class="method-content">
+                                <div class="method-title">Сгенерировать через ИИ</div>
+                                <div class="method-description">Автоматическое создание на основе вашей распаковки</div>
+                            </div>
+                        </button>
+                        <button class="method-button" id="write-manual">
+                            <div class="method-icon">✍️</div>
+                            <div class="method-content">
+                                <div class="method-title">Написать самому</div>
+                                <div class="method-description">Создать пост с нуля в редакторе</div>
+                            </div>
+                        </button>
+                        <button class="method-button" id="use-template">
+                            <div class="method-icon">📋</div>
+                            <div class="method-content">
+                                <div class="method-title">Использовать шаблон</div>
+                                <div class="method-description">Готовые структуры для быстрого создания</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Generation Options (Hidden by default) -->
+                <div class="ai-options" id="ai-options" style="display: none;">
+                    <h4>🤖 Настройки ИИ-генерации:</h4>
+                    <div class="ai-settings">
+                        <div class="setting-item">
+                            <label>Тип поста:</label>
+                            <select id="post-type" class="setting-select">
+                                <option value="advice">Совет/рекомендация</option>
+                                <option value="experience">Личный опыт</option>
+                                <option value="insight">Инсайт/размышление</option>
+                                <option value="story">История/кейс</option>
+                                <option value="question">Вопрос аудитории</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Тон:</label>
+                            <select id="post-tone" class="setting-select">
+                                <option value="professional">Профессиональный</option>
+                                <option value="friendly">Дружелюбный</option>
+                                <option value="motivational">Мотивирующий</option>
+                                <option value="educational">Обучающий</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Длина поста:</label>
+                            <select id="post-length" class="setting-select">
+                                <option value="short">Короткий (до 200 символов)</option>
+                                <option value="medium">Средний (200-350 символов)</option>
+                                <option value="long">Длинный (350-500 символов)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="threads-button primary" id="generate-ai-post">
+                        ✨ Сгенерировать пост
+                    </button>
+                </div>
+
+                <!-- Template Selection (Hidden by default) -->
+                <div class="template-section" id="template-section" style="display: none;">
+                    <h4>📋 Выберите шаблон:</h4>
+                    <div class="template-grid">
+                        <div class="template-card" data-template="experience">
+                            <div class="template-title">💼 Опыт</div>
+                            <div class="template-preview">Поделюсь опытом: [ваш опыт]...</div>
+                        </div>
+                        <div class="template-card" data-template="problem-solution">
+                            <div class="template-title">💡 Проблема-решение</div>
+                            <div class="template-preview">Проблема: [описание]...</div>
+                        </div>
+                        <div class="template-card" data-template="insight">
+                            <div class="template-title">🧠 Инсайт</div>
+                            <div class="template-preview">Сегодня понял важную вещь...</div>
+                        </div>
+                        <div class="template-card" data-template="question">
+                            <div class="template-title">❓ Вопрос</div>
+                            <div class="template-preview">А как вы решаете...?</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Editor -->
+                <div class="editor-section" id="editor-section" style="display: none;">
+                    <h4>✍️ Редактор поста:</h4>
+                    <div class="editor-tools">
+                        <button class="tool-button" id="add-emoji" title="Добавить эмодзи">😊</button>
+                        <button class="tool-button" id="add-hashtag" title="Добавить хештег">#️⃣</button>
+                        <button class="tool-button" id="format-text" title="Форматирование">🎨</button>
+                    </div>
+                    <textarea id="post-content" placeholder="Введите текст поста..." 
+                              class="post-textarea" maxlength="500"></textarea>
+                    <div class="char-counter">
+                        <span id="char-count">0</span>/500
+                        <span class="char-indicator" id="char-indicator">📝</span>
+                    </div>
+                    
+                    <!-- Preview -->
+                    <div class="post-preview">
+                        <h5>👁️ Предварительный просмотр:</h5>
+                        <div class="preview-card" id="preview-card">
+                            <div class="preview-header">
+                                <div class="preview-avatar">👤</div>
+                                <div class="preview-info">
+                                    <div class="preview-name">Ваш профиль</div>
+                                    <div class="preview-time">Только что</div>
+                                </div>
+                            </div>
+                            <div class="preview-content" id="preview-content">
+                                Текст поста появится здесь...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Publishing Options -->
+                <div class="publishing-section" id="publishing-section" style="display: none;">
+                    <h4>📅 Планирование публикации:</h4>
+                    <div class="publishing-options">
+                        <button class="publish-button now" id="publish-now">
+                            <div class="publish-icon">📤</div>
+                            <div class="publish-content">
+                                <div class="publish-title">Опубликовать сейчас</div>
+                                <div class="publish-description">Мгновенная публикация в Threads</div>
+                            </div>
+                        </button>
+                        <button class="publish-button schedule" id="publish-schedule">
+                            <div class="publish-icon">📅</div>
+                            <div class="publish-content">
+                                <div class="publish-title">Выбрать дату и время</div>
+                                <div class="publish-description">Запланировать публикацию</div>
+                            </div>
+                        </button>
+                        <button class="publish-button queue" id="publish-queue">
+                            <div class="publish-icon">💾</div>
+                            <div class="publish-content">
+                                <div class="publish-title">Добавить в очередь автопилота</div>
+                                <div class="publish-description">Автоматическая публикация по расписанию</div>
+                            </div>
+                        </button>
+                        <button class="publish-button draft" id="save-draft">
+                            <div class="publish-icon">📄</div>
+                            <div class="publish-content">
+                                <div class="publish-title">Сохранить как черновик</div>
+                                <div class="publish-description">Отложить для доработки</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scheduling Calendar -->
+                <div class="scheduling-calendar" id="scheduling-calendar" style="display: none;">
+                    <h4>📅 ПЛАНИРОВАНИЕ ПУБЛИКАЦИИ</h4>
+                    <div id="schedule-calendar-container">
+                        <!-- Calendar for scheduling -->
+                    </div>
+                    <div class="schedule-time-section" id="schedule-time-section" style="display: none;">
+                        <h5>⏰ Выберите время:</h5>
+                        <div class="schedule-time-grid">
+                            <!-- Time buttons -->
+                        </div>
+                        <div class="manual-schedule-time">
+                            <input type="time" id="schedule-manual-time" class="time-input">
+                            <button class="threads-button secondary" id="confirm-schedule-time">
+                                ✅ ЗАПЛАНИРОВАТЬ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats and Management -->
+                <div class="management-section">
+                    <h4>📊 Управление контентом:</h4>
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-number" id="drafts-count">0</div>
+                            <div class="stat-label">Черновиков</div>
+                            <button class="stat-button" id="view-drafts">Просмотреть</button>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="scheduled-count">0</div>
+                            <div class="stat-label">Запланировано</div>
+                            <button class="stat-button" id="view-scheduled">Просмотреть</button>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="queue-count">0</div>
+                            <div class="stat-label">В очереди</div>
+                            <button class="stat-button" id="view-queue">Просмотреть</button>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="published-count">0</div>
+                            <div class="stat-label">Опубликовано</div>
+                            <button class="stat-button" id="view-published">История</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation to other sections -->
+                <div class="navigation-section">
+                    <h4>🚀 Быстрые действия:</h4>
+                    <div class="nav-buttons">
+                        <button class="nav-button" id="go-to-autopilot">
+                            🤖 Перейти к автопилоту
+                        </button>
+                        <button class="nav-button" id="go-to-connection">
+                            📋 Настройки подключения
+                        </button>
+                        <button class="nav-button" id="improve-ai">
+                            🧠 Улучшить ИИ-генерацию
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="../assets/js/threads-create.js"></script>
+</body>
+</html>

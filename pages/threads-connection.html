@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <title>Подключение - THREADS ZAVOD</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/threads.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-title-block">
+                <div class="header-title">📋 ПОДКЛЮЧЕНИЕ К THREADS</div>
+                <div class="header-subtitle">Настройка аккаунта и расписания</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="connection-container">
+                <div class="connection-section">
+                    
+                    <!-- Step 1: Connect Account -->
+                    <div class="step-card" id="step-connect">
+                        <div class="step-header">
+                            <div class="step-icon">🔗</div>
+                            <div class="step-text">
+                                <div class="step-title">ШАГ 1: Подключить аккаунт</div>
+                                <div class="step-status" id="connection-status">Не подключен</div>
+                            </div>
+                        </div>
+                        <button class="threads-button primary" id="connect-button">
+                            🔗 Подключить Threads
+                        </button>
+                    </div>
+
+                    <!-- Step 2: Setup Schedule -->
+                    <div class="step-card disabled" id="step-schedule">
+                        <div class="step-header">
+                            <div class="step-icon">⚙️</div>
+                            <div class="step-text">
+                                <div class="step-title">ШАГ 2: Настроить публикации</div>
+                                <div class="step-status">Требует подключения</div>
+                            </div>
+                        </div>
+                        <button class="threads-button secondary disabled" id="schedule-button">
+                            ⚙️ Настроить расписание
+                        </button>
+                    </div>
+
+                    <!-- Schedule Setup Form (Hidden by default) -->
+                    <div class="schedule-setup" id="schedule-setup" style="display: none;">
+                        <h4>⚙️ НАСТРОЙКА РАСПИСАНИЯ</h4>
+                        
+                        <!-- Posts per day -->
+                        <div class="schedule-section">
+                            <label>📊 Количество постов в день:</label>
+                            <input type="number" id="posts-per-day" min="1" max="10" value="2" 
+                                   placeholder="Введите число" class="number-input">
+                        </div>
+
+                        <!-- Calendar -->
+                        <div class="schedule-section">
+                            <label>📅 Календарь и время публикаций:</label>
+                            <div class="calendar-container" id="calendar-container">
+                                <!-- Calendar will be generated here -->
+                            </div>
+                        </div>
+
+                        <!-- Selected date info -->
+                        <div class="selected-date-info" id="selected-date-info" style="display: none;">
+                            <h5>📅 Выбрано: <span id="selected-date-text"></span></h5>
+                            <div class="posting-times" id="posting-times">
+                                <!-- Posting times will be shown here -->
+                            </div>
+                            <button class="threads-button secondary" id="add-time-button">
+                                + Добавить время
+                            </button>
+                        </div>
+
+                        <!-- Time Selector (Hidden by default) -->
+                        <div class="time-selector" id="time-selector" style="display: none;">
+                            <h5>⏰ ВЫБОР ВРЕМЕНИ</h5>
+                            <div class="time-grid">
+                                <button class="time-button" data-time="09:00">🕘 09:00</button>
+                                <button class="time-button" data-time="10:00">🕙 10:00</button>
+                                <button class="time-button" data-time="11:00">🕚 11:00</button>
+                                <button class="time-button" data-time="12:00">🕛 12:00</button>
+                                <button class="time-button" data-time="13:00">🕐 13:00</button>
+                                <button class="time-button" data-time="14:00">🕑 14:00</button>
+                                <button class="time-button" data-time="15:00">🕒 15:00</button>
+                                <button class="time-button" data-time="16:00">🕓 16:00</button>
+                                <button class="time-button" data-time="17:00">🕔 17:00</button>
+                                <button class="time-button" data-time="18:00">🕕 18:00</button>
+                                <button class="time-button" data-time="19:00">🕖 19:00</button>
+                                <button class="time-button" data-time="20:00">🕗 20:00</button>
+                            </div>
+                            
+                            <div class="manual-time">
+                                <label>Или введите время вручную:</label>
+                                <input type="time" id="manual-time-input" class="time-input">
+                                <button class="threads-button secondary" id="use-manual-time">
+                                    ✅ Использовать
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Save Schedule -->
+                        <div class="schedule-actions">
+                            <button class="threads-button primary" id="save-schedule">
+                                💾 СОХРАНИТЬ РАСПИСАНИЕ
+                            </button>
+                            <button class="threads-button secondary" id="select-another-date">
+                                📅 ВЫБРАТЬ ДРУГУЮ ДАТУ
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Completed Setup -->
+                    <div class="setup-complete" id="setup-complete" style="display: none;">
+                        <h4>✅ ПОДКЛЮЧЕНИЕ ЗАВЕРШЕНО</h4>
+                        <div class="connection-info">
+                            <div class="info-item">
+                                <span class="info-label">Подключено:</span>
+                                <span class="info-value" id="connected-username">@username</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Постов в день:</span>
+                                <span class="info-value" id="daily-posts-count">2</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Дата начала:</span>
+                                <span class="info-value" id="start-date">14 декабря 2024</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Время:</span>
+                                <span class="info-value" id="posting-schedule">10:00, 18:00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="setup-actions">
+                            <button class="threads-button primary" id="launch-autopilot">
+                                🚀 ЗАПУСТИТЬ АВТОПИЛОТ
+                            </button>
+                            <button class="threads-button secondary" id="modify-schedule">
+                                ⚙️ ИЗМЕНИТЬ РАСПИСАНИЕ
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Navigation to other sections -->
+                    <div class="navigation-section">
+                        <h4>🚀 Следующие шаги:</h4>
+                        <div class="nav-buttons">
+                            <button class="nav-button" id="go-to-autopilot">
+                                🤖 Перейти к автопилоту
+                            </button>
+                            <button class="nav-button" id="go-to-create">
+                                📝 Создать первый пост
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="../assets/js/threads-connection.js"></script>
+</body>
+</html>
