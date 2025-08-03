@@ -1,5 +1,21 @@
 /* Cases Page Styles */
 
+/* Header Back Button */
+.header-back-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.header-back-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
 .cases-container {
     max-width: 600px;
     margin: 0 auto;
