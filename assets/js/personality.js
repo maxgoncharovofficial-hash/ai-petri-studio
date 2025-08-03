@@ -25,8 +25,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация обработчиков событий
     initializeSectionHandlers();
     
+    // Отладка localStorage
+    debugLocalStorage();
+    
     // Обновляем все счетчики при загрузке
     updateAllSectionCounters();
+    
+    // Пересчитать прогресс с существующими данными
+    recalculateExistingProgress();
     updateOverallProgress();
     
     // Анимация появления элементов
@@ -248,46 +254,124 @@ function updateAllSectionCounters() {
     console.log('All section counters updated successfully');
 }
 
-// Функция подсчета заполненных вопросов для раздела
-function getFilledQuestionsCount(section, maxQuestions) {
-    const data = JSON.parse(localStorage.getItem(`${section}-data`) || '{}');
+// Функция отладки localStorage
+function debugLocalStorage() {
+    console.log('🔍 === ОТЛАДКА LOCALSTORAGE ===');
+    
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        
+        if (key.includes('product') || key.includes('audience') || 
+            key.includes('personality') || key.includes('lite') || 
+            key.includes('pro')) {
+            console.log('📝', key + ':', value);
+        }
+    }
+}
+
+// Функция подсчета заполненных полей в объекте
+function countNonEmptyFields(data) {
+    let count = 0;
+    
+    if (typeof data === 'object' && data !== null) {
+        for (let key in data) {
+            const value = data[key];
+            if (value && typeof value === 'string' && value.trim().length > 0) {
+                count++;
+            }
+        }
+    }
+    
+    return count;
+}
+
+// Функция подсчета заполненных полей на текущей странице
+function countFilledFieldsOnPage(sectionName) {
+    const textareas = document.querySelectorAll('textarea');
     let filledCount = 0;
     
-    // Подсчитать количество заполненных полей
-    for (let key in data) {
-        if (data[key] && data[key].toString().trim().length > 0) {
+    textareas.forEach(textarea => {
+        if (textarea.value && textarea.value.trim().length > 0) {
             filledCount++;
         }
+    });
+    
+    return filledCount;
+}
+
+// Функция подсчета заполненных вопросов для раздела с проверкой разных ключей
+function getFilledQuestionsCount(section, maxQuestions) {
+    let filledCount = 0;
+    
+    // Попробовать разные возможные ключи localStorage для раздела
+    const possibleKeys = [
+        section + '-data',
+        section + '_data', 
+        section,
+        section + 'Data'
+    ];
+    
+    for (let key of possibleKeys) {
+        const data = localStorage.getItem(key);
+        if (data) {
+            console.log('✅ Найдены данные в:', key);
+            try {
+                const parsed = JSON.parse(data);
+                filledCount = countNonEmptyFields(parsed);
+                break;
+            } catch (e) {
+                console.log('❌ Ошибка парсинга:', key);
+            }
+        }
+    }
+    
+    // Также проверить поля на самих страницах
+    if (filledCount === 0) {
+        filledCount = countFilledFieldsOnPage(section);
     }
     
     return Math.min(filledCount, maxQuestions);
 }
 
-// Функция расчета глобального прогресса (БЕЗ кейсов)
-function calculateGlobalProgress() {
-    let totalQuestions = 21; // БЕЗ кейсов: 4+6+6+5 = 21
-    let answeredQuestions = 0;
+// Функция пересчета существующих данных
+function recalculateExistingProgress() {
+    console.log('🔄 Пересчет существующих данных...');
     
-    // Подсчет по разделам:
-    // Распаковка продукта (4 вопроса)
-    answeredQuestions += getFilledQuestionsCount('product', 4);
+    let totalAnswered = 0;
     
-    // Распаковка аудитории (6 вопросов) 
-    answeredQuestions += getFilledQuestionsCount('audience', 6);
+    // Проверить каждый раздел и подсчитать заполненные поля
     
-    // Распаковка личности Lite (6 вопросов)
-    answeredQuestions += getFilledQuestionsCount('personality_lite', 6);
+    // 1. Распаковка продукта (4 вопроса)
+    const productAnswered = getFilledQuestionsCount('product', 4);
+    console.log('📦 Продукт:', productAnswered + '/4');
     
-    // Распаковка личности Pro (5 вопросов)
-    answeredQuestions += getFilledQuestionsCount('personality_pro', 5);
+    // 2. Распаковка аудитории (6 вопросов)  
+    const audienceAnswered = getFilledQuestionsCount('audience', 6);
+    console.log('👥 Аудитория:', audienceAnswered + '/6');
     
-    let percentage = Math.round((answeredQuestions / totalQuestions) * 100);
+    // 3. Распаковка личности Lite (6 вопросов)
+    const personalityLiteAnswered = getFilledQuestionsCount('personality_lite', 6);
+    console.log('🧠 Личность Lite:', personalityLiteAnswered + '/6');
+    
+    // 4. Распаковка личности Pro (5 вопросов)  
+    const personalityProAnswered = getFilledQuestionsCount('personality_pro', 5);
+    console.log('⭐ Личность Pro:', personalityProAnswered + '/5');
+    
+    totalAnswered = productAnswered + audienceAnswered + personalityLiteAnswered + personalityProAnswered;
+    
+    console.log('📊 Итого заполнено:', totalAnswered + '/21');
     
     return {
-        answered: answeredQuestions,
-        total: totalQuestions,
-        percentage: percentage
+        answered: totalAnswered,
+        total: 21,
+        percentage: Math.round((totalAnswered / 21) * 100)
     };
+}
+
+// Функция расчета глобального прогресса (БЕЗ кейсов)
+function calculateGlobalProgress() {
+    return recalculateExistingProgress();
 }
 
 // Функция обновления общего прогресса
