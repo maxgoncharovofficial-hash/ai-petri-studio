@@ -155,8 +155,8 @@ async function connectAccount() {
                 scheduleButton.textContent = '🤖 Перейти к автопилоту';
             }
             
-            // Показываем модальное окно успеха
-            showSuccessModal('Threads API успешно подключен! Теперь можно переходить к настройке автопилота.');
+            // Показываем статус подключения без модального окна
+            showConnectionResult('success', `Успешно подключено! Профиль: @${result.username}`);
             
         } else {
             throw new Error(result.error || 'Не удалось инициализировать API');
@@ -174,13 +174,27 @@ async function connectAccount() {
 function updateConnectionStatus(data) {
     const statusElement = document.getElementById('connection-status');
     const usernameElement = document.getElementById('connected-username');
+    const connectBtn = document.getElementById('connect-threads');
     
     if (data.connected) {
-        statusElement.textContent = `✅ Подключено: @${data.username}`;
+        statusElement.textContent = `✅ Подключено: @${data.userProfile.username}`;
         statusElement.style.color = '#28a745';
         
+        // Обновляем кнопку подключения
+        if (connectBtn) {
+            connectBtn.textContent = '✅ Подключено';
+            connectBtn.style.background = '#28a745';
+            connectBtn.disabled = true;
+        }
+        
+        // Загружаем токен в поле
+        const tokenInput = document.getElementById('access-token');
+        if (tokenInput && data.accessToken) {
+            tokenInput.value = data.accessToken;
+        }
+        
         if (usernameElement) {
-            usernameElement.textContent = `@${data.username}`;
+            usernameElement.textContent = `@${data.userProfile.username}`;
         }
     }
 }

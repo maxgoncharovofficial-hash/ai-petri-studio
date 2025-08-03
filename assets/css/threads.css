@@ -724,6 +724,17 @@
     background: #c8e6c9;
 }
 
+.control-button.clear {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+.control-button.clear:hover {
+    background: #c82333;
+    border-color: #bd2130;
+}
+
 /* Schedule Editor Modal */
 .modal-overlay {
     position: fixed;
@@ -1777,6 +1788,15 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .prompt-settings-container {
+        padding: 16px;
+        max-width: 100%;
+    }
 }
 
 .info-section {
@@ -1878,6 +1898,28 @@
     display: flex;
     gap: 12px;
     justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .info-section {
+        padding: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .tips-block {
+        padding: 12px;
+    }
+    
+    .prompt-input {
+        min-height: 150px;
+        padding: 12px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
 }
 
 .preview-section {

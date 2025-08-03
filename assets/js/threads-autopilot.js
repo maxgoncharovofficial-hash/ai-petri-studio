@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeScheduleManager();
     initializePostsGenerator();
     initializeQueueManager();
+    initializeControlButtons();
     loadAutopilotData();
     updateAIRequirements();
     updateQueueCount();
@@ -1445,6 +1446,30 @@ window.removeScheduledPost = function(timeToRemove) {
     
     alert(`✅ Пост на ${timeToRemove} удален из расписания`);
 };
+
+// === ИНИЦИАЛИЗАЦИЯ КНОПОК УПРАВЛЕНИЯ ===
+function initializeControlButtons() {
+    const clearScheduleBtn = document.getElementById('clear-schedule');
+    
+    if (clearScheduleBtn) {
+        clearScheduleBtn.addEventListener('click', clearSchedule);
+    }
+}
+
+// === ОЧИСТКА РАСПИСАНИЯ ===
+function clearSchedule() {
+    if (confirm('Вы уверены, что хотите полностью очистить расписание?')) {
+        // Удаляем данные расписания
+        localStorage.removeItem('threads_schedule');
+        
+        // Обновляем отображение
+        updateTodayPosts();
+        updateQueueCount();
+        updateScheduleDisplay();
+        
+        alert('✅ Расписание очищено!');
+    }
+}
 
 // === ОТЛАДКА ===
 console.log('Threads Autopilot JavaScript loaded successfully');
