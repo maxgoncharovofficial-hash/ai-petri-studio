@@ -9,6 +9,11 @@ function handleThreadsZavod() {
     alert('Раздел THREADS ZAVOD в разработке');
 }
 
+function handleCases() {
+    console.log('РАСПАКОВКА КЕЙСОВ clicked');
+    window.location.href = 'pages/cases.html';
+}
+
 function handleContentCreation() {
     console.log('СОЗДАНИЕ КОНТЕНТА clicked');
     alert('Раздел СОЗДАНИЕ КОНТЕНТА в разработке');
@@ -30,6 +35,15 @@ document.addEventListener('DOMContentLoaded', function() {
         personalityCard.addEventListener('touchstart', function(e) {
             e.preventDefault();
             handlePersonality();
+        });
+    }
+    
+    const casesCard = document.getElementById('cases-card');
+    if (casesCard) {
+        casesCard.addEventListener('click', handleCases);
+        casesCard.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            handleCases();
         });
     }
     
