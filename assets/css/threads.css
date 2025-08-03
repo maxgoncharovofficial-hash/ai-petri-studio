@@ -724,6 +724,218 @@
     background: #c8e6c9;
 }
 
+/* Schedule Editor Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 18px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #6c757d;
+    padding: 5px;
+}
+
+.modal-close:hover {
+    color: #dc3545;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Schedule Type Selection */
+.schedule-type-section {
+    margin-bottom: 24px;
+}
+
+.schedule-type-section h4 {
+    margin-bottom: 12px;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.type-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.type-button {
+    padding: 10px 16px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    color: #495057;
+    transition: all 0.3s ease;
+}
+
+.type-button:hover {
+    border-color: #2196f3;
+    background: #f8f9fa;
+}
+
+.type-button.active {
+    border-color: #2196f3;
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+/* Daily Schedule */
+.daily-schedule h4 {
+    margin: 20px 0 12px 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.posts-input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.posts-input input {
+    width: 80px;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.posts-input span {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* Time Slots */
+.time-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.time-slot {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.time-slot input[type="time"] {
+    padding: 6px 8px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.time-slot .remove-time {
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.time-slot .remove-time:hover {
+    background: #c82333;
+}
+
+.add-time-btn {
+    padding: 8px 16px;
+    background: #e3f2fd;
+    border: 1px solid #2196f3;
+    border-radius: 6px;
+    color: #1976d2;
+    cursor: pointer;
+    font-size: 14px;
+    align-self: flex-start;
+}
+
+.add-time-btn:hover {
+    background: #bbdefb;
+}
+
+/* Modal Buttons */
+.btn-primary {
+    padding: 10px 20px;
+    background: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-primary:hover {
+    background: #1976d2;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+}
+
 /* AI Section */
 .ai-section {
     background: #fff3cd;

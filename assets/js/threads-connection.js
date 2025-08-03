@@ -445,9 +445,8 @@ function saveSchedule() {
 }
 
 function showSetupComplete(scheduleData) {
-    // Элементы удалены, просто сохраняем данные и показываем сообщение
+    // Тихо сохраняем данные без всплывающих уведомлений
     console.log('Schedule setup completed:', scheduleData);
-    alert('✅ Расписание настроено! Переходите в автопилот для управления.');
 }
 
 function launchAutopilot() {

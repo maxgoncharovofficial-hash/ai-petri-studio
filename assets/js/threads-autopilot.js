@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavigation();
     loadAutopilotData();
     updateAIRequirements();
+    updateQueueCount();
 });
 
 // === КНОПКА НАЗАД ===
@@ -65,7 +66,6 @@ function initializeAutopilot() {
     const skipButton = document.getElementById('skip-post');
     const createButton = document.getElementById('create-now');
     const calendarButton = document.getElementById('view-calendar');
-    const settingsButton = document.getElementById('modify-settings');
     const editScheduleButton = document.getElementById('edit-schedule');
     
     if (pauseButton) {
@@ -84,19 +84,12 @@ function initializeAutopilot() {
         calendarButton.addEventListener('click', toggleCalendarView);
     }
     
-    if (settingsButton) {
-        settingsButton.addEventListener('click', function() {
-            window.location.href = 'threads-connection.html';
-        });
+    if (editScheduleButton) {
+        editScheduleButton.addEventListener('click', openScheduleEditor);
     }
     
-    if (editScheduleButton) {
-        editScheduleButton.addEventListener('click', function() {
-            console.log('Edit schedule clicked');
-            // TODO: Добавить модальное окно или переход к настройке расписания
-            alert('🚧 Редактирование расписания будет добавлено в следующем обновлении');
-        });
-    }
+    // Инициализация модального окна
+    initializeScheduleModal();
 }
 
 function loadAutopilotData() {
@@ -225,10 +218,15 @@ function generateDayPosts(date, scheduleData) {
 
 function updateQueueCount() {
     const queueElement = document.getElementById('queue-count');
-    const scheduledPosts = getFromStorage('threads_scheduled_posts') || [];
-    const queuePosts = getFromStorage('threads_queue_posts') || [];
+    const scheduleData = getFromStorage('threads_schedule');
     
-    queueElement.textContent = scheduledPosts.length + queuePosts.length;
+    if (scheduleData && scheduleData.postingTimes) {
+        // Считаем посты на сегодня как готовые в очереди
+        const todayPostsCount = scheduleData.postingTimes.length;
+        queueElement.textContent = todayPostsCount;
+    } else {
+        queueElement.textContent = '0';
+    }
 }
 
 function updateStatistics() {
@@ -366,6 +364,205 @@ function getFromStorage(key) {
         console.error('Error loading from storage:', error);
         return null;
     }
+}
+
+// === РЕДАКТОР РАСПИСАНИЯ ===
+function openScheduleEditor() {
+    const modal = document.getElementById('schedule-modal');
+    if (modal) {
+        modal.style.display = 'flex';
+        loadCurrentSchedule();
+    }
+}
+
+function closeScheduleEditor() {
+    const modal = document.getElementById('schedule-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function initializeScheduleModal() {
+    const modal = document.getElementById('schedule-modal');
+    const closeBtn = document.getElementById('close-schedule-modal');
+    const cancelBtn = document.getElementById('cancel-schedule');
+    const saveBtn = document.getElementById('save-schedule');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeScheduleEditor);
+    }
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', closeScheduleEditor);
+    }
+    
+    if (saveBtn) {
+        saveBtn.addEventListener('click', saveNewSchedule);
+    }
+    
+    // Клик вне модального окна закрывает его
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeScheduleEditor();
+            }
+        });
+    }
+    
+    // Переключение типа расписания
+    const typeButtons = document.querySelectorAll('.type-button');
+    typeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            typeButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const type = this.dataset.type;
+            if (type === 'daily') {
+                document.getElementById('daily-schedule').style.display = 'block';
+                document.getElementById('custom-schedule').style.display = 'none';
+            } else {
+                document.getElementById('daily-schedule').style.display = 'none';
+                document.getElementById('custom-schedule').style.display = 'block';
+            }
+        });
+    });
+    
+    // Изменение количества постов в день
+    const dailyPostsInput = document.getElementById('daily-posts');
+    if (dailyPostsInput) {
+        dailyPostsInput.addEventListener('change', updateDailyTimeSlots);
+    }
+    
+    // Добавление времени
+    const addTimeBtn = document.getElementById('add-daily-time');
+    if (addTimeBtn) {
+        addTimeBtn.addEventListener('click', addTimeSlot);
+    }
+    
+    // Инициализация временных слотов
+    updateDailyTimeSlots();
+}
+
+function loadCurrentSchedule() {
+    const scheduleData = getFromStorage('threads_schedule');
+    if (scheduleData && scheduleData.postingTimes) {
+        const dailyPostsInput = document.getElementById('daily-posts');
+        if (dailyPostsInput) {
+            dailyPostsInput.value = scheduleData.postingTimes.length;
+            updateDailyTimeSlots();
+            
+            // Заполняем времена
+            setTimeout(() => {
+                const timeSlots = document.querySelectorAll('.time-slot input[type="time"]');
+                scheduleData.postingTimes.forEach((time, index) => {
+                    if (timeSlots[index]) {
+                        timeSlots[index].value = time;
+                    }
+                });
+            }, 100);
+        }
+    }
+}
+
+function updateDailyTimeSlots() {
+    const container = document.getElementById('daily-time-slots');
+    const count = parseInt(document.getElementById('daily-posts').value) || 6;
+    
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    // Стандартные времена для разного количества постов
+    const defaultTimes = {
+        1: ['12:00'],
+        2: ['10:00', '16:00'],
+        3: ['09:00', '13:00', '18:00'],
+        4: ['09:00', '12:00', '15:00', '18:00'],
+        5: ['09:00', '12:00', '15:00', '17:00', '19:00'],
+        6: ['09:00', '13:00', '15:00', '16:00', '18:00', '19:00'],
+        7: ['09:00', '11:00', '13:00', '15:00', '17:00', '18:00', '19:00'],
+        8: ['09:00', '11:00', '13:00', '14:00', '15:00', '17:00', '18:00', '19:00'],
+        9: ['09:00', '10:00', '12:00', '13:00', '15:00', '16:00', '17:00', '18:00', '19:00'],
+        10: ['09:00', '10:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00']
+    };
+    
+    const times = defaultTimes[count] || defaultTimes[6];
+    
+    times.forEach((time, index) => {
+        addTimeSlot(time);
+    });
+}
+
+function addTimeSlot(defaultTime = '12:00') {
+    const container = document.getElementById('daily-time-slots');
+    if (!container) return;
+    
+    const timeSlot = document.createElement('div');
+    timeSlot.className = 'time-slot';
+    timeSlot.innerHTML = `
+        <span>Время публикации:</span>
+        <input type="time" value="${defaultTime}">
+        <button class="remove-time" onclick="removeTimeSlot(this)">Удалить</button>
+    `;
+    
+    container.appendChild(timeSlot);
+}
+
+function removeTimeSlot(button) {
+    const timeSlot = button.closest('.time-slot');
+    if (timeSlot) {
+        timeSlot.remove();
+        
+        // Обновляем счетчик постов
+        const count = document.querySelectorAll('.time-slot').length;
+        document.getElementById('daily-posts').value = count;
+    }
+}
+
+function saveNewSchedule() {
+    const timeSlots = document.querySelectorAll('.time-slot input[type="time"]');
+    const postingTimes = Array.from(timeSlots).map(input => input.value).filter(time => time);
+    
+    if (postingTimes.length === 0) {
+        alert('❌ Добавьте хотя бы одно время публикации');
+        return;
+    }
+    
+    // Сортируем времена по возрастанию
+    postingTimes.sort();
+    
+    const newScheduleData = {
+        postsPerDay: postingTimes.length,
+        startDate: new Date().toISOString(),
+        postingTimes: postingTimes,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+    
+    // Сохраняем новое расписание
+    saveToStorage('threads_schedule', newScheduleData);
+    
+    // Очищаем старые логи
+    clearOldScheduleLogs();
+    
+    // Обновляем отображение
+    updateScheduleDisplay();
+    updateStatistics();
+    updateQueueCount();
+    
+    // Закрываем модальное окно
+    closeScheduleEditor();
+    
+    alert('✅ Расписание успешно обновлено!');
+}
+
+function clearOldScheduleLogs() {
+    // Очищаем старые данные расписания
+    localStorage.removeItem('threads_today_posts');
+    localStorage.removeItem('threads_tomorrow_posts');
+    localStorage.removeItem('threads_queue_posts');
+    
+    console.log('Old schedule logs cleared');
 }
 
 // === ОТЛАДКА ===
