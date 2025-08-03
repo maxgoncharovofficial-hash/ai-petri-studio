@@ -127,34 +127,59 @@
                         </div>
                     </div>
 
-                    <!-- Completed Setup -->
+                    <!-- Completed Setup - Compact Version -->
                     <div class="setup-complete" id="setup-complete" style="display: none;">
-                        <h4>✅ ПОДКЛЮЧЕНИЕ ЗАВЕРШЕНО</h4>
-                        <div class="connection-info">
-                            <div class="info-item">
-                                <span class="info-label">Подключено:</span>
-                                <span class="info-value" id="connected-username">@username</span>
+                        <!-- Success Status -->
+                        <div class="success-status">
+                            <div class="success-icon">✅</div>
+                            <div class="success-text">
+                                <div class="success-title">Подключение настроено</div>
+                                <div class="success-subtitle">Готово к запуску автопилота</div>
                             </div>
-                            <div class="info-item">
-                                <span class="info-label">Постов в день:</span>
-                                <span class="info-value" id="daily-posts-count">2</span>
+                        </div>
+
+                        <!-- Compact Info Cards -->
+                        <div class="info-cards">
+                            <div class="info-card">
+                                <div class="info-icon">👤</div>
+                                <div class="info-details">
+                                    <div class="info-label">Аккаунт</div>
+                                    <div class="info-value" id="connected-username">@username</div>
+                                </div>
                             </div>
-                            <div class="info-item">
-                                <span class="info-label">Дата начала:</span>
-                                <span class="info-value" id="start-date">14 декабря 2024</span>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">📊</div>
+                                <div class="info-details">
+                                    <div class="info-label">Постов в день</div>
+                                    <div class="info-value" id="daily-posts-count">2</div>
+                                </div>
                             </div>
-                            <div class="info-item">
-                                <span class="info-label">Время:</span>
-                                <span class="info-value" id="posting-schedule">10:00, 18:00</span>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">📅</div>
+                                <div class="info-details">
+                                    <div class="info-label">Начало</div>
+                                    <div class="info-value" id="start-date">14 декабря</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">⏰</div>
+                                <div class="info-details">
+                                    <div class="info-label">Время</div>
+                                    <div class="info-value" id="posting-schedule">10:00, 18:00</div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="setup-actions">
-                            <button class="threads-button primary" id="launch-autopilot">
-                                🚀 ЗАПУСТИТЬ АВТОПИЛОТ
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button class="action-button primary" id="launch-autopilot">
+                                🚀 Запустить автопилот
                             </button>
-                            <button class="threads-button secondary" id="modify-schedule">
-                                ⚙️ ИЗМЕНИТЬ РАСПИСАНИЕ
+                            <button class="action-button secondary" id="modify-schedule">
+                                ⚙️ Изменить настройки
                             </button>
                         </div>
                     </div>
