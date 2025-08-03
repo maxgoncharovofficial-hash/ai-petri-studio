@@ -235,6 +235,12 @@ textarea::placeholder {
     opacity: 1 !important;
 }
 
+.modal-overlay:not(.show) {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
 .modal-content {
     background: var(--tg-theme-bg-color, #ffffff) !important;
     border-radius: 20px;

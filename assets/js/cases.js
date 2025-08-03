@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     console.log('🚀 === Cases page initialization completed successfully ===');
     
-    // ГЛОБАЛЬНЫЙ ОБРАБОТЧИК КЛИКОВ ДЛЯ ДИАГНОСТИКИ
+    // ГЛОБАЛЬНЫЙ ОБРАБОТЧИК КЛИКОВ ДЛЯ ДИАГНОСТИКИ И ДЕЛЕГИРОВАНИЯ
     document.addEventListener('click', function(e) {
         console.log('🔍 === GLOBAL CLICK DETECTED ===');
         console.log('🔍 Clicked element:', e.target);
@@ -86,10 +86,34 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('🔍 Element classes:', e.target.className);
         console.log('🔍 Element ID:', e.target.id);
         
+        // ДЕЛЕГИРОВАНИЕ СОБЫТИЙ ДЛЯ КНОПОК КАРТОЧЕК
         if (e.target.classList.contains('case-action-btn')) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             console.log('✅ CASE ACTION BUTTON CLICKED!');
-            console.log('📋 Action:', e.target.dataset.action);
-            console.log('📋 Case ID:', e.target.dataset.caseId);
+            const action = e.target.dataset.action;
+            const caseId = parseInt(e.target.dataset.caseId);
+            
+            console.log('📋 Action:', action);
+            console.log('📋 Case ID:', caseId);
+            
+            // Обработка действий
+            if (action === 'view') {
+                const cases = getCases();
+                const caseData = cases.find(case_ => case_.id === caseId);
+                if (caseData) {
+                    showCaseModal(caseData);
+                }
+            } else if (action === 'edit') {
+                const cases = getCases();
+                const caseData = cases.find(case_ => case_.id === caseId);
+                if (caseData) {
+                    loadCaseForEditing(caseData);
+                }
+            } else if (action === 'delete') {
+                showDeleteConfirmModal(caseId);
+            }
         }
         
         if (e.target.id === 'save-button') {
@@ -575,6 +599,14 @@ function loadCasesList() {
         return;
     }
     
+    // ПРИНУДИТЕЛЬНО ПОКАЗАТЬ КОНТЕЙНЕР СПИСКА
+    casesList.style.display = 'flex';
+    casesList.style.visibility = 'visible';
+    casesList.style.opacity = '1';
+    casesList.style.width = '100%';
+    casesList.style.minHeight = '200px';
+    console.log('📋 Cases list container forced to show');
+    
     // Обновляем счетчик
     const countText = `${cases.length} кейс${cases.length === 1 ? '' : cases.length < 5 ? 'а' : 'ов'}`;
     casesCount.textContent = countText;
@@ -803,6 +835,7 @@ function initializeModals() {
             // Переключаемся на список кейсов после закрытия модального окна
             setTimeout(() => {
                 switchTab('list');
+                loadCasesList(); // Обновить список кейсов
                 console.log('📱 Switched to list tab after save');
             }, 100);
         });
@@ -814,6 +847,7 @@ function initializeModals() {
             // Переключаемся на список кейсов после закрытия модального окна
             setTimeout(() => {
                 switchTab('list');
+                loadCasesList(); // Обновить список кейсов
                 console.log('📱 Switched to list tab after save');
             }, 100);
         });
@@ -950,6 +984,7 @@ function hideModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         console.log('📱 Modal element found:', modal);
+        modal.classList.remove('show');
         modal.style.display = 'none';
         modal.style.visibility = 'hidden';
         modal.style.opacity = '0';
