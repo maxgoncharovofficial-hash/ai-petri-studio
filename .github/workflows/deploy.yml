@@ -10,202 +10,29 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   deploy:
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          
-      - name: Debug - Show current directory structure
-        run: |
-          echo "🔍 === DEBUG: Current directory structure ==="
-          pwd
-          ls -la
-          echo "📁 Assets directory:"
-          ls -la assets/ || echo "❌ Assets directory not found"
-          echo "📁 Pages directory:"
-          ls -la pages/ || echo "❌ Pages directory not found"
-          echo "📄 Root files:"
-          ls -la *.html *.md 2>/dev/null || echo "No HTML/MD files in root"
-          
-      - name: Create deployment structure
-        run: |
-          echo "🚀 === Creating deployment structure for GitHub Pages ==="
-          
-          # Создаем временную папку для сборки
-          mkdir -p temp-deploy
-          echo "✅ Created temp-deploy directory"
-          
-          # Проверяем существование критических файлов
-          echo "📁 === Checking critical files ==="
-          
-          if [ ! -f "index.html" ]; then
-            echo "❌ CRITICAL ERROR: index.html not found!"
-            echo "Current directory contents:"
-            ls -la
-            exit 1
-          fi
-          echo "✅ index.html found"
-          
-          if [ ! -d "assets" ]; then
-            echo "❌ CRITICAL ERROR: assets directory not found!"
-            echo "Current directory contents:"
-            ls -la
-            exit 1
-          fi
-          echo "✅ assets directory found"
-          
-          if [ ! -d "pages" ]; then
-            echo "❌ CRITICAL ERROR: pages directory not found!"
-            echo "Current directory contents:"
-            ls -la
-            exit 1
-          fi
-          echo "✅ pages directory found"
-          
-          # Копируем файлы в правильную структуру
-          echo "📋 === Copying files ==="
-          
-          # Копируем index.html в корень
-          cp index.html temp-deploy/
-          echo "✅ Copied index.html to temp-deploy/"
-          
-          # Копируем папку assets
-          cp -r assets temp-deploy/
-          echo "✅ Copied assets directory to temp-deploy/"
-          
-          # Копируем HTML файлы из pages/ в корень
-          cp pages/*.html temp-deploy/
-          echo "✅ Copied all HTML files from pages/ to temp-deploy/"
-          
-          # Показываем созданную структуру
-          echo "📂 === Deployment structure created ==="
-          echo "📂 Root files:"
-          ls -la temp-deploy/
-          echo "📂 Assets structure:"
-          ls -la temp-deploy/assets/
-          echo "📂 CSS files:"
-          ls -la temp-deploy/assets/css/ 2>/dev/null || echo "No CSS files found"
-          echo "📂 JS files:"
-          ls -la temp-deploy/assets/js/ 2>/dev/null || echo "No JS files found"
-          echo "📂 Images:"
-          ls -la temp-deploy/assets/images/ 2>/dev/null || echo "No images found"
-          
-      - name: Update file paths for GitHub Pages
-        run: |
-          echo "🔧 === Updating file paths for GitHub Pages ==="
-          
-          # Обновляем пути в index.html
-          echo "🔧 Processing index.html..."
-          if [ -f "temp-deploy/index.html" ]; then
-            # Убеждаемся что пути к assets корректны
-            sed -i 's|assets/|assets/|g' temp-deploy/index.html
-            echo "✅ Updated paths in index.html"
-          else
-            echo "❌ ERROR: temp-deploy/index.html not found!"
-            exit 1
-          fi
-          
-          # Обновляем пути в остальных HTML файлах
-          echo "🔧 Processing other HTML files..."
-          for file in temp-deploy/*.html; do
-            if [ -f "$file" ] && [ "$(basename "$file")" != "index.html" ]; then
-              echo "🔧 Processing: $(basename "$file")"
-              
-              # Заменяем ../assets/ на assets/ для файлов из pages/
-              sed -i 's|../assets/|assets/|g' "$file"
-              
-              # Обновляем навигацию между страницами
-              sed -i 's|pages/||g' "$file"
-              
-              # Обновляем навигацию в JS вызовах
-              sed -i 's|pages/||g' "$file"
-              sed -i 's|../index.html|index.html|g' "$file"
-              
-              echo "✅ Updated paths in $(basename "$file")"
-            fi
-          done
-          
-          # Обновляем навигацию в JS файлах
-          echo "🔧 Processing JS files..."
-          if [ -d "temp-deploy/assets/js" ]; then
-            for file in temp-deploy/assets/js/*.js; do
-              if [ -f "$file" ]; then
-                echo "🔧 Processing JS: $(basename "$file")"
-                
-                # Заменяем навигацию на pages/ на прямые ссылки
-                sed -i 's|pages/||g' "$file"
-                
-                # Заменяем ../index.html на index.html
-                sed -i 's|../index.html|index.html|g' "$file"
-                
-                echo "✅ Updated navigation in $(basename "$file")"
-              fi
-            done
-          else
-            echo "⚠️ Warning: temp-deploy/assets/js directory not found"
-          fi
-          
-          echo "🎉 All file paths updated successfully!"
-          
-      - name: Verify deployment structure
-        run: |
-          echo "🔍 === Verifying deployment structure ==="
-          
-          # Проверяем что все необходимые файлы существуют
-          if [ ! -f "temp-deploy/index.html" ]; then
-            echo "❌ ERROR: temp-deploy/index.html not found!"
-            exit 1
-          fi
-          echo "✅ temp-deploy/index.html exists"
-          
-          if [ ! -d "temp-deploy/assets" ]; then
-            echo "❌ ERROR: temp-deploy/assets directory not found!"
-            exit 1
-          fi
-          echo "✅ temp-deploy/assets directory exists"
-          
-          # Проверяем что есть хотя бы один HTML файл из pages/
-          html_count=$(ls temp-deploy/*.html 2>/dev/null | wc -l)
-          if [ "$html_count" -lt 2 ]; then
-            echo "❌ ERROR: Not enough HTML files in temp-deploy/"
-            echo "Found $html_count HTML files"
-            ls -la temp-deploy/*.html 2>/dev/null || echo "No HTML files found"
-            exit 1
-          fi
-          echo "✅ Found $html_count HTML files"
-          
-          echo "🎉 Deployment structure verification passed!"
-          
+        
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./temp-deploy
+          path: '.'
           
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        
-      - name: Cleanup
-        run: |
-          echo "🧹 === Cleaning up temporary files ==="
-          rm -rf temp-deploy
-          echo "✅ Cleanup completed"
-          
-      - name: Success message
-        run: |
-          echo "🎉 === Deployment completed successfully! ==="
-          echo "🌐 Your Telegram Mini App is now available at:"
-          echo "https://${{ github.repository_owner }}.github.io/$(echo ${{ github.repository }} | cut -d'/' -f2)/"
-          echo "📱 Ready for Telegram Mini App integration!"
-          echo "📊 Deployment URL: ${{ steps.deployment.outputs.page_url }}" 
