@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация обработчиков событий
     initializeSectionHandlers();
     
+    // Добавить кнопку очистки для тестирования
+    addClearButton();
+    
     // Отладка localStorage
     debugLocalStorage();
     
@@ -281,6 +284,164 @@ function debugLocalStorage() {
             console.log('📝', key + ':', value);
         }
     }
+}
+
+// Функция полной очистки данных
+function clearAllData() {
+    console.log('🧹 === ПОЛНАЯ ОЧИСТКА ДАННЫХ ===');
+    
+    // Список всех возможных ключей для удаления
+    const keysToRemove = [
+        // Данные разделов
+        'product-data', 'productData', 'product',
+        'audience-data', 'audienceData', 'audience',
+        'personality-lite-data', 'personalityLiteData', 'personality-lite',
+        'personality-pro-data', 'personalityProData', 'personality-pro',
+        
+        // Данные кейсов
+        'cases', 'cases-data', 'casesData',
+        
+        // Любые другие данные
+        'progress', 'progressData', 'saved-progress'
+    ];
+    
+    // Удалить все ключи
+    keysToRemove.forEach(key => {
+        if (localStorage.getItem(key)) {
+            localStorage.removeItem(key);
+            console.log('🗑️ Удален ключ:', key);
+        }
+    });
+    
+    // Дополнительно - удалить все ключи содержащие определенные слова
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+        const key = localStorage.key(i);
+        if (key && (
+            key.includes('product') || 
+            key.includes('audience') || 
+            key.includes('personality') || 
+            key.includes('cases') ||
+            key.includes('progress')
+        )) {
+            localStorage.removeItem(key);
+            console.log('🗑️ Удален найденный ключ:', key);
+        }
+    }
+    
+    console.log('✅ Все данные очищены');
+}
+
+// Функция сброса прогресса во всех разделах
+function resetAllProgress() {
+    console.log('🔄 === СБРОС ПРОГРЕССА ===');
+    
+    // Сбросить глобальный прогресс
+    const globalProgress = {
+        answered: 0,
+        total: 21,
+        percentage: 0
+    };
+    
+    updateGlobalProgressDisplay(globalProgress);
+    
+    // Сбросить счетчики в карточках разделов
+    updateSectionProgress('product', 0, 4);
+    updateSectionProgress('audience', 0, 6);
+    updateSectionProgress('personality-lite', 0, 6);
+    updateSectionProgress('personality-pro', 0, 5);
+    
+    // Сбросить счетчик кейсов
+    updateCasesCount(0);
+    
+    console.log('✅ Весь прогресс сброшен');
+}
+
+// Функция обновления отображения глобального прогресса
+function updateGlobalProgressDisplay(progress) {
+    // Обновить верхний блок
+    const parametersElement = document.querySelector('[data-parameters-count]');
+    if (parametersElement) {
+        parametersElement.textContent = `${progress.answered}/21 параметров`;
+    }
+    
+    const percentageElement = document.querySelector('[data-readiness-percent]');
+    if (percentageElement) {
+        percentageElement.textContent = `${progress.percentage}%`;
+    }
+    
+    const progressBar = document.querySelector('[data-progress-bar]');
+    if (progressBar) {
+        progressBar.style.width = `${progress.percentage}%`;
+    }
+}
+
+// Функция обновления прогресса раздела
+function updateSectionProgress(section, answered, total) {
+    const sectionElement = document.querySelector(`[data-section="${section}"] [data-section-progress]`);
+    if (sectionElement) {
+        sectionElement.textContent = `[${answered}/${total}]`;
+    }
+}
+
+// Функция обновления счетчика кейсов
+function updateCasesCount(count) {
+    const casesElement = document.querySelector('[data-cases-count]');
+    if (casesElement) {
+        casesElement.textContent = count;
+    }
+}
+
+// Функция очистки форм на всех страницах
+function clearAllForms() {
+    console.log('📝 === ОЧИСТКА ФОРМ ===');
+    
+    // Очистить все textarea на текущей странице
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach(textarea => {
+        textarea.value = '';
+        console.log('🧹 Очищено поле:', textarea.id || textarea.name);
+    });
+    
+    // Очистить все input поля
+    const inputs = document.querySelectorAll('input[type="text"], input[type="email"]');
+    inputs.forEach(input => {
+        input.value = '';
+        console.log('🧹 Очищено поле:', input.id || input.name);
+    });
+    
+    console.log('✅ Все формы очищены');
+}
+
+// ВРЕМЕННАЯ кнопка для полной очистки
+function addClearButton() {
+    const clearBtn = document.createElement('button');
+    clearBtn.textContent = '🧹 ОЧИСТИТЬ ВСЕ ДАННЫЕ';
+    clearBtn.style.cssText = `
+        position: fixed !important;
+        bottom: 20px !important;
+        right: 20px !important;
+        z-index: 99999 !important;
+        background: #dc3545 !important;
+        color: white !important;
+        border: none !important;
+        padding: 15px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+        cursor: pointer !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+    `;
+    
+    clearBtn.onclick = function() {
+        if (confirm('Удалить ВСЕ данные? Это действие нельзя отменить!')) {
+            clearAllData();
+            resetAllProgress();
+            clearAllForms();
+            alert('✅ Все данные очищены!');
+            location.reload(); // Перезагрузить страницу
+        }
+    };
+    
+    document.body.appendChild(clearBtn);
 }
 
 // Функция подсчета заполненных полей в объекте
