@@ -229,15 +229,10 @@ function generateDayPosts(date, scheduleData) {
 
 function updateQueueCount() {
     const queueElement = document.getElementById('queue-count');
-    const scheduleData = getFromStorage('threads_schedule');
+    const queuePosts = getFromStorage('threads_queue_posts') || [];
     
-    if (scheduleData && scheduleData.postingTimes) {
-        // Считаем посты на сегодня как готовые в очереди
-        const todayPostsCount = scheduleData.postingTimes.length;
-        queueElement.textContent = todayPostsCount;
-    } else {
-        queueElement.textContent = '0';
-    }
+    // Считаем реальное количество постов в очереди
+    queueElement.textContent = queuePosts.length;
 }
 
 function updateStatistics() {
@@ -1393,9 +1388,20 @@ window.deleteQueuePost = function(postId) {
 window.publishPostNow = async function(postId) {
     try {
         // Проверяем подключение к Threads API
-        if (!window.threadsAPI || !window.threadsAPI.isConnected()) {
+        const connectionData = getFromStorage('threads_connection');
+        if (!connectionData || !connectionData.connected || !connectionData.accessToken) {
             alert('❌ Threads API не подключен. Перейдите в раздел "Подключение" и настройте API.');
             return;
+        }
+        
+        // Инициализируем API если не инициализирован
+        if (!window.threadsAPI || !window.threadsAPI.accessToken) {
+            if (window.threadsAPI) {
+                await window.threadsAPI.initialize(connectionData.accessToken);
+            } else {
+                alert('❌ Threads API не загружен. Обновите страницу.');
+                return;
+            }
         }
         
         // Находим пост в очереди

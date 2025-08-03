@@ -108,7 +108,6 @@ async function connectAccount() {
     // Показываем процесс подключения
     button.textContent = '🔄 Проверяем токен...';
     button.disabled = true;
-    showConnectionResult('loading', 'Подключаемся к Threads API...');
     
     try {
         // Инициализируем API
