@@ -65,10 +65,32 @@
                 <!-- Active Autopilot (shown when configured) -->
                 <div class="active-autopilot" id="active-autopilot" style="display: none;">
                     
-                    <!-- Schedule Today -->
-                    <div class="schedule-section">
-                        <div class="schedule-day">
-                            <h4>📅 Расписание на сегодня</h4>
+                    <!-- Tabs Navigation -->
+                    <div class="tabs-navigation">
+                        <button class="tab-button active" data-tab="overview">📊 Обзор</button>
+                        <button class="tab-button" data-tab="schedule">📅 Расписание</button>
+                        <button class="tab-button" data-tab="posts">✍️ Создать посты</button>
+                        <button class="tab-button" data-tab="queue">📝 Очередь</button>
+                    </div>
+
+                    <!-- Tab Content: Overview -->
+                    <div class="tab-content active" id="tab-overview">
+                        <!-- Autopilot Status -->
+                        <div class="status-section">
+                            <div class="status-card">
+                                <div class="status-info">
+                                    <div class="status-dot" id="autopilot-dot">🔴</div>
+                                    <div class="status-text">
+                                        <div class="status-title">Автопилот: <span id="autopilot-status">Неактивен</span></div>
+                                        <div class="status-subtitle">Аккаунт: <span id="autopilot-account">Не подключен</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Today's Posts -->
+                        <div class="schedule-section">
+                            <h4>📅 Сегодня запланировано</h4>
                             <div class="posts-list" id="today-posts">
                                 <div class="post-item">
                                     <span class="post-time">10:00</span>
@@ -77,25 +99,113 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Queue Info -->
-                    <div class="queue-section">
-                        <div class="queue-info">
-                            📝 В очереди: <span id="queue-count">0</span> постов готовы
+                        <!-- Queue Info -->
+                        <div class="queue-section">
+                            <div class="queue-info">
+                                📝 В очереди: <span id="queue-count">0</span> постов готовы
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="controls-section">
+                            <h4>🎛️ Управление:</h4>
+                            <div class="control-buttons">
+                                <button class="control-button pause" id="pause-autopilot">
+                                    ⏸️ Приостановить автопилот
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Controls -->
-                    <div class="controls-section">
-                        <h4>🎛️ Управление:</h4>
-                        <div class="control-buttons">
-                            <button class="control-button pause" id="pause-autopilot">
-                                ⏸️ Приостановить автопилот
+                    <!-- Tab Content: Schedule -->
+                    <div class="tab-content" id="tab-schedule">
+                        <div class="schedule-manager">
+                            <h4>📅 Управление расписанием</h4>
+                            
+                            <div class="schedule-controls">
+                                <div class="posts-count-control">
+                                    <label>Количество постов в день:</label>
+                                    <div class="count-selector">
+                                        <button class="count-btn" data-count="1">1</button>
+                                        <button class="count-btn" data-count="3">3</button>
+                                        <button class="count-btn active" data-count="6">6</button>
+                                        <button class="count-btn" data-count="10">10</button>
+                                        <input type="number" id="custom-count" min="1" max="10" placeholder="Свое">
+                                    </div>
+                                </div>
+
+                                <div class="time-distribution">
+                                    <label>Распределение времени:</label>
+                                    <div class="distribution-buttons">
+                                        <button class="dist-btn active" data-mode="auto">🤖 Автоматически</button>
+                                        <button class="dist-btn" data-mode="manual">✋ Вручную</button>
+                                        <button class="dist-btn" data-mode="random">🎲 Случайно</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="schedule-preview" id="schedule-preview">
+                                <!-- Schedule table will be generated here -->
+                            </div>
+
+                            <div class="schedule-actions">
+                                <button class="threads-button secondary" id="regenerate-schedule">🔄 Пересгенерировать</button>
+                                <button class="threads-button primary" id="apply-schedule">💾 Применить расписание</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Create Posts -->
+                    <div class="tab-content" id="tab-posts">
+                        <div class="posts-generator">
+                            <h4>✍️ Генерация постов</h4>
+                            
+                            <div class="generation-controls">
+                                <div class="posts-quantity">
+                                    <label>Сколько постов сгенерировать:</label>
+                                    <select id="generate-count">
+                                        <option value="1">1 пост</option>
+                                        <option value="3">3 поста</option>
+                                        <option value="5" selected>5 постов</option>
+                                        <option value="10">10 постов</option>
+                                    </select>
+                                </div>
+
+                                <div class="content-style">
+                                    <label>Стиль контента:</label>
+                                    <div class="style-buttons">
+                                        <button class="style-btn active" data-style="mixed">🎯 Смешанный</button>
+                                        <button class="style-btn" data-style="questions">❓ Вопросы</button>
+                                        <button class="style-btn" data-style="tips">💡 Советы</button>
+                                        <button class="style-btn" data-style="insights">📈 Инсайты</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="threads-button primary generate-btn" id="generate-posts">
+                                ✨ Сгенерировать посты
                             </button>
-                            <button class="control-button schedule" id="edit-schedule">
-                                📅 Изменить расписание
-                            </button>
+
+                            <div class="generated-posts" id="generated-posts">
+                                <!-- Generated posts will appear here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Queue -->
+                    <div class="tab-content" id="tab-queue">
+                        <div class="queue-manager">
+                            <h4>📝 Очередь публикаций</h4>
+                            
+                            <div class="queue-controls">
+                                <button class="threads-button secondary" id="clear-queue">🗑️ Очистить очередь</button>
+                                <button class="threads-button primary" id="add-to-queue">➕ Добавить пост</button>
+                            </div>
+
+                            <div class="queue-list" id="queue-list">
+                                <!-- Queue items will be displayed here -->
+                            </div>
                         </div>
                     </div>
 

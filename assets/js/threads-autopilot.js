@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeBackButton();
     initializeAutopilot();
     initializeNavigation();
+    initializeTabs();
+    initializeScheduleManager();
+    initializePostsGenerator();
+    initializeQueueManager();
     loadAutopilotData();
     updateAIRequirements();
     updateQueueCount();
@@ -826,6 +830,492 @@ document.addEventListener('DOMContentLoaded', function() {
         Notification.requestPermission();
     }
 });
+
+// === ТАБОВАЯ СИСТЕМА ===
+function initializeTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetTab = this.dataset.tab;
+            
+            // Убираем активный класс со всех кнопок и контента
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Добавляем активный класс к текущей кнопке
+            this.classList.add('active');
+            
+            // Показываем соответствующий контент
+            const targetContent = document.getElementById(`tab-${targetTab}`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+}
+
+// === УПРАВЛЕНИЕ РАСПИСАНИЕМ ===
+function initializeScheduleManager() {
+    // Кнопки выбора количества постов
+    const countButtons = document.querySelectorAll('.count-btn');
+    countButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            countButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const count = parseInt(this.dataset.count);
+            generateSchedulePreview(count);
+        });
+    });
+    
+    // Кнопки режима распределения времени
+    const distButtons = document.querySelectorAll('.dist-btn');
+    distButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            distButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const mode = this.dataset.mode;
+            const count = getSelectedPostsCount();
+            generateSchedulePreview(count, mode);
+        });
+    });
+    
+    // Пользовательский ввод количества
+    const customCountInput = document.getElementById('custom-count');
+    if (customCountInput) {
+        customCountInput.addEventListener('input', function() {
+            const count = parseInt(this.value);
+            if (count >= 1 && count <= 10) {
+                countButtons.forEach(btn => btn.classList.remove('active'));
+                generateSchedulePreview(count);
+            }
+        });
+    }
+    
+    // Кнопки действий
+    const regenerateBtn = document.getElementById('regenerate-schedule');
+    const applyBtn = document.getElementById('apply-schedule');
+    
+    if (regenerateBtn) {
+        regenerateBtn.addEventListener('click', function() {
+            const count = getSelectedPostsCount();
+            const mode = getSelectedDistributionMode();
+            generateSchedulePreview(count, mode);
+        });
+    }
+    
+    if (applyBtn) {
+        applyBtn.addEventListener('click', applySchedule);
+    }
+    
+    // Инициализация с текущими настройками
+    generateSchedulePreview(6);
+}
+
+function getSelectedPostsCount() {
+    const activeButton = document.querySelector('.count-btn.active');
+    if (activeButton) {
+        return parseInt(activeButton.dataset.count);
+    }
+    
+    const customInput = document.getElementById('custom-count');
+    if (customInput && customInput.value) {
+        return parseInt(customInput.value);
+    }
+    
+    return 6; // по умолчанию
+}
+
+function getSelectedDistributionMode() {
+    const activeButton = document.querySelector('.dist-btn.active');
+    return activeButton ? activeButton.dataset.mode : 'auto';
+}
+
+function generateSchedulePreview(count, mode = 'auto') {
+    const preview = document.getElementById('schedule-preview');
+    if (!preview) return;
+    
+    const times = generatePostingTimes(count, mode);
+    
+    let html = `
+        <h5>Предварительное расписание (${count} ${count === 1 ? 'пост' : count < 5 ? 'поста' : 'постов'} в день):</h5>
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Время</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    times.forEach((time, index) => {
+        html += `
+            <tr>
+                <td>${index + 1}</td>
+                <td class="schedule-time">${time}</td>
+                <td><span style="color: #28a745;">📅 Запланировано</span></td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+        <p style="margin-top: 16px; color: #6c757d; font-size: 14px;">
+            Режим: ${getModeDisplayName(mode)} | 
+            Интервал: ${calculateInterval(times)} | 
+            Период: с ${times[0]} до ${times[times.length - 1]}
+        </p>
+    `;
+    
+    preview.innerHTML = html;
+}
+
+function generatePostingTimes(count, mode = 'auto') {
+    const times = [];
+    
+    switch (mode) {
+        case 'auto':
+            // Оптимальное распределение в течение дня
+            const optimalTimes = {
+                1: ['14:00'],
+                2: ['10:00', '16:00'],
+                3: ['09:00', '13:00', '18:00'],
+                4: ['09:00', '12:00', '15:00', '18:00'],
+                5: ['09:00', '12:00', '15:00', '17:00', '19:00'],
+                6: ['09:00', '11:00', '13:00', '15:00', '17:00', '19:00'],
+                7: ['09:00', '10:30', '12:00', '14:00', '16:00', '17:30', '19:00'],
+                8: ['09:00', '10:00', '11:30', '13:00', '14:30', '16:00', '17:30', '19:00'],
+                9: ['09:00', '10:00', '11:00', '12:30', '14:00', '15:30', '17:00', '18:00', '19:00'],
+                10: ['09:00', '10:00', '11:00', '12:00', '13:30', '15:00', '16:00', '17:00', '18:00', '19:00']
+            };
+            return optimalTimes[count] || optimalTimes[6];
+            
+        case 'random':
+            // Случайное распределение
+            const startHour = 9;
+            const endHour = 19;
+            const availableHours = [];
+            
+            for (let hour = startHour; hour <= endHour; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    availableHours.push(`${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`);
+                }
+            }
+            
+            // Перемешиваем и берем нужное количество
+            const shuffled = availableHours.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count).sort();
+            
+        case 'manual':
+        default:
+            // Равномерное распределение
+            const start = 9 * 60; // 9:00 в минутах
+            const end = 19 * 60;  // 19:00 в минутах
+            const interval = (end - start) / (count - 1);
+            
+            for (let i = 0; i < count; i++) {
+                const totalMinutes = start + (interval * i);
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = Math.round(totalMinutes % 60);
+                times.push(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+            }
+            return times;
+    }
+}
+
+function getModeDisplayName(mode) {
+    const modes = {
+        'auto': '🤖 Автоматический (оптимальный)',
+        'manual': '✋ Равномерное распределение',
+        'random': '🎲 Случайное время'
+    };
+    return modes[mode] || mode;
+}
+
+function calculateInterval(times) {
+    if (times.length < 2) return 'N/A';
+    
+    const first = timeToMinutes(times[0]);
+    const last = timeToMinutes(times[times.length - 1]);
+    const totalMinutes = last - first;
+    const intervals = times.length - 1;
+    const avgInterval = Math.round(totalMinutes / intervals);
+    
+    const hours = Math.floor(avgInterval / 60);
+    const minutes = avgInterval % 60;
+    
+    if (hours > 0) {
+        return `≈${hours}ч ${minutes}мин`;
+    } else {
+        return `≈${minutes}мин`;
+    }
+}
+
+function timeToMinutes(timeStr) {
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return hours * 60 + minutes;
+}
+
+function applySchedule() {
+    const count = getSelectedPostsCount();
+    const mode = getSelectedDistributionMode();
+    const times = generatePostingTimes(count, mode);
+    
+    const scheduleData = {
+        postsPerDay: count,
+        startDate: new Date().toISOString(),
+        postingTimes: times,
+        distributionMode: mode,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+    
+    // Сохраняем расписание
+    saveToStorage('threads_schedule', scheduleData);
+    
+    // Обновляем UI
+    updateScheduleDisplay();
+    updateQueueCount();
+    
+    alert(`✅ Расписание применено! ${count} ${count === 1 ? 'пост' : count < 5 ? 'поста' : 'постов'} в день.`);
+}
+
+// === ГЕНЕРАТОР ПОСТОВ ===
+function initializePostsGenerator() {
+    // Кнопки стиля контента
+    const styleButtons = document.querySelectorAll('.style-btn');
+    styleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            styleButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Кнопка генерации
+    const generateBtn = document.getElementById('generate-posts');
+    if (generateBtn) {
+        generateBtn.addEventListener('click', generatePosts);
+    }
+}
+
+async function generatePosts() {
+    const generateBtn = document.getElementById('generate-posts');
+    const countSelect = document.getElementById('generate-count');
+    const postsContainer = document.getElementById('generated-posts');
+    
+    const count = parseInt(countSelect.value) || 5;
+    const style = document.querySelector('.style-btn.active')?.dataset.style || 'mixed';
+    
+    // Показываем процесс генерации
+    generateBtn.textContent = '🔄 Генерируем...';
+    generateBtn.disabled = true;
+    
+    try {
+        const posts = [];
+        
+        for (let i = 0; i < count; i++) {
+            const content = await generateContentFromUserData(style);
+            posts.push({
+                id: Date.now() + i,
+                text: content.text,
+                style: style,
+                createdAt: new Date().toISOString()
+            });
+        }
+        
+        displayGeneratedPosts(posts);
+        
+    } catch (error) {
+        alert('Ошибка генерации: ' + error.message);
+    }
+    
+    generateBtn.textContent = '✨ Сгенерировать посты';
+    generateBtn.disabled = false;
+}
+
+function displayGeneratedPosts(posts) {
+    const container = document.getElementById('generated-posts');
+    if (!container) return;
+    
+    container.style.display = 'block';
+    
+    let html = `<h5>Сгенерированные посты (${posts.length}):</h5>`;
+    
+    posts.forEach((post, index) => {
+        html += `
+            <div class="generated-post" data-post-id="${post.id}">
+                <div class="post-text">${post.text}</div>
+                <div class="post-actions">
+                    <button class="post-action-btn edit" onclick="editPost(${post.id})">✏️ Изменить</button>
+                    <button class="post-action-btn queue" onclick="addPostToQueue(${post.id})">➕ В очередь</button>
+                    <button class="post-action-btn delete" onclick="deleteGeneratedPost(${post.id})">🗑️ Удалить</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    
+    // Сохраняем сгенерированные посты
+    saveToStorage('generated_posts', posts);
+}
+
+// === УПРАВЛЕНИЕ ОЧЕРЕДЬЮ ===
+function initializeQueueManager() {
+    const clearBtn = document.getElementById('clear-queue');
+    const addBtn = document.getElementById('add-to-queue');
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearQueue);
+    }
+    
+    if (addBtn) {
+        addBtn.addEventListener('click', addManualPost);
+    }
+    
+    // Загружаем очередь
+    displayQueue();
+}
+
+function displayQueue() {
+    const container = document.getElementById('queue-list');
+    const queuePosts = getFromStorage('threads_queue_posts') || [];
+    
+    if (!container) return;
+    
+    if (queuePosts.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; color: #6c757d; padding: 40px;">
+                <p>📝 Очередь публикаций пуста</p>
+                <p>Добавьте посты через генератор или вручную</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    queuePosts.forEach((post, index) => {
+        html += `
+            <div class="queue-item" data-post-id="${post.id}">
+                <div class="queue-number">${index + 1}</div>
+                <div class="queue-content">${post.text}</div>
+                <div class="queue-actions">
+                    <button class="queue-action-btn edit" onclick="editQueuePost(${post.id})">✏️</button>
+                    <button class="queue-action-btn move-up" onclick="moveQueuePost(${post.id}, 'up')" ${index === 0 ? 'disabled' : ''}>↑</button>
+                    <button class="queue-action-btn move-down" onclick="moveQueuePost(${post.id}, 'down')" ${index === queuePosts.length - 1 ? 'disabled' : ''}>↓</button>
+                    <button class="queue-action-btn delete" onclick="deleteQueuePost(${post.id})">🗑️</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function clearQueue() {
+    if (confirm('Очистить всю очередь публикаций?')) {
+        saveToStorage('threads_queue_posts', []);
+        displayQueue();
+        updateQueueCount();
+    }
+}
+
+function addManualPost() {
+    const text = prompt('Введите текст поста:');
+    if (text && text.trim()) {
+        const queuePosts = getFromStorage('threads_queue_posts') || [];
+        queuePosts.push({
+            id: Date.now(),
+            text: text.trim(),
+            addedAt: new Date().toISOString()
+        });
+        
+        saveToStorage('threads_queue_posts', queuePosts);
+        displayQueue();
+        updateQueueCount();
+    }
+}
+
+// === ГЛОБАЛЬНЫЕ ФУНКЦИИ ДЛЯ ONCLICK ===
+window.editPost = function(postId) {
+    const posts = getFromStorage('generated_posts') || [];
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+        const newText = prompt('Изменить текст поста:', post.text);
+        if (newText !== null) {
+            post.text = newText;
+            saveToStorage('generated_posts', posts);
+            displayGeneratedPosts(posts);
+        }
+    }
+};
+
+window.addPostToQueue = function(postId) {
+    const posts = getFromStorage('generated_posts') || [];
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+        const queuePosts = getFromStorage('threads_queue_posts') || [];
+        queuePosts.push({
+            id: Date.now(),
+            text: post.text,
+            addedAt: new Date().toISOString()
+        });
+        
+        saveToStorage('threads_queue_posts', queuePosts);
+        displayQueue();
+        updateQueueCount();
+        alert('Пост добавлен в очередь!');
+    }
+};
+
+window.deleteGeneratedPost = function(postId) {
+    const posts = getFromStorage('generated_posts') || [];
+    const filtered = posts.filter(p => p.id !== postId);
+    saveToStorage('generated_posts', filtered);
+    displayGeneratedPosts(filtered);
+};
+
+window.editQueuePost = function(postId) {
+    const queuePosts = getFromStorage('threads_queue_posts') || [];
+    const post = queuePosts.find(p => p.id === postId);
+    if (post) {
+        const newText = prompt('Изменить текст поста:', post.text);
+        if (newText !== null) {
+            post.text = newText;
+            saveToStorage('threads_queue_posts', queuePosts);
+            displayQueue();
+        }
+    }
+};
+
+window.deleteQueuePost = function(postId) {
+    const queuePosts = getFromStorage('threads_queue_posts') || [];
+    const filtered = queuePosts.filter(p => p.id !== postId);
+    saveToStorage('threads_queue_posts', filtered);
+    displayQueue();
+    updateQueueCount();
+};
+
+window.moveQueuePost = function(postId, direction) {
+    const queuePosts = getFromStorage('threads_queue_posts') || [];
+    const index = queuePosts.findIndex(p => p.id === postId);
+    
+    if (index === -1) return;
+    
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    if (newIndex >= 0 && newIndex < queuePosts.length) {
+        [queuePosts[index], queuePosts[newIndex]] = [queuePosts[newIndex], queuePosts[index]];
+        saveToStorage('threads_queue_posts', queuePosts);
+        displayQueue();
+    }
+};
 
 // === ОТЛАДКА ===
 console.log('Threads Autopilot JavaScript loaded successfully');

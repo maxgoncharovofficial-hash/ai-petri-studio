@@ -150,8 +150,7 @@ async function connectAccount() {
                 scheduleButton.textContent = '🤖 Перейти к автопилоту';
             }
             
-            // Получаем дополнительную информацию
-            loadAPIStats();
+            // API stats removed - too technical for users
             
         } else {
             throw new Error(result.error || 'Не удалось инициализировать API');
@@ -627,40 +626,7 @@ function showConnectionResult(type, message, user = null) {
     resultDiv.innerHTML = html;
 }
 
-async function loadAPIStats() {
-    try {
-        const stats = await window.ThreadsIntegration.getAccountStats();
-        if (stats.success) {
-            displayAPIStats(stats);
-        }
-    } catch (error) {
-        console.warn('Failed to load API stats:', error);
-    }
-}
-
-function displayAPIStats(stats) {
-    const resultDiv = document.getElementById('connection-result');
-    if (!resultDiv || !stats.limits) return;
-    
-    const statsHTML = `
-        <div class="api-stats">
-            <div class="stat-item">
-                <span class="stat-value">${stats.limits.quota_usage || 0}</span>
-                <div class="stat-label">Использовано запросов</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value">${stats.limits.config?.quota_total || 'N/A'}</span>
-                <div class="stat-label">Лимит в день</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value">${window.threadsAPI.rateLimit.remaining}</span>
-                <div class="stat-label">Осталось сейчас</div>
-            </div>
-        </div>
-    `;
-    
-    resultDiv.innerHTML += statsHTML;
-}
+// API stats functions removed - too technical for users
 
 // === ОТЛАДКА ===
 console.log('Threads Connection JavaScript loaded successfully');
