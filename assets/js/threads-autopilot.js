@@ -1451,8 +1451,13 @@ window.removeScheduledPost = function(timeToRemove) {
 function initializeControlButtons() {
     const clearScheduleBtn = document.getElementById('clear-schedule');
     
+    console.log('Initializing control buttons, clear button found:', !!clearScheduleBtn);
+    
     if (clearScheduleBtn) {
         clearScheduleBtn.addEventListener('click', clearSchedule);
+        console.log('Clear schedule button initialized');
+    } else {
+        console.warn('Clear schedule button not found');
     }
 }
 

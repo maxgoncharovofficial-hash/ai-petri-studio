@@ -119,11 +119,14 @@ async function connectAccount() {
                 connected: true,
                 accessToken: accessToken,
                 username: result.user.username,
-                userId: result.user.id,
-                name: result.user.name,
-                profilePicture: result.user.threads_profile_picture_url,
-                biography: result.user.threads_biography,
-                isVerified: result.user.is_verified,
+                userProfile: {
+                    username: result.user.username,
+                    name: result.user.name,
+                    id: result.user.id,
+                    profilePicture: result.user.threads_profile_picture_url,
+                    biography: result.user.threads_biography,
+                    isVerified: result.user.is_verified
+                },
                 connectedAt: new Date().toISOString()
             };
             
@@ -176,9 +179,14 @@ function updateConnectionStatus(data) {
     const usernameElement = document.getElementById('connected-username');
     const connectBtn = document.getElementById('connect-threads');
     
-    if (data.connected) {
-        statusElement.textContent = `✅ Подключено: @${data.userProfile.username}`;
-        statusElement.style.color = '#28a745';
+    if (data && data.connected) {
+        // Получаем username с защитой от ошибок
+        const username = data.userProfile?.username || data.username || 'Неизвестно';
+        
+        if (statusElement) {
+            statusElement.textContent = `✅ Подключено: @${username}`;
+            statusElement.style.color = '#28a745';
+        }
         
         // Обновляем кнопку подключения
         if (connectBtn) {
@@ -194,7 +202,7 @@ function updateConnectionStatus(data) {
         }
         
         if (usernameElement) {
-            usernameElement.textContent = `@${data.userProfile.username}`;
+            usernameElement.textContent = `@${username}`;
         }
     }
 }
