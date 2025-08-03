@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeBackButton();
     initializeCards();
     loadMainPageData();
-    updateMainPageStats();
 });
 
 // === КНОПКА НАЗАД ===
@@ -33,37 +32,43 @@ function initializeCards() {
     const createCard = document.getElementById('create-section');
     
     if (connectionCard) {
-        connectionCard.addEventListener('click', function() {
+        connectionCard.addEventListener('click', function(e) {
+            e.preventDefault();
             console.log('Connection section clicked');
             window.location.href = 'threads-connection.html';
         });
         
         connectionCard.addEventListener('touchstart', function(e) {
             e.preventDefault();
+            console.log('Connection section touched');
             window.location.href = 'threads-connection.html';
         });
     }
     
     if (autopilotCard) {
-        autopilotCard.addEventListener('click', function() {
+        autopilotCard.addEventListener('click', function(e) {
+            e.preventDefault();
             console.log('Autopilot section clicked');
             window.location.href = 'threads-autopilot.html';
         });
         
         autopilotCard.addEventListener('touchstart', function(e) {
             e.preventDefault();
+            console.log('Autopilot section touched');
             window.location.href = 'threads-autopilot.html';
         });
     }
     
     if (createCard) {
-        createCard.addEventListener('click', function() {
+        createCard.addEventListener('click', function(e) {
+            e.preventDefault();
             console.log('Create section clicked');
             window.location.href = 'threads-create.html';
         });
         
         createCard.addEventListener('touchstart', function(e) {
             e.preventDefault();
+            console.log('Create section touched');
             window.location.href = 'threads-create.html';
         });
     }
@@ -133,52 +138,6 @@ function updateCreateStatus() {
     }
 }
 
-// === ОБНОВЛЕНИЕ СТАТИСТИКИ ГЛАВНОЙ СТРАНИЦЫ ===
-function updateMainPageStats() {
-    updateMainAutopilotStatus();
-    updateMainScheduledCount();
-    updateMainDraftsCount();
-}
-
-function updateMainAutopilotStatus() {
-    const autopilotData = getFromStorage('threads_autopilot');
-    const connectionData = getFromStorage('threads_connection');
-    const scheduleData = getFromStorage('threads_schedule');
-    const statusElement = document.getElementById('main-autopilot-status');
-    
-    if (autopilotData && autopilotData.active && 
-        connectionData && connectionData.connected && 
-        scheduleData) {
-        statusElement.textContent = '🟢 Активен';
-        statusElement.style.color = '#28a745';
-    } else if (connectionData && connectionData.connected && scheduleData) {
-        statusElement.textContent = '🟡 Готов к запуску';
-        statusElement.style.color = '#ffc107';
-    } else if (connectionData && connectionData.connected) {
-        statusElement.textContent = '🔶 Требует настройки';
-        statusElement.style.color = '#fd7e14';
-    } else {
-        statusElement.textContent = '🔴 Не настроен';
-        statusElement.style.color = '#dc3545';
-    }
-}
-
-function updateMainScheduledCount() {
-    const scheduled = getFromStorage('threads_scheduled_posts') || [];
-    const queue = getFromStorage('threads_queue_posts') || [];
-    const statusElement = document.getElementById('main-scheduled-count');
-    
-    const totalScheduled = scheduled.length + queue.length;
-    statusElement.textContent = totalScheduled;
-}
-
-function updateMainDraftsCount() {
-    const drafts = getFromStorage('threads_drafts') || [];
-    const statusElement = document.getElementById('main-drafts-count');
-    
-    statusElement.textContent = drafts.length;
-}
-
 // === УТИЛИТЫ ЛОКАЛЬНОГО ХРАНИЛИЩА ===
 function saveToStorage(key, data) {
     try {
@@ -216,7 +175,5 @@ window.threadsMainDebug = {
     saveToStorage,
     getFromStorage,
     removeFromStorage,
-    updateMainPageStats,
     loadMainPageData
-};
 };
