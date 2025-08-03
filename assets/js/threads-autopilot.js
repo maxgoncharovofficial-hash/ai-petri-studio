@@ -66,6 +66,7 @@ function initializeAutopilot() {
     const createButton = document.getElementById('create-now');
     const calendarButton = document.getElementById('view-calendar');
     const settingsButton = document.getElementById('modify-settings');
+    const editScheduleButton = document.getElementById('edit-schedule');
     
     if (pauseButton) {
         pauseButton.addEventListener('click', toggleAutopilot);
@@ -86,6 +87,14 @@ function initializeAutopilot() {
     if (settingsButton) {
         settingsButton.addEventListener('click', function() {
             window.location.href = 'threads-connection.html';
+        });
+    }
+    
+    if (editScheduleButton) {
+        editScheduleButton.addEventListener('click', function() {
+            console.log('Edit schedule clicked');
+            // TODO: Добавить модальное окно или переход к настройке расписания
+            alert('🚧 Редактирование расписания будет добавлено в следующем обновлении');
         });
     }
 }
@@ -124,13 +133,22 @@ function updateAutopilotStatus() {
     const statusDot = document.getElementById('autopilot-dot');
     const statusText = document.getElementById('autopilot-status');
     const accountElement = document.getElementById('autopilot-account');
+    const pauseButton = document.getElementById('pause-autopilot');
     
     if (autopilotData && autopilotData.active) {
         statusDot.textContent = '🟢';
         statusText.textContent = 'Активен';
+        if (pauseButton) {
+            pauseButton.innerHTML = '⏸️ Приостановить автопилот';
+            pauseButton.classList.remove('active');
+        }
     } else {
         statusDot.textContent = '🔴';
         statusText.textContent = 'Неактивен';
+        if (pauseButton) {
+            pauseButton.innerHTML = '▶️ Запустить автопилот';
+            pauseButton.classList.add('active');
+        }
     }
     
     if (connectionData && connectionData.connected) {

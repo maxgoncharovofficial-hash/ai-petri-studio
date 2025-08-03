@@ -148,7 +148,10 @@ function initializeScheduleSetup() {
     
     if (selectDateButton) {
         selectDateButton.addEventListener('click', () => {
-            document.getElementById('selected-date-info').style.display = 'none';
+            const selectedDateInfo = document.getElementById('selected-date-info');
+            if (selectedDateInfo) {
+                selectedDateInfo.style.display = 'none';
+            }
             generateCalendar();
         });
     }
@@ -442,19 +445,9 @@ function saveSchedule() {
 }
 
 function showSetupComplete(scheduleData) {
-    // Скрываем форму настройки
-    document.getElementById('schedule-setup').style.display = 'none';
-    
-    // Показываем завершенную настройку
-    const setupComplete = document.getElementById('setup-complete');
-    
-    // Обновляем информацию
-    document.getElementById('daily-posts-count').textContent = scheduleData.postsPerDay;
-    document.getElementById('start-date').textContent = new Date(scheduleData.startDate).toLocaleDateString('ru-RU');
-    document.getElementById('posting-schedule').textContent = scheduleData.postingTimes.join(', ');
-    
-    setupComplete.style.display = 'block';
-    setupComplete.scrollIntoView({ behavior: 'smooth' });
+    // Элементы удалены, просто сохраняем данные и показываем сообщение
+    console.log('Schedule setup completed:', scheduleData);
+    alert('✅ Расписание настроено! Переходите в автопилот для управления.');
 }
 
 function launchAutopilot() {
