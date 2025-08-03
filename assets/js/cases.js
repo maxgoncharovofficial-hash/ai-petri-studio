@@ -296,6 +296,28 @@ function saveData() {
         return;
     }
     
+    // РАСШИРЕННАЯ ОТЛАДКА ЗНАЧЕНИЙ
+    console.log('📝 question1.value RAW:', `"${question1.value}"`);
+    console.log('📝 question1.value LENGTH:', question1.value.length);
+    console.log('📝 question1.value TRIMMED:', `"${question1.value.trim()}"`);
+    console.log('📝 question1.value TRIMMED LENGTH:', question1.value.trim().length);
+    
+    // Альтернативные способы получения значения
+    const byQuerySelector = document.querySelector('#question-1').value;
+    const byName = document.querySelector('textarea[name="client_name"]').value;
+    const byForm = document.forms['cases-form']['client_name'].value;
+    
+    console.log('📝 By querySelector:', `"${byQuerySelector}"`);
+    console.log('📝 By name:', `"${byName}"`);
+    console.log('📝 By form:', `"${byForm}"`);
+    
+    // Проверяем все textarea
+    const allTextareas = document.querySelectorAll('textarea');
+    console.log('📝 All textareas values:');
+    allTextareas.forEach((ta, index) => {
+        console.log(`📝 Textarea ${index}: "${ta.value}"`);
+    });
+    
     // Собираем данные из формы
     const clientName = question1.value.trim();
     console.log('👤 Имя клиента:', clientName);
