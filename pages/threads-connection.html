@@ -40,9 +40,50 @@
                                 <div class="step-status" id="connection-status">Не подключен</div>
                             </div>
                         </div>
+                        
+                        <!-- API Token Form -->
+                        <div class="api-form" id="api-form">
+                            <div class="form-group">
+                                <label for="access-token">Threads API Access Token:</label>
+                                <div class="token-input-group">
+                                    <input 
+                                        type="password" 
+                                        id="access-token" 
+                                        placeholder="Введите ваш Threads API токен..."
+                                        class="token-input"
+                                    >
+                                    <button type="button" class="toggle-token" id="toggle-token">👁️</button>
+                                </div>
+                                <div class="form-help">
+                                    <p>📝 <strong>Как получить токен:</strong></p>
+                                    <ol>
+                                        <li>Перейдите в <a href="https://developers.facebook.com/" target="_blank">Meta for Developers</a></li>
+                                        <li>Создайте приложение и настройте Threads API</li>
+                                        <li>Получите долгосрочный токен доступа</li>
+                                        <li>Вставьте токен в поле выше</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="user-id">User ID (опционально):</label>
+                                <input 
+                                    type="text" 
+                                    id="user-id" 
+                                    placeholder="Автоматически определится по токену"
+                                    class="user-id-input"
+                                    disabled
+                                >
+                            </div>
+                        </div>
+                        
                         <button class="threads-button primary" id="connect-button">
-                            🔗 Подключить Threads
+                            🔗 Подключить и проверить токен
                         </button>
+                        
+                        <div class="connection-status" id="connection-result" style="display: none;">
+                            <!-- Результат подключения будет здесь -->
+                        </div>
                     </div>
 
                     <!-- Step 2: Setup Schedule -->
@@ -69,6 +110,7 @@
         </main>
     </div>
     
+    <script src="../assets/js/threads-api.js"></script>
     <script src="../assets/js/threads-connection.js"></script>
 </body>
 </html>

@@ -253,12 +253,17 @@ function updateStatistics() {
 
 function toggleAutopilot() {
     const autopilotData = getFromStorage('threads_autopilot') || {};
-    autopilotData.active = !autopilotData.active;
+    const wasActive = autopilotData.active;
     
-    saveToStorage('threads_autopilot', autopilotData);
+    if (wasActive) {
+        stopAutopilot();
+    } else {
+        startAutopilot();
+    }
+    
     updateAutopilotStatus();
     
-    const action = autopilotData.active ? 'запущен' : 'приостановлен';
+    const action = !wasActive ? 'запущен' : 'приостановлен';
     alert(`Автопилот ${action}`);
 }
 
@@ -564,6 +569,263 @@ function clearOldScheduleLogs() {
     
     console.log('Old schedule logs cleared');
 }
+
+// === АВТОМАТИЧЕСКАЯ ПУБЛИКАЦИЯ ===
+
+/**
+ * Проверка и выполнение запланированных публикаций
+ */
+async function checkScheduledPosts() {
+    const scheduleData = getFromStorage('threads_schedule');
+    const connectionData = getFromStorage('threads_connection');
+    
+    if (!scheduleData || !connectionData?.connected) {
+        console.log('No schedule or connection data available');
+        return;
+    }
+
+    // Инициализируем API если еще не инициализирован
+    if (!window.threadsAPI.accessToken && connectionData.accessToken) {
+        await window.ThreadsIntegration.initFromStorage();
+    }
+
+    const now = new Date();
+    const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+    
+    // Проверяем каждое время в расписании
+    for (const scheduledTime of scheduleData.postingTimes) {
+        if (shouldPostNow(scheduledTime, currentTime)) {
+            await executeScheduledPost(scheduledTime);
+        }
+    }
+}
+
+/**
+ * Проверка, нужно ли публиковать пост сейчас
+ */
+function shouldPostNow(scheduledTime, currentTime) {
+    // Проверяем точное совпадение времени (с точностью до минуты)
+    return scheduledTime === currentTime;
+}
+
+/**
+ * Выполнение запланированной публикации
+ */
+async function executeScheduledPost(scheduledTime) {
+    try {
+        // Получаем контент для публикации
+        const postContent = await generatePostContent();
+        
+        if (!postContent) {
+            console.warn(`No content available for post at ${scheduledTime}`);
+            return;
+        }
+
+        // Публикуем пост
+        const result = await window.ThreadsIntegration.publishScheduledPost({
+            text: postContent.text,
+            scheduledTime: scheduledTime,
+            replyControl: postContent.replyControl || 'everyone'
+        });
+
+        if (result.success) {
+            console.log(`Successfully published post at ${scheduledTime}:`, result.postId);
+            
+            // Обновляем статистику
+            updatePublishedCount();
+            updateQueueCount();
+            
+            // Показываем уведомление
+            showPublicationNotification('success', `Пост опубликован в ${scheduledTime}`, postContent.text);
+        } else {
+            console.error(`Failed to publish post at ${scheduledTime}:`, result.error);
+            showPublicationNotification('error', `Ошибка публикации в ${scheduledTime}`, result.error);
+        }
+
+    } catch (error) {
+        console.error('Error in executeScheduledPost:', error);
+        showPublicationNotification('error', 'Ошибка автопилота', error.message);
+    }
+}
+
+/**
+ * Генерация контента для публикации
+ */
+async function generatePostContent() {
+    // Сначала пробуем получить из очереди готовых постов
+    const queuedPosts = getFromStorage('threads_queue_posts') || [];
+    
+    if (queuedPosts.length > 0) {
+        const post = queuedPosts.shift();
+        saveToStorage('threads_queue_posts', queuedPosts);
+        return post;
+    }
+
+    // Если очереди нет, генерируем контент на основе данных пользователя
+    return await generateContentFromUserData();
+}
+
+/**
+ * Генерация контента на основе данных пользователя
+ */
+async function generateContentFromUserData() {
+    const productData = getFromStorage('product_data');
+    const audienceData = getFromStorage('audience_data');
+    const personalityData = getFromStorage('personality_lite_data') || getFromStorage('personality_pro_data');
+
+    if (!productData && !audienceData && !personalityData) {
+        return {
+            text: "🚀 Автоматический пост от AiPetri Studio! Настройте свой контент в разделе 'Личность' для персонализированных публикаций.",
+            replyControl: 'everyone'
+        };
+    }
+
+    // Простая генерация контента на основе данных
+    const templates = [
+        "💡 {insight} - что думаете?",
+        "🎯 Сегодня фокусируюсь на {focus}",
+        "📈 {tip} - делитесь опытом!",
+        "🔥 {question}",
+        "✨ {inspiration}"
+    ];
+
+    const insights = [
+        "Качество важнее количества",
+        "Постоянство - ключ к успеху", 
+        "Инновации начинаются с вопросов",
+        "Сообщество сильнее индивидуальности"
+    ];
+
+    const focuses = [
+        "росте и развитии",
+        "создании ценности",
+        "построении связей",
+        "изучении нового"
+    ];
+
+    const tips = [
+        "Лучше сделать маленький шаг, чем стоять на месте",
+        "Обратная связь - подарок для роста",
+        "Экспериментируйте и анализируйте результаты"
+    ];
+
+    const questions = [
+        "Что вас мотивирует продолжать, когда сложно?",
+        "Какой один совет изменил вашу жизнь?",
+        "Что для вас значит успех?"
+    ];
+
+    const inspirations = [
+        "Каждый день - новая возможность стать лучше",
+        "Ваш уникальный опыт может помочь другим",
+        "Маленькие шаги ведут к большим результатам"
+    ];
+
+    const contentSets = { insights, focuses, tips, questions, inspirations };
+    
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    let content = template;
+
+    // Заменяем плейсхолдеры на реальный контент
+    Object.keys(contentSets).forEach(key => {
+        const placeholder = `{${key.slice(0, -1)}}`;
+        if (content.includes(placeholder)) {
+            const items = contentSets[key];
+            const randomItem = items[Math.floor(Math.random() * items.length)];
+            content = content.replace(placeholder, randomItem);
+        }
+    });
+
+    return {
+        text: content,
+        replyControl: 'everyone'
+    };
+}
+
+/**
+ * Показ уведомления о публикации
+ */
+function showPublicationNotification(type, title, message) {
+    // Можно использовать системные уведомления, если разрешены
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(title, {
+            body: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
+            icon: '/favicon.ico'
+        });
+    }
+    
+    // Также выводим в консоль
+    console.log(`${type.toUpperCase()}: ${title} - ${message}`);
+}
+
+/**
+ * Обновление счетчика опубликованных постов
+ */
+function updatePublishedCount() {
+    const publishedPosts = getFromStorage('threads_published_posts') || [];
+    const today = new Date().toDateString();
+    const todayPublished = publishedPosts.filter(post => 
+        new Date(post.publishedAt).toDateString() === today
+    ).length;
+    
+    const element = document.getElementById('today-published');
+    if (element) {
+        element.textContent = todayPublished;
+    }
+}
+
+/**
+ * Запуск автопилота
+ */
+function startAutopilot() {
+    const autopilotData = getFromStorage('threads_autopilot') || {};
+    autopilotData.active = true;
+    autopilotData.startedAt = new Date().toISOString();
+    
+    saveToStorage('threads_autopilot', autopilotData);
+    
+    // Проверяем посты каждую минуту
+    if (window.autopilotInterval) {
+        clearInterval(window.autopilotInterval);
+    }
+    
+    window.autopilotInterval = setInterval(checkScheduledPosts, 60000); // каждую минуту
+    
+    console.log('Autopilot started');
+}
+
+/**
+ * Остановка автопилота
+ */
+function stopAutopilot() {
+    const autopilotData = getFromStorage('threads_autopilot') || {};
+    autopilotData.active = false;
+    autopilotData.stoppedAt = new Date().toISOString();
+    
+    saveToStorage('threads_autopilot', autopilotData);
+    
+    if (window.autopilotInterval) {
+        clearInterval(window.autopilotInterval);
+        window.autopilotInterval = null;
+    }
+    
+    console.log('Autopilot stopped');
+}
+
+// Автоматический запуск автопилота при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        const autopilotData = getFromStorage('threads_autopilot');
+        if (autopilotData?.active) {
+            startAutopilot();
+        }
+    }, 2000); // Даем время на инициализацию
+
+    // Запрашиваем разрешение на уведомления
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+});
 
 // === ОТЛАДКА ===
 console.log('Threads Autopilot JavaScript loaded successfully');

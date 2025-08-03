@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     initializeBackButton();
     initializeConnection();
-    initializeCalendar();
+    initializeTokenToggle();
     initializeNavigation();
     loadSavedData();
 });
@@ -87,30 +87,83 @@ function initializeConnection() {
     initializeScheduleSetup();
 }
 
-function connectAccount() {
+async function connectAccount() {
     console.log('Connecting Threads account...');
     
-    // Симуляция подключения (в реальном приложении здесь будет OAuth)
-    setTimeout(() => {
-        const connectionData = {
-            connected: true,
-            username: 'your_username',
-            connectedAt: new Date().toISOString()
-        };
+    const button = document.getElementById('connect-button');
+    const status = document.getElementById('connection-status');
+    const resultDiv = document.getElementById('connection-result');
+    const tokenInput = document.getElementById('access-token');
+    const userIdInput = document.getElementById('user-id');
+    
+    const accessToken = tokenInput.value.trim();
+    
+    if (!accessToken) {
+        showConnectionResult('error', 'Введите токен доступа Threads API');
+        return;
+    }
+    
+    // Показываем процесс подключения
+    button.textContent = '🔄 Проверяем токен...';
+    button.disabled = true;
+    showConnectionResult('loading', 'Подключаемся к Threads API...');
+    
+    try {
+        // Инициализируем API
+        const result = await window.threadsAPI.initialize(accessToken);
         
-        saveToStorage('threads_connection', connectionData);
-        updateConnectionStatus(connectionData);
+        if (result.success) {
+            const connectionData = {
+                connected: true,
+                accessToken: accessToken,
+                username: result.user.username,
+                userId: result.user.id,
+                name: result.user.name,
+                profilePicture: result.user.threads_profile_picture_url,
+                biography: result.user.threads_biography,
+                isVerified: result.user.is_verified,
+                connectedAt: new Date().toISOString()
+            };
+            
+            // Сохраняем данные подключения
+            saveToStorage('threads_connection', connectionData);
+            window.ThreadsIntegration.saveConnection(connectionData);
+            
+            // Заполняем User ID
+            if (userIdInput) {
+                userIdInput.value = result.user.id;
+            }
+            
+            // Обновляем интерфейс
+            updateConnectionStatus(connectionData);
+            showConnectionResult('success', 'Успешно подключено к Threads API!', result.user);
+            
+            button.textContent = '✅ Подключено';
+            
+            // Активируем шаг 2
+            const stepSchedule = document.getElementById('step-schedule');
+            const scheduleButton = document.getElementById('schedule-button');
+            
+            if (stepSchedule) stepSchedule.classList.remove('disabled');
+            if (scheduleButton) {
+                scheduleButton.classList.remove('disabled');
+                scheduleButton.textContent = '🤖 Перейти к автопилоту';
+            }
+            
+            // Получаем дополнительную информацию
+            loadAPIStats();
+            
+        } else {
+            throw new Error(result.error || 'Не удалось инициализировать API');
+        }
         
-        // Активируем шаг 2
-        const stepSchedule = document.getElementById('step-schedule');
-        const scheduleButton = document.getElementById('schedule-button');
-        
-        stepSchedule.classList.remove('disabled');
-        scheduleButton.classList.remove('disabled');
-        scheduleButton.textContent = '🤖 Перейти к автопилоту';
-        
-        alert('✅ Аккаунт Threads успешно подключен!');
-    }, 1000);
+    } catch (error) {
+        console.error('Connection failed:', error);
+        showConnectionResult('error', `Ошибка подключения: ${window.threadsAPI.formatError(error)}`);
+        button.textContent = '🔗 Подключить и проверить токен';
+    }
+    
+    button.disabled = false;
 }
 
 function updateConnectionStatus(data) {
@@ -527,6 +580,86 @@ function getFromStorage(key) {
         console.error('Error loading from storage:', error);
         return null;
     }
+}
+
+function initializeTokenToggle() {
+    const toggleButton = document.getElementById('toggle-token');
+    const tokenInput = document.getElementById('access-token');
+    
+    if (toggleButton && tokenInput) {
+        toggleButton.addEventListener('click', function() {
+            if (tokenInput.type === 'password') {
+                tokenInput.type = 'text';
+                toggleButton.textContent = '🙈';
+            } else {
+                tokenInput.type = 'password';
+                toggleButton.textContent = '👁️';
+            }
+        });
+    }
+}
+
+function showConnectionResult(type, message, user = null) {
+    const resultDiv = document.getElementById('connection-result');
+    if (!resultDiv) return;
+    
+    resultDiv.style.display = 'block';
+    resultDiv.className = `connection-status ${type}`;
+    
+    let html = `<div>${message}</div>`;
+    
+    if (user && type === 'success') {
+        html += `
+            <div class="user-info">
+                ${user.threads_profile_picture_url ? `<img src="${user.threads_profile_picture_url}" alt="Profile" class="user-avatar">` : ''}
+                <div class="user-details">
+                    <h4>
+                        @${user.username}
+                        ${user.is_verified ? '<span class="verification-badge">✓ Верифицирован</span>' : ''}
+                    </h4>
+                    <p>${user.name || 'Имя не указано'}</p>
+                    ${user.threads_biography ? `<p>${user.threads_biography}</p>` : ''}
+                </div>
+            </div>
+        `;
+    }
+    
+    resultDiv.innerHTML = html;
+}
+
+async function loadAPIStats() {
+    try {
+        const stats = await window.ThreadsIntegration.getAccountStats();
+        if (stats.success) {
+            displayAPIStats(stats);
+        }
+    } catch (error) {
+        console.warn('Failed to load API stats:', error);
+    }
+}
+
+function displayAPIStats(stats) {
+    const resultDiv = document.getElementById('connection-result');
+    if (!resultDiv || !stats.limits) return;
+    
+    const statsHTML = `
+        <div class="api-stats">
+            <div class="stat-item">
+                <span class="stat-value">${stats.limits.quota_usage || 0}</span>
+                <div class="stat-label">Использовано запросов</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">${stats.limits.config?.quota_total || 'N/A'}</span>
+                <div class="stat-label">Лимит в день</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">${window.threadsAPI.rateLimit.remaining}</span>
+                <div class="stat-label">Осталось сейчас</div>
+            </div>
+        </div>
+    `;
+    
+    resultDiv.innerHTML += statsHTML;
 }
 
 // === ОТЛАДКА ===
