@@ -5,6 +5,10 @@ let currentEditingCaseId = null;
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 === DOMContentLoaded - Cases page initialization started ===');
+    console.log('📋 Script version: v30.23');
+    console.log('📋 Current timestamp:', new Date().toISOString());
+    console.log('📋 User agent:', navigator.userAgent);
+    console.log('📋 Viewport size:', window.innerWidth, 'x', window.innerHeight);
     
     // Проверяем что все основные элементы существуют
     const form = document.getElementById('cases-form');
@@ -73,6 +77,29 @@ document.addEventListener('DOMContentLoaded', function() {
     updateProgress();
     
     console.log('🚀 === Cases page initialization completed successfully ===');
+    
+    // ГЛОБАЛЬНЫЙ ОБРАБОТЧИК КЛИКОВ ДЛЯ ДИАГНОСТИКИ
+    document.addEventListener('click', function(e) {
+        console.log('🔍 === GLOBAL CLICK DETECTED ===');
+        console.log('🔍 Clicked element:', e.target);
+        console.log('🔍 Element tag:', e.target.tagName);
+        console.log('🔍 Element classes:', e.target.className);
+        console.log('🔍 Element ID:', e.target.id);
+        
+        if (e.target.classList.contains('case-action-btn')) {
+            console.log('✅ CASE ACTION BUTTON CLICKED!');
+            console.log('📋 Action:', e.target.dataset.action);
+            console.log('📋 Case ID:', e.target.dataset.caseId);
+        }
+        
+        if (e.target.id === 'save-button') {
+            console.log('✅ SAVE BUTTON CLICKED!');
+        }
+        
+        if (e.target.id === 'modal-ok-button') {
+            console.log('✅ MODAL OK BUTTON CLICKED!');
+        }
+    });
 });
 
 // Инициализация вкладок
@@ -601,6 +628,60 @@ function loadCasesList() {
     // Добавляем обработчики для кнопок
     addCaseCardHandlers();
     console.log('📋 Case card handlers added');
+    
+    // ДОПОЛНИТЕЛЬНАЯ ДИАГНОСТИКА ОТОБРАЖЕНИЯ
+    console.log('🔍 === ДОПОЛНИТЕЛЬНАЯ ДИАГНОСТИКА ===');
+    
+    // Проверяем видимость списка
+    const listComputedStyle = window.getComputedStyle(casesList);
+    console.log('📋 Cases list computed display:', listComputedStyle.display);
+    console.log('📋 Cases list computed visibility:', listComputedStyle.visibility);
+    console.log('📋 Cases list computed opacity:', listComputedStyle.opacity);
+    console.log('📋 Cases list computed height:', listComputedStyle.height);
+    
+    // Проверяем каждую карточку
+    const allCards = document.querySelectorAll('.case-card');
+    console.log('📋 Total cards found in DOM:', allCards.length);
+    allCards.forEach((card, index) => {
+        const cardStyle = window.getComputedStyle(card);
+        console.log(`📋 Card ${index + 1}:`);
+        console.log(`   - Display: ${cardStyle.display}`);
+        console.log(`   - Visibility: ${cardStyle.visibility}`);
+        console.log(`   - Opacity: ${cardStyle.opacity}`);
+        console.log(`   - Height: ${cardStyle.height}`);
+        console.log(`   - Background: ${cardStyle.backgroundColor}`);
+    });
+    
+    // Проверяем кнопки действий
+    const actionButtons = document.querySelectorAll('.case-action-btn');
+    console.log('📋 Action buttons found:', actionButtons.length);
+    actionButtons.forEach((btn, index) => {
+        const btnStyle = window.getComputedStyle(btn);
+        console.log(`📋 Button ${index + 1}:`);
+        console.log(`   - Display: ${btnStyle.display}`);
+        console.log(`   - Visibility: ${btnStyle.visibility}`);
+        console.log(`   - Action: ${btn.dataset.action}`);
+        console.log(`   - Case ID: ${btn.dataset.caseId}`);
+    });
+    
+    // Проверяем модальные окна
+    const saveModal = document.getElementById('save-modal');
+    const viewModal = document.getElementById('view-case-modal');
+    const deleteModal = document.getElementById('delete-confirm-modal');
+    
+    console.log('📱 Modal elements found:');
+    console.log('   - Save modal:', saveModal);
+    console.log('   - View modal:', viewModal);
+    console.log('   - Delete modal:', deleteModal);
+    
+    if (saveModal) {
+        const modalStyle = window.getComputedStyle(saveModal);
+        console.log('📱 Save modal computed style:');
+        console.log('   - Display:', modalStyle.display);
+        console.log('   - Visibility:', modalStyle.visibility);
+        console.log('   - Position:', modalStyle.position);
+        console.log('   - Z-index:', modalStyle.zIndex);
+    }
     
     console.log('📋 === loadCasesList() completed successfully ===');
 }
