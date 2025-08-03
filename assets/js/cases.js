@@ -577,6 +577,27 @@ function loadCasesList() {
     casesList.innerHTML = casesHTML;
     console.log('📋 Cases HTML inserted into DOM');
     
+    // ПРИНУДИТЕЛЬНОЕ ПОКАЗЫВАНИЕ СПИСКА
+    casesList.style.display = 'flex';
+    casesList.style.flexDirection = 'column';
+    casesList.style.gap = '16px';
+    casesList.style.visibility = 'visible';
+    casesList.style.opacity = '1';
+    casesList.style.width = '100%';
+    casesList.style.minHeight = '200px';
+    
+    // Проверяем каждую карточку
+    const cards = casesList.querySelectorAll('.case-card');
+    console.log('📋 Found case cards in DOM:', cards.length);
+    cards.forEach((card, index) => {
+        card.style.display = 'block';
+        card.style.visibility = 'visible';
+        card.style.opacity = '1';
+        card.style.position = 'relative';
+        card.style.zIndex = '1';
+        console.log(`📋 Card ${index + 1} forced to show`);
+    });
+    
     // Добавляем обработчики для кнопок
     addCaseCardHandlers();
     console.log('📋 Case card handlers added');
@@ -808,23 +829,35 @@ function initializeModals() {
 
 // Показ модального окна
 function showModal(modalId) {
-    console.log('📱 === Showing modal:', modalId, '===');
+    console.log('📱 === FORCE SHOWING MODAL:', modalId, '===');
     const modal = document.getElementById(modalId);
     if (modal) {
         console.log('📱 Modal element found:', modal);
-        console.log('📱 Modal current display:', modal.style.display);
-        console.log('📱 Modal current visibility:', modal.style.visibility);
-        console.log('📱 Modal current opacity:', modal.style.opacity);
         
+        // ПРИНУДИТЕЛЬНОЕ ПОКАЗЫВАНИЕ
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100vw';
+        modal.style.height = '100vh';
+        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
         modal.style.display = 'flex';
         modal.style.visibility = 'visible';
         modal.style.opacity = '1';
+        modal.style.zIndex = '999999';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.classList.add('show');
         
-        console.log('📱 Modal display set to:', modal.style.display);
-        console.log('📱 Modal visibility set to:', modal.style.visibility);
-        console.log('📱 Modal opacity set to:', modal.style.opacity);
+        console.log('✅ Modal forced to show');
         
-        console.log('✅ Modal shown successfully');
+        // Проверка через 100ms
+        setTimeout(() => {
+            const computedStyle = window.getComputedStyle(modal);
+            console.log('📱 Modal computed display:', computedStyle.display);
+            console.log('📱 Modal computed visibility:', computedStyle.visibility);
+            console.log('📱 Modal computed opacity:', computedStyle.opacity);
+        }, 100);
     } else {
         console.error('❌ Modal not found:', modalId);
     }

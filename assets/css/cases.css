@@ -214,22 +214,25 @@ textarea::placeholder {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    background: rgba(0, 0, 0, 0.4) !important;
+    background: rgba(0, 0, 0, 0.5) !important;
     display: none !important;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999 !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 999999 !important;
     opacity: 0;
     transition: opacity 0.3s ease;
     visibility: hidden !important;
 }
 
-.modal-overlay.show {
+.modal-overlay.show,
+#save-modal.show {
     display: flex !important;
-    opacity: 1 !important;
     visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .modal-content {
@@ -243,7 +246,8 @@ textarea::placeholder {
     transform: scale(0.9);
     transition: transform 0.3s ease;
     position: relative !important;
-    z-index: 100000 !important;
+    z-index: 1000000 !important;
+    margin: auto !important;
 }
 
 .modal-overlay.show .modal-content {
@@ -353,17 +357,27 @@ textarea::placeholder {
 }
 
 .cases-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+    min-height: 200px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 /* Case Card Styles */
 .case-card {
-    background: var(--tg-theme-secondary-bg-color, #f8f9fa);
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid var(--tg-theme-hint-color, #e9ecef);
+    display: block !important;
+    background: var(--tg-theme-secondary-bg-color, #f8f9fa) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    border: 1px solid var(--tg-theme-hint-color, #e9ecef) !important;
+    margin-bottom: 16px !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: relative !important;
+    z-index: 1 !important;
     transition: all 0.2s ease;
 }
 
