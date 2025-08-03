@@ -20,46 +20,89 @@ jobs:
           
       - name: Create deployment structure
         run: |
-          echo "Creating deployment structure for GitHub Pages..."
+          echo "🚀 Creating deployment structure for GitHub Pages..."
           
           # Создаем временную папку для сборки
           mkdir -p temp-deploy
+          echo "✅ Created temp-deploy directory"
+          
+          # Проверяем существование файлов перед копированием
+          echo "📁 Checking source files..."
+          
+          if [ ! -f "index.html" ]; then
+            echo "❌ ERROR: index.html not found!"
+            exit 1
+          fi
+          
+          if [ ! -d "assets" ]; then
+            echo "❌ ERROR: assets directory not found!"
+            exit 1
+          fi
+          
+          if [ ! -d "pages" ]; then
+            echo "❌ ERROR: pages directory not found!"
+            exit 1
+          fi
+          
+          echo "✅ All source files found"
           
           # Копируем index.html в корень
           cp index.html temp-deploy/
+          echo "✅ Copied index.html"
           
           # Копируем папку assets
           cp -r assets temp-deploy/
+          echo "✅ Copied assets directory"
           
           # Копируем HTML файлы из pages/ в корень
           cp pages/*.html temp-deploy/
+          echo "✅ Copied pages/*.html"
+          
+          # Показываем структуру созданных файлов
+          echo "📂 Deployment structure created:"
+          ls -la temp-deploy/
+          echo "📂 Assets structure:"
+          ls -la temp-deploy/assets/
+          echo "📂 JS files:"
+          ls -la temp-deploy/assets/js/
           
           # Обновляем пути в HTML файлах для GitHub Pages
-          echo "Updating paths in HTML files..."
+          echo "🔧 Updating paths in HTML files..."
           
           # Обновляем пути в index.html
           sed -i 's|assets/|assets/|g' temp-deploy/index.html
+          echo "✅ Updated paths in index.html"
           
           # Обновляем пути в остальных HTML файлах
           for file in temp-deploy/*.html; do
             if [ "$(basename "$file")" != "index.html" ]; then
+              echo "🔧 Processing file: $(basename "$file")"
               # Заменяем ../assets/ на assets/ для файлов из pages/
               sed -i 's|../assets/|assets/|g' "$file"
               # Обновляем навигацию между страницами
               sed -i 's|pages/||g' "$file"
+              echo "✅ Updated paths in $(basename "$file")"
             fi
           done
           
-          # Обновляем навигацию в JS файлах
-          echo "Updating navigation in JS files..."
-          for file in temp-deploy/assets/js/*.js; do
-            # Заменяем навигацию на pages/ на прямые ссылки
-            sed -i 's|pages/||g' "$file"
-            # Заменяем ../index.html на index.html
-            sed -i 's|../index.html|index.html|g' "$file"
-          done
+          # Обновляем навигацию в JS файлах (с проверкой существования)
+          echo "🔧 Updating navigation in JS files..."
+          if [ -d "temp-deploy/assets/js" ]; then
+            for file in temp-deploy/assets/js/*.js; do
+              if [ -f "$file" ]; then
+                echo "🔧 Processing JS file: $(basename "$file")"
+                # Заменяем навигацию на pages/ на прямые ссылки
+                sed -i 's|pages/||g' "$file"
+                # Заменяем ../index.html на index.html
+                sed -i 's|../index.html|index.html|g' "$file"
+                echo "✅ Updated navigation in $(basename "$file")"
+              fi
+            done
+          else
+            echo "⚠️ Warning: temp-deploy/assets/js directory not found"
+          fi
           
-          echo "Deployment structure created successfully!"
+          echo "🎉 Deployment structure created successfully!"
           
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -70,11 +113,13 @@ jobs:
           
       - name: Cleanup
         run: |
-          echo "Cleaning up temporary files..."
+          echo "🧹 Cleaning up temporary files..."
           rm -rf temp-deploy
+          echo "✅ Cleanup completed"
           
       - name: Success message
         run: |
-          echo "✅ Deployment completed successfully!"
+          echo "🎉 Deployment completed successfully!"
           echo "🌐 Your Telegram Mini App is now available at:"
-          echo "https://${{ github.repository_owner }}.github.io/$(echo ${{ github.repository }} | cut -d'/' -f2)/" 
+          echo "https://${{ github.repository_owner }}.github.io/$(echo ${{ github.repository }} | cut -d'/' -f2)/"
+          echo "📱 Ready for Telegram Mini App integration!" 
