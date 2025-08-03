@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeConnection();
     initializeTokenToggle();
     initializeNavigation();
+    initializeOpenAI();
     loadSavedData();
 });
 
@@ -626,7 +627,131 @@ function showConnectionResult(type, message, user = null) {
     resultDiv.innerHTML = html;
 }
 
-// API stats functions removed - too technical for users
+// === OPENAI ИНТЕГРАЦИЯ ===
+function initializeOpenAI() {
+    const connectBtn = document.getElementById('connect-openai');
+    const toggleBtn = document.getElementById('toggle-openai-key');
+    const apiKeyInput = document.getElementById('openai-api-key');
+    
+    if (connectBtn) {
+        connectBtn.addEventListener('click', connectOpenAI);
+    }
+    
+    if (toggleBtn && apiKeyInput) {
+        toggleBtn.addEventListener('click', function() {
+            const isPassword = apiKeyInput.type === 'password';
+            apiKeyInput.type = isPassword ? 'text' : 'password';
+            this.textContent = isPassword ? '🙈' : '👁️';
+        });
+    }
+    
+    // Проверяем сохраненное подключение
+    checkSavedOpenAI();
+}
+
+async function connectOpenAI() {
+    const apiKeyInput = document.getElementById('openai-api-key');
+    const connectBtn = document.getElementById('connect-openai');
+    const resultDiv = document.getElementById('openai-result');
+    
+    const apiKey = apiKeyInput.value.trim();
+    
+    if (!apiKey) {
+        alert('Пожалуйста, введите OpenAI API ключ');
+        return;
+    }
+    
+    // Показываем процесс подключения
+    connectBtn.textContent = '🔄 Подключаем...';
+    connectBtn.disabled = true;
+    
+    try {
+        const result = await window.openAIService.initialize(apiKey);
+        
+        if (result.success) {
+            showOpenAIResult('success', result.message);
+            connectBtn.textContent = '✅ Подключено';
+            connectBtn.style.background = '#28a745';
+            
+            // Добавляем кнопку настроек
+            setTimeout(() => {
+                addPromptSettingsButton();
+            }, 500);
+            
+        } else {
+            throw new Error(result.error || 'Не удалось подключить OpenAI');
+        }
+        
+    } catch (error) {
+        showOpenAIResult('error', 'Ошибка подключения: ' + error.message);
+        connectBtn.textContent = '🔗 Подключить OpenAI';
+        connectBtn.disabled = false;
+    }
+}
+
+function showOpenAIResult(type, message) {
+    const resultDiv = document.getElementById('openai-result');
+    if (!resultDiv) return;
+    
+    const statusClass = type === 'success' ? 'success' : 'error';
+    const icon = type === 'success' ? '✅' : '❌';
+    
+    resultDiv.innerHTML = `
+        <div class="connection-status ${statusClass}">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span>${icon}</span>
+                <span>${message}</span>
+            </div>
+        </div>
+    `;
+    
+    resultDiv.style.display = 'block';
+}
+
+function addPromptSettingsButton() {
+    const resultDiv = document.getElementById('openai-result');
+    if (!resultDiv) return;
+    
+    const existingButton = resultDiv.querySelector('.prompt-settings-btn');
+    if (existingButton) return; // Кнопка уже добавлена
+    
+    const settingsButton = document.createElement('button');
+    settingsButton.className = 'threads-button secondary prompt-settings-btn';
+    settingsButton.style.marginTop = '12px';
+    settingsButton.innerHTML = '⚙️ Настроить промпт';
+    settingsButton.onclick = openPromptSettings;
+    
+    resultDiv.appendChild(settingsButton);
+}
+
+function openPromptSettings() {
+    const currentPrompt = window.openAIService.getCustomPrompt();
+    
+    const newPrompt = prompt(
+        'Настройте промпт для генерации постов:\n\n' +
+        'Используйте [ТЕМА] для подстановки темы на основе ваших данных.',
+        currentPrompt
+    );
+    
+    if (newPrompt !== null && newPrompt.trim()) {
+        window.openAIService.saveCustomPrompt(newPrompt.trim());
+        alert('✅ Промпт сохранен!');
+    }
+}
+
+function checkSavedOpenAI() {
+    if (window.openAIService.isServiceConnected()) {
+        const connectBtn = document.getElementById('connect-openai');
+        if (connectBtn) {
+            connectBtn.textContent = '✅ Подключено';
+            connectBtn.style.background = '#28a745';
+            connectBtn.disabled = true;
+        }
+        
+        showOpenAIResult('success', 'OpenAI подключен');
+        addPromptSettingsButton();
+    }
+}
 
 // === ОТЛАДКА ===
 console.log('Threads Connection JavaScript loaded successfully');

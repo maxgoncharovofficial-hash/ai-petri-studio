@@ -92,11 +92,7 @@
                         <div class="schedule-section">
                             <h4>📅 Сегодня запланировано</h4>
                             <div class="posts-list" id="today-posts">
-                                <div class="post-item">
-                                    <span class="post-time">10:00</span>
-                                    <span class="post-status">⏳ Ожидание</span>
-                                    <span class="post-content">Пост готов к публикации</span>
-                                </div>
+                                <!-- Posts will be dynamically generated -->
                             </div>
                         </div>
 
@@ -171,20 +167,10 @@
                                         <option value="10">10 постов</option>
                                     </select>
                                 </div>
-
-                                <div class="content-style">
-                                    <label>Стиль контента:</label>
-                                    <div class="style-buttons">
-                                        <button class="style-btn active" data-style="mixed">🎯 Смешанный</button>
-                                        <button class="style-btn" data-style="questions">❓ Вопросы</button>
-                                        <button class="style-btn" data-style="tips">💡 Советы</button>
-                                        <button class="style-btn" data-style="insights">📈 Инсайты</button>
-                                    </div>
-                                </div>
                             </div>
 
                             <button class="threads-button primary generate-btn" id="generate-posts">
-                                ✨ Сгенерировать посты
+                                🧵 Сгенерировать Threads
                             </button>
 
                             <div class="generated-posts" id="generated-posts">
@@ -287,6 +273,7 @@
     </div>
     
     <script src="../assets/js/threads-api.js"></script>
+    <script src="../assets/js/openai-service.js"></script>
     <script src="../assets/js/threads-autopilot.js"></script>
 </body>
 </html>

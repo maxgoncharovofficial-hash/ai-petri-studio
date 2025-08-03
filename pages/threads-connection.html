@@ -100,10 +100,41 @@
                         </button>
                     </div>
 
+                    <!-- OpenAI Integration -->
+                    <div class="step-card" id="step-openai">
+                        <div class="step-header">
+                            <div class="step-icon">🤖</div>
+                            <div class="step-text">
+                                <div class="step-title">ШАГ 3: Подключить OpenAI</div>
+                                <div class="step-status">Для генерации постов ИИ</div>
+                            </div>
+                        </div>
+                        
+                        <div class="api-form">
+                            <div class="form-group">
+                                <label for="openai-api-key">OpenAI API Key:</label>
+                                <div class="token-input-group">
+                                    <input type="password" 
+                                           id="openai-api-key" 
+                                           class="token-input" 
+                                           placeholder="sk-proj-..." 
+                                           autocomplete="off">
+                                    <button type="button" class="toggle-token" id="toggle-openai-key">👁️</button>
+                                </div>
+                                <small class="form-help">
+                                    Получите ключ на <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a>
+                                </small>
+                            </div>
 
+                            <button class="threads-button primary" id="connect-openai">
+                                🔗 Подключить OpenAI
+                            </button>
 
-
-
+                            <div class="openai-result" id="openai-result" style="display: none;">
+                                <!-- OpenAI connection status will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -111,6 +142,7 @@
     </div>
     
     <script src="../assets/js/threads-api.js"></script>
+    <script src="../assets/js/openai-service.js"></script>
     <script src="../assets/js/threads-connection.js"></script>
 </body>
 </html>

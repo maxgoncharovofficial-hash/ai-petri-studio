@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadAutopilotData();
     updateAIRequirements();
     updateQueueCount();
+    updateTodayPosts();
 });
 
 // === КНОПКА НАЗАД ===
@@ -880,6 +881,16 @@ function initializeScheduleManager() {
             const mode = this.dataset.mode;
             const count = getSelectedPostsCount();
             generateSchedulePreview(count, mode);
+            
+            // Управляем видимостью кнопки регенерации
+            const regenerateBtn = document.getElementById('regenerate-schedule');
+            if (regenerateBtn) {
+                if (mode === 'random') {
+                    regenerateBtn.style.display = 'inline-block';
+                } else {
+                    regenerateBtn.style.display = 'none';
+                }
+            }
         });
     });
     
@@ -937,6 +948,33 @@ function getSelectedDistributionMode() {
 function generateSchedulePreview(count, mode = 'auto') {
     const preview = document.getElementById('schedule-preview');
     if (!preview) return;
+    
+    if (mode === 'manual') {
+        // Для ручного режима показываем поля ввода времени
+        let html = `
+            <h5>Ручная настройка времени (${count} ${count === 1 ? 'пост' : count < 5 ? 'поста' : 'постов'} в день):</h5>
+            <div class="manual-time-inputs">
+        `;
+        
+        for (let i = 0; i < count; i++) {
+            html += `
+                <div class="time-input-row">
+                    <label>Пост ${i + 1}:</label>
+                    <input type="time" class="manual-time-input" data-index="${i}" value="09:00">
+                </div>
+            `;
+        }
+        
+        html += `
+            </div>
+            <p style="margin-top: 16px; color: #6c757d; font-size: 14px;">
+                Режим: ${getModeDisplayName(mode)} | Укажите точное время для каждого поста
+            </p>
+        `;
+        
+        preview.innerHTML = html;
+        return;
+    }
     
     const times = generatePostingTimes(count, mode);
     
@@ -1065,7 +1103,22 @@ function timeToMinutes(timeStr) {
 function applySchedule() {
     const count = getSelectedPostsCount();
     const mode = getSelectedDistributionMode();
-    const times = generatePostingTimes(count, mode);
+    
+    let times;
+    
+    if (mode === 'manual') {
+        // Для ручного режима собираем времена из полей ввода
+        const timeInputs = document.querySelectorAll('.manual-time-input');
+        times = Array.from(timeInputs).map(input => input.value).sort();
+        
+        // Проверяем что все поля заполнены
+        if (times.some(time => !time)) {
+            alert('Пожалуйста, укажите время для всех постов');
+            return;
+        }
+    } else {
+        times = generatePostingTimes(count, mode);
+    }
     
     const scheduleData = {
         postsPerDay: count,
@@ -1082,21 +1135,13 @@ function applySchedule() {
     // Обновляем UI
     updateScheduleDisplay();
     updateQueueCount();
+    updateTodayPosts(); // Обновляем список сегодняшних постов
     
     alert(`✅ Расписание применено! ${count} ${count === 1 ? 'пост' : count < 5 ? 'поста' : 'постов'} в день.`);
 }
 
 // === ГЕНЕРАТОР ПОСТОВ ===
 function initializePostsGenerator() {
-    // Кнопки стиля контента
-    const styleButtons = document.querySelectorAll('.style-btn');
-    styleButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            styleButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-    
     // Кнопка генерации
     const generateBtn = document.getElementById('generate-posts');
     if (generateBtn) {
@@ -1110,23 +1155,59 @@ async function generatePosts() {
     const postsContainer = document.getElementById('generated-posts');
     
     const count = parseInt(countSelect.value) || 5;
-    const style = document.querySelector('.style-btn.active')?.dataset.style || 'mixed';
+    
+    // Проверяем подключение OpenAI
+    if (!window.openAIService || !window.openAIService.isServiceConnected()) {
+        alert('⚠️ Сначала подключите OpenAI в разделе "Подключение"');
+        return;
+    }
     
     // Показываем процесс генерации
-    generateBtn.textContent = '🔄 Генерируем...';
+    generateBtn.textContent = '🔄 Генерируем с ИИ...';
     generateBtn.disabled = true;
     
     try {
         const posts = [];
         
+        // Получаем данные пользователя для контекста
+        const userData = {
+            product: getFromStorage('product_data'),
+            audience: getFromStorage('audience_data'),
+            personality: getFromStorage('personality_data')
+        };
+        
         for (let i = 0; i < count; i++) {
-            const content = await generateContentFromUserData(style);
-            posts.push({
-                id: Date.now() + i,
-                text: content.text,
-                style: style,
-                createdAt: new Date().toISOString()
-            });
+            try {
+                // Используем OpenAI для генерации
+                const result = await window.openAIService.generatePost(null, userData);
+                
+                if (result.success) {
+                    posts.push({
+                        id: Date.now() + i,
+                        text: result.text,
+                        source: 'openai',
+                        createdAt: new Date().toISOString()
+                    });
+                } else {
+                    throw new Error('Не удалось сгенерировать пост');
+                }
+                
+                // Небольшая задержка между запросами
+                if (i < count - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+            } catch (error) {
+                console.warn(`Ошибка генерации поста ${i + 1}:`, error);
+                // В случае ошибки используем fallback
+                const fallbackContent = await generateContentFromUserData('mixed');
+                posts.push({
+                    id: Date.now() + i,
+                    text: fallbackContent.text,
+                    source: 'fallback',
+                    createdAt: new Date().toISOString()
+                });
+            }
         }
         
         displayGeneratedPosts(posts);
@@ -1135,7 +1216,7 @@ async function generatePosts() {
         alert('Ошибка генерации: ' + error.message);
     }
     
-    generateBtn.textContent = '✨ Сгенерировать посты';
+    generateBtn.textContent = '🧵 Сгенерировать Threads';
     generateBtn.disabled = false;
 }
 
@@ -1315,6 +1396,53 @@ window.moveQueuePost = function(postId, direction) {
         saveToStorage('threads_queue_posts', queuePosts);
         displayQueue();
     }
+};
+
+// === ОБНОВЛЕНИЕ СЕГОДНЯШНИХ ПОСТОВ ===
+function updateTodayPosts() {
+    const container = document.getElementById('today-posts');
+    if (!container) return;
+    
+    const scheduleData = getFromStorage('threads_schedule');
+    if (!scheduleData || !scheduleData.postingTimes) {
+        container.innerHTML = '<p style="color: #6c757d; text-align: center; padding: 20px;">Расписание не настроено</p>';
+        return;
+    }
+    
+    let html = '';
+    scheduleData.postingTimes.forEach((time, index) => {
+        html += `
+            <div class="post-item" data-time="${time}">
+                <span class="post-time">${time}</span>
+                <span class="post-status">⏳ Ожидание</span>
+                <span class="post-content">Пост готов к публикации</span>
+                <button class="post-delete-btn" onclick="removeScheduledPost('${time}')" title="Удалить">🗑️</button>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// === УДАЛЕНИЕ ЗАПЛАНИРОВАННОГО ПОСТА ===
+window.removeScheduledPost = function(timeToRemove) {
+    const scheduleData = getFromStorage('threads_schedule');
+    if (!scheduleData || !scheduleData.postingTimes) return;
+    
+    // Удаляем время из расписания
+    scheduleData.postingTimes = scheduleData.postingTimes.filter(time => time !== timeToRemove);
+    scheduleData.postsPerDay = scheduleData.postingTimes.length;
+    scheduleData.updatedAt = new Date().toISOString();
+    
+    // Сохраняем обновленное расписание
+    saveToStorage('threads_schedule', scheduleData);
+    
+    // Обновляем UI
+    updateTodayPosts();
+    updateQueueCount();
+    updateScheduleDisplay();
+    
+    alert(`✅ Пост на ${timeToRemove} удален из расписания`);
 };
 
 // === ОТЛАДКА ===

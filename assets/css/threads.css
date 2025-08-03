@@ -1580,6 +1580,79 @@
     color: #856404;
 }
 
+/* Manual Time Inputs */
+.manual-time-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.time-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.time-input-row label {
+    min-width: 80px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.manual-time-input {
+    padding: 8px 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    min-width: 120px;
+}
+
+.manual-time-input:focus {
+    border-color: #2196f3;
+    outline: none;
+}
+
+/* Post Item Delete Button */
+.post-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.post-item:last-child {
+    margin-bottom: 0;
+}
+
+.post-delete-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-left: auto;
+}
+
+.post-delete-btn:hover {
+    background: #f5c6cb;
+    color: #721c24;
+}
+
 /* AI Section */
 .ai-section {
     background: #fff3cd;
