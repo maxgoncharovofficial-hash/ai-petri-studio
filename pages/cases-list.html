@@ -3,17 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="-1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AiPetri Studio</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Мои кейсы - AiPetri Studio</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/cases.css">
 </head>
 <body>
     <div id="app">
-        <!-- Header Gradient -->
+        <!-- Header -->
         <div class="header-gradient">
             <div class="header-factory-icon">
                 <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
@@ -73,41 +69,76 @@
             </div>
             <div class="header-title-block">
                 <div class="header-title">AiPetri Studio</div>
-                <div class="header-subtitle">Премиум автоматизация публикаций v30.29</div>
+                <div class="header-subtitle">Мои кейсы</div>
             </div>
         </div>
+
         <!-- Main Content -->
         <main class="main-content">
-            <div class="cards-container">
-                <!-- РАСПАКОВКА ЛИЧНОСТИ Card -->
-                <div class="card" id="personality-card">
-                    <div class="card-icon">
-                        <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
-                            <!-- Inner circle around head - same shade as THREADS ZAVOD -->
-                            <circle cx="25" cy="20" r="12" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
-                            <!-- User icon -->
-                            <image href="assets/images/ChatGPT Image 2 авг. 2025 г., 19_40_13.png" x="10" y="10" width="30" height="30"/>
-                        </svg>
-                    </div>
-                    <div class="card-content">
-                        <h3>РАСПАКОВКА ЛИЧНОСТИ</h3>
-                    </div>
+            <div class="cases-page-container">
+                <!-- Back Button -->
+                <div class="back-button-container">
+                    <button id="back-button" class="back-button">
+                        ← Назад к созданию кейсов
+                    </button>
                 </div>
-                
-                <!-- THREADS ZAVOD Card -->
-                <div class="card" id="threads-zavod-card">
-                    <div class="card-icon">
-                        <div class="threads-icon"></div>
-                    </div>
-                    <div class="card-content">
-                        <h3>THREADS ZAVOD</h3>
-                        <p>Автоматизация и управление Threads</p>
-                    </div>
+
+                <!-- Cases Counter -->
+                <div class="cases-counter">
+                    <h2>📋 Сохранено: <span id="cases-count">0</span> кейсов</h2>
+                </div>
+
+                <!-- Cases List -->
+                <div id="cases-list" class="cases-list">
+                    <!-- Cases will be loaded here -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state" style="display: none;">
+                    <div class="empty-icon">📋</div>
+                    <div class="empty-text">У вас пока нет сохраненных кейсов</div>
+                    <div class="empty-subtext">Создайте первый кейс, чтобы увидеть его здесь</div>
+                </div>
+
+                <!-- Add New Case Button -->
+                <div class="add-case-button-container">
+                    <button id="add-new-case-btn" class="add-case-button">
+                        ➕ Добавить новый кейс
+                    </button>
                 </div>
             </div>
         </main>
     </div>
-    
-    <script src="assets/js/app.js?v=30.29"></script>
+
+    <!-- Modal для просмотра кейса -->
+    <div id="view-case-modal" class="modal-overlay">
+        <div class="modal-content view-case-modal">
+            <div class="modal-header">Просмотр кейса</div>
+            <div class="modal-body view-case-content" id="view-case-content">
+                <!-- Case content will be loaded here -->
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button secondary" id="edit-case-button">Редактировать</button>
+                <button class="modal-button" id="close-view-modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal для подтверждения удаления -->
+    <div id="delete-confirm-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">Удаление кейса</div>
+            <div class="modal-body">
+                <span class="modal-icon">⚠️</span>
+                <span class="modal-text">Вы уверены, что хотите удалить этот кейс?</span>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-button secondary" id="cancel-delete">Отмена</button>
+                <button class="modal-button danger" id="confirm-delete">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/cases-list.js?v=30.29"></script>
 </body>
-</html>
+</html> 

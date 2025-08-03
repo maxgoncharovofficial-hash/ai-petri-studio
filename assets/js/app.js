@@ -9,10 +9,7 @@ function handleThreadsZavod() {
     alert('Раздел THREADS ZAVOD в разработке');
 }
 
-function handleCases() {
-    console.log('РАСПАКОВКА КЕЙСОВ clicked');
-    window.location.href = 'pages/cases.html';
-}
+
 
 function handleContentCreation() {
     console.log('СОЗДАНИЕ КОНТЕНТА clicked');
@@ -38,14 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    const casesCard = document.getElementById('cases-card');
-    if (casesCard) {
-        casesCard.addEventListener('click', handleCases);
-        casesCard.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            handleCases();
-        });
-    }
+
     
     const threadsZavodCard = document.getElementById('threads-zavod-card');
     if (threadsZavodCard) {
