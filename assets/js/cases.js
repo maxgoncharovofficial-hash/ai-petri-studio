@@ -183,8 +183,8 @@ function switchTab(tabName) {
     
     // Если переключаемся на список кейсов, обновляем его
     if (tabName === 'list') {
-        console.log('📋 Switching to list tab, loading cases list...');
-        loadCasesList();
+        console.log('📋 Switching to list tab, showing fullscreen interface...');
+        showFullscreenCasesInterface();
     }
     
     console.log('🔄 === Tab switched successfully to:', tabName, '===');
@@ -384,7 +384,7 @@ function saveData() {
     
     // Собираем все данные из формы
     const formData = {
-        id: currentEditingCaseId || Date.now(),
+        id: window.editingCaseId || Date.now(),
         date: new Date().toLocaleDateString('ru-RU'),
         clientName: clientName,
         howFoundOut: question2.value.trim(),
@@ -434,20 +434,30 @@ function saveData() {
     console.log('📋 Количество существующих кейсов:', existingCases.length);
     
     // Добавляем или обновляем кейс
-    if (currentEditingCaseId) {
-        // Обновляем существующий кейс
-        const index = existingCases.findIndex(case_ => case_.id === currentEditingCaseId);
-        if (index !== -1) {
-            existingCases[index] = formData;
-            console.log('✏️ Updated existing case at index:', index);
-        } else {
-            console.log('✏️ Case not found for editing, adding as new');
-            existingCases.push(formData);
+    if (window.editingCaseId) {
+        // Режим редактирования - обновить существующий кейс
+        const caseIndex = existingCases.findIndex(c => c.id === window.editingCaseId);
+        if (caseIndex !== -1) {
+            // Обновить данные, но сохранить исходный ID и дату создания
+            const originalId = existingCases[caseIndex].id;
+            const originalDate = existingCases[caseIndex].saved_at;
+            
+            existingCases[caseIndex] = {
+                ...formData,
+                id: originalId,
+                saved_at: originalDate,
+                updated_at: new Date().toISOString()
+            };
+            
+            console.log('📝 Case updated:', formData.clientName);
         }
+        
+        // Сбросить режим редактирования
+        delete window.editingCaseId;
     } else {
-        // Добавляем новый кейс
+        // Режим создания - добавить новый кейс
         existingCases.push(formData);
-        console.log('➕ Added new case, total cases now:', existingCases.length);
+        console.log('➕ New case added:', formData.clientName);
     }
     
     console.log('📋 Кейсы после добавления/обновления:', existingCases);
@@ -840,7 +850,7 @@ function initializeModals() {
             // Переключаемся на список кейсов после закрытия модального окна
             setTimeout(() => {
                 switchTab('list');
-                loadCasesList(); // Обновить список кейсов
+                showFullscreenCasesInterface();
                 console.log('📱 Switched to list tab after save');
             }, 100);
         });
@@ -852,7 +862,7 @@ function initializeModals() {
             // Переключаемся на список кейсов после закрытия модального окна
             setTimeout(() => {
                 switchTab('list');
-                loadCasesList(); // Обновить список кейсов
+                showFullscreenCasesInterface();
                 console.log('📱 Switched to list tab after save');
             }, 100);
         });
@@ -999,43 +1009,295 @@ function hideModal(modalId) {
     }
 }
 
-// Показ модального окна кейса
-function showCaseModal(caseData) {
-    console.log('📱 === Showing case modal for:', caseData, '===');
-    const modalContent = document.getElementById('view-case-content');
-    const editButton = document.getElementById('edit-case-button');
+// Полноэкранный интерфейс кейсов
+function showFullscreenCasesInterface() {
+    console.log('🚀 Launching fullscreen cases interface');
     
-    const content = `
-        <div class="case-field">
-            <div class="case-field-label">Имя клиента:</div>
-            <div class="case-field-value">${caseData.clientName}</div>
-        </div>
-        <div class="case-field">
-            <div class="case-field-label">Как узнал о вас:</div>
-            <div class="case-field-value">${caseData.howFoundOut || 'Не указано'}</div>
-        </div>
-        <div class="case-field">
-            <div class="case-field-label">Основные цели:</div>
-            <div class="case-field-value">${caseData.goals || 'Не указано'}</div>
-        </div>
-        <div class="case-field">
-            <div class="case-field-label">Проблемы до работы:</div>
-            <div class="case-field-value">${caseData.problems || 'Не указано'}</div>
-        </div>
-        <div class="case-field">
-            <div class="case-field-label">Достигнутые результаты:</div>
-            <div class="case-field-value">${caseData.results || 'Не указано'}</div>
-        </div>
-        <div class="case-field">
-            <div class="case-field-label">Что помогло:</div>
-            <div class="case-field-value">${caseData.whatHelped || 'Не указано'}</div>
-        </div>
+    // Получить данные из localStorage
+    const casesData = localStorage.getItem('cases');
+    let cases = [];
+    
+    if (casesData) {
+        try {
+            cases = JSON.parse(casesData);
+        } catch (e) {
+            console.error('Parse error:', e);
+        }
+    }
+    
+    // Создать полноэкранный оверлей
+    const overlay = document.createElement('div');
+    overlay.id = 'cases-fullscreen-interface';
+    overlay.style.cssText = `
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        z-index: 999999 !important;
+        overflow-y: auto !important;
+        padding: 20px !important;
+        box-sizing: border-box !important;
     `;
     
-    modalContent.innerHTML = content;
-    editButton.setAttribute('data-case', JSON.stringify(caseData));
+    // Создать заголовок и навигацию
+    const header = document.createElement('div');
+    header.style.cssText = `
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 30px !important;
+        background: rgba(255,255,255,0.9) !important;
+        padding: 20px !important;
+        border-radius: 15px !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+    `;
     
-    showModal('view-case-modal');
+    const title = document.createElement('h1');
+    title.textContent = '📋 МЕНЕДЖЕР КЕЙСОВ';
+    title.style.cssText = `
+        color: #333 !important;
+        font-size: 28px !important;
+        margin: 0 !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1) !important;
+    `;
+    
+    const controls = document.createElement('div');
+    controls.style.cssText = `display: flex !important; gap: 15px !important;`;
+    
+    // Кнопка создания кейса
+    const newBtn = document.createElement('button');
+    newBtn.textContent = '➕ Новый кейс';
+    newBtn.style.cssText = `
+        background: #28a745 !important;
+        color: white !important;
+        border: none !important;
+        padding: 12px 20px !important;
+        font-size: 16px !important;
+        border-radius: 8px !important;
+        cursor: pointer !important;
+        font-weight: bold !important;
+        box-shadow: 0 4px 15px rgba(40,167,69,0.3) !important;
+        transition: all 0.3s ease !important;
+    `;
+    newBtn.onclick = () => {
+        overlay.remove();
+        switchTab('create');
+    };
+    
+    // Кнопка закрытия
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '❌ Закрыть';
+    closeBtn.style.cssText = `
+        background: #dc3545 !important;
+        color: white !important;
+        border: none !important;
+        padding: 12px 20px !important;
+        font-size: 16px !important;
+        border-radius: 8px !important;
+        cursor: pointer !important;
+        font-weight: bold !important;
+        box-shadow: 0 4px 15px rgba(220,53,69,0.3) !important;
+        transition: all 0.3s ease !important;
+    `;
+    closeBtn.onclick = () => overlay.remove();
+    
+    controls.appendChild(newBtn);
+    controls.appendChild(closeBtn);
+    header.appendChild(title);
+    header.appendChild(controls);
+    overlay.appendChild(header);
+    
+    // Создать контейнер для кейсов
+    const container = document.createElement('div');
+    container.style.cssText = `
+        max-width: 1000px !important;
+        margin: 0 auto !important;
+        display: grid !important;
+        gap: 25px !important;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)) !important;
+    `;
+    
+    if (cases.length === 0) {
+        // Пустое состояние
+        const emptyState = document.createElement('div');
+        emptyState.style.cssText = `
+            grid-column: 1 / -1 !important;
+            text-align: center !important;
+            padding: 60px 20px !important;
+            background: rgba(255,255,255,0.9) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+        `;
+        emptyState.innerHTML = `
+            <div style="font-size: 80px; margin-bottom: 20px;">📋</div>
+            <h2 style="color: #666; margin: 0 0 15px 0;">Кейсов пока нет</h2>
+            <p style="color: #999; font-size: 18px; margin: 0;">Создайте первый кейс, нажав кнопку "Новый кейс"</p>
+        `;
+        container.appendChild(emptyState);
+    } else {
+        // Отобразить кейсы
+        cases.sort((a, b) => new Date(b.saved_at) - new Date(a.saved_at));
+        
+        cases.forEach((caseItem, index) => {
+            const card = document.createElement('div');
+            card.style.cssText = `
+                background: rgba(255,255,255,0.95) !important;
+                border-radius: 20px !important;
+                padding: 25px !important;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.1) !important;
+                border: 2px solid rgba(255,255,255,0.3) !important;
+                backdrop-filter: blur(10px) !important;
+                transition: all 0.3s ease !important;
+                position: relative !important;
+                overflow: hidden !important;
+            `;
+            
+            const description = caseItem.howFoundOut || caseItem.goals || caseItem.problems || 'Описание не указано';
+            
+            card.innerHTML = `
+                <div style="
+                    position: absolute; top: 0; right: 0; 
+                    background: linear-gradient(45deg, #667eea, #764ba2); 
+                    color: white; padding: 8px 15px; 
+                    border-radius: 0 20px 0 15px; 
+                    font-weight: bold; font-size: 12px;
+                ">
+                    #${index + 1}
+                </div>
+                
+                <div style="margin-bottom: 20px; padding-top: 15px;">
+                    <h3 style="
+                        margin: 0 0 8px 0; 
+                        color: #333; 
+                        font-size: 22px; 
+                        font-weight: 700;
+                        background: linear-gradient(45deg, #667eea, #764ba2);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                    ">
+                        👤 ${caseItem.clientName}
+                    </h3>
+                    <p style="
+                        margin: 0; 
+                        color: #666; 
+                        font-size: 14px;
+                        opacity: 0.8;
+                    ">
+                        📅 ${caseItem.date} | 🆔 ${caseItem.id}
+                    </p>
+                </div>
+                
+                <div style="
+                    background: #f8f9fa; 
+                    padding: 15px; 
+                    border-radius: 12px; 
+                    margin-bottom: 20px;
+                    border-left: 4px solid #667eea;
+                ">
+                    <p style="
+                        margin: 0; 
+                        color: #555; 
+                        line-height: 1.6;
+                        font-size: 14px;
+                    ">
+                        ${description}
+                    </p>
+                </div>
+                
+                <div style="
+                    display: grid; 
+                    grid-template-columns: repeat(3, 1fr); 
+                    gap: 10px;
+                ">
+                    <button data-action="view" data-case-id="${caseItem.id}" style="
+                        background: linear-gradient(45deg, #28a745, #20c997);
+                        color: white; border: none; padding: 12px 8px; 
+                        border-radius: 10px; cursor: pointer; font-size: 13px;
+                        font-weight: bold; transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+                    ">
+                        👁️ Просмотр
+                    </button>
+                    <button data-action="edit" data-case-id="${caseItem.id}" style="
+                        background: linear-gradient(45deg, #ffc107, #fd7e14);
+                        color: white; border: none; padding: 12px 8px; 
+                        border-radius: 10px; cursor: pointer; font-size: 13px;
+                        font-weight: bold; transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(255,193,7,0.3);
+                    ">
+                        ✏️ Правка
+                    </button>
+                    <button data-action="delete" data-case-id="${caseItem.id}" style="
+                        background: linear-gradient(45deg, #dc3545, #e83e8c);
+                        color: white; border: none; padding: 12px 8px; 
+                        border-radius: 10px; cursor: pointer; font-size: 13px;
+                        font-weight: bold; transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(220,53,69,0.3);
+                    ">
+                        🗑️ Удалить
+                    </button>
+                </div>
+            `;
+            
+            // Обработчики кнопок
+            const buttons = card.querySelectorAll('button[data-action]');
+            buttons.forEach(btn => {
+                btn.onclick = function(e) {
+                    e.preventDefault();
+                    const action = this.dataset.action;
+                    const caseId = parseInt(this.dataset.caseId);
+                    
+                    if (action === 'view') {
+                        showCaseModal(caseItem);
+                    } else if (action === 'edit') {
+                        overlay.remove();
+                        loadCaseForEditing(caseItem);
+                        switchTab('create');
+                    } else if (action === 'delete') {
+                        if (confirm(`Удалить кейс "${caseItem.clientName}"?`)) {
+                            let cases = JSON.parse(localStorage.getItem('cases') || '[]');
+                            cases = cases.filter(c => c.id !== caseId);
+                            localStorage.setItem('cases', JSON.stringify(cases));
+                            card.remove();
+                            alert('Кейс удален!');
+                            
+                            if (cases.length === 0) {
+                                setTimeout(() => overlay.remove(), 1000);
+                            }
+                        }
+                    }
+                };
+            });
+            
+            container.appendChild(card);
+        });
+    }
+    
+    overlay.appendChild(container);
+    document.body.appendChild(overlay);
+    
+    console.log('✅ Fullscreen cases interface created');
+}
+
+// Показ модального окна кейса
+function showCaseModal(caseData) {
+    console.log('📋 === Showing case modal ===');
+    console.log('📋 Case data:', caseData);
+    
+    // Простой alert для просмотра кейса
+    const message = `📋 Просмотр кейса: ${caseData.clientName}
+
+📅 Дата: ${caseData.date}
+🎯 Цели: ${caseData.goals || 'Не указано'}
+❗ Проблемы: ${caseData.problems || 'Не указано'}
+✅ Результаты: ${caseData.results || 'Не указано'}
+💡 Что помогло: ${caseData.whatHelped || 'Не указано'}`;
+    
+    alert(message);
+    console.log('✅ Case modal shown');
 }
 
 // Показ модального окна подтверждения удаления
@@ -1054,6 +1316,32 @@ function deleteCase(caseId) {
     localStorage.setItem('cases_data', JSON.stringify(updatedCases));
     loadCasesList();
     console.log('✅ Case deleted successfully');
+}
+
+// Загрузка кейса для редактирования
+function loadCaseForEditing(caseData) {
+    console.log('📝 === Loading case for editing ===');
+    console.log('📝 Case data:', caseData);
+    
+    // Заполнить форму данными кейса для редактирования
+    const question1 = document.getElementById('question-1');
+    const question2 = document.getElementById('question-2');
+    const question3 = document.getElementById('question-3');
+    const question4 = document.getElementById('question-4');
+    const question5 = document.getElementById('question-5');
+    const question6 = document.getElementById('question-6');
+    
+    if (question1) question1.value = caseData.clientName || '';
+    if (question2) question2.value = caseData.howFoundOut || '';
+    if (question3) question3.value = caseData.goals || '';
+    if (question4) question4.value = caseData.problems || '';
+    if (question5) question5.value = caseData.results || '';
+    if (question6) question6.value = caseData.whatHelped || '';
+    
+    // Установить режим редактирования
+    window.editingCaseId = caseData.id;
+    console.log('📝 Case loaded for editing:', caseData.clientName);
+    console.log('📝 Editing case ID:', window.editingCaseId);
 }
 
 // Показ сообщения об успехе через модальное окно
