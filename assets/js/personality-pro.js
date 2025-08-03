@@ -53,8 +53,14 @@ function initializeFormHandlers() {
         // Обработчик изменения текста
         textarea.addEventListener('input', function() {
             updateCharCounter(questionNumber, this.value.length);
-            updateProgress();
+            // Обновлять прогресс только при первом символе или при очистке поля
+            if (this.value.length === 1 || this.value.length === 0) {
+                updateProgress();
+            }
         });
+        
+        // Обновлять прогресс при потере фокуса
+        textarea.addEventListener('blur', updateProgress);
         
         // Обработчик фокуса
         textarea.addEventListener('focus', function() {

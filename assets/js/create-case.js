@@ -96,8 +96,14 @@ function setupEventHandlers() {
             textarea.addEventListener('input', function() {
                 const length = this.value.length;
                 counter.textContent = length;
-                updateProgress();
+                // Обновлять прогресс только при первом символе или при очистке поля
+                if (length === 1 || length === 0) {
+                    updateProgress();
+                }
             });
+            
+            // Обновлять прогресс при потере фокуса
+            textarea.addEventListener('blur', updateProgress);
         }
     }
 }
@@ -219,8 +225,6 @@ function saveCase() {
 }
 
 function updateProgress() {
-    console.log('📊 Updating progress');
-    
     let filledCount = 0;
     const totalQuestions = 6;
     
@@ -241,8 +245,6 @@ function updateProgress() {
     if (filledQuestions) filledQuestions.textContent = `${filledCount}/${totalQuestions}`;
     if (progressPercentage) progressPercentage.textContent = `${percentage}%`;
     if (progressFill) progressFill.style.width = `${percentage}%`;
-    
-    console.log(`📊 Progress: ${filledCount}/${totalQuestions} (${percentage}%)`);
 }
 
 function showModal(modalId) {
