@@ -206,12 +206,20 @@ function updateProgress() {
     if (progressFill) progressFill.style.width = `${percentage}%`;
 }
 
-// Сохранение данных
+// Сохранение данных - ПОЛНОСТЬЮ ПЕРЕПИСАНА С ОТЛАДКОЙ
 function saveData() {
-    console.log('=== saveData() called ===');
+    console.log('=== НАЧАЛО СОХРАНЕНИЯ КЕЙСА ===');
     
+    // Проверяем что форма существует
+    const form = document.getElementById('cases-form');
+    if (!form) {
+        console.error('Форма не найдена!');
+        return;
+    }
+    
+    // Собираем данные из формы
     const clientName = document.getElementById('question-1').value.trim();
-    console.log('Client name:', clientName);
+    console.log('Имя клиента:', clientName);
     
     // Валидация - имя клиента обязательно
     if (!clientName) {
@@ -220,7 +228,7 @@ function saveData() {
         return;
     }
     
-    // Собираем данные из всех полей
+    // Собираем все данные из формы
     const formData = {
         id: currentEditingCaseId || Date.now(),
         date: new Date().toLocaleDateString('ru-RU'),
@@ -232,20 +240,45 @@ function saveData() {
         whatHelped: document.getElementById('question-6').value.trim(),
         saved_at: new Date().toISOString()
     };
+    console.log('Данные формы:', formData);
     
-    console.log('Form data collected:', formData);
+    // Получаем существующие кейсы из localStorage
+    let existingCases = [];
+    try {
+        const savedData = localStorage.getItem('cases_data');
+        console.log('Raw localStorage data:', savedData);
+        
+        if (savedData) {
+            existingCases = JSON.parse(savedData);
+            console.log('Parsed existing cases:', existingCases);
+        } else {
+            console.log('No existing cases found, starting with empty array');
+        }
+        
+        // Убеждаемся что это массив
+        if (!Array.isArray(existingCases)) {
+            console.log('Existing cases is not array, resetting to empty array');
+            existingCases = [];
+        }
+        
+    } catch (error) {
+        console.error('Error parsing existing cases:', error);
+        existingCases = [];
+    }
     
-    // Получаем существующие кейсы
-    const existingCases = getCases();
-    console.log('Existing cases before save:', existingCases);
-    console.log('Existing cases count before save:', existingCases.length);
+    console.log('Существующие кейсы перед сохранением:', existingCases);
+    console.log('Количество существующих кейсов:', existingCases.length);
     
+    // Добавляем или обновляем кейс
     if (currentEditingCaseId) {
         // Обновляем существующий кейс
         const index = existingCases.findIndex(case_ => case_.id === currentEditingCaseId);
         if (index !== -1) {
             existingCases[index] = formData;
             console.log('Updated existing case at index:', index);
+        } else {
+            console.log('Case not found for editing, adding as new');
+            existingCases.push(formData);
         }
     } else {
         // Добавляем новый кейс
@@ -253,11 +286,16 @@ function saveData() {
         console.log('Added new case, total cases now:', existingCases.length);
     }
     
+    console.log('Кейсы после добавления/обновления:', existingCases);
+    
     // Сохраняем в localStorage
     try {
         localStorage.setItem('cases_data', JSON.stringify(existingCases));
         console.log('Data saved to localStorage successfully');
-        console.log('localStorage content after save:', localStorage.getItem('cases_data'));
+        
+        // Проверяем что сохранилось
+        const saved = localStorage.getItem('cases_data');
+        console.log('Проверка сохранения:', saved);
         
         // Сразу обновляем список кейсов
         loadCasesList();
@@ -280,7 +318,7 @@ function saveData() {
     showSuccessMessage();
     console.log('Success message shown');
     
-    console.log('=== saveData() completed successfully ===');
+    console.log('=== КОНЕЦ СОХРАНЕНИЯ КЕЙСА ===');
 }
 
 // Очистка формы
@@ -317,25 +355,36 @@ function loadCaseForEditing(caseData) {
     switchTab('create');
 }
 
-// Получение списка кейсов
+// Получение списка кейсов - ИСПРАВЛЕНА
 function getCases() {
-    const savedData = localStorage.getItem('cases_data');
-    console.log('Raw localStorage data:', savedData);
+    console.log('=== getCases() called ===');
     
-    if (savedData) {
-        try {
+    try {
+        const savedData = localStorage.getItem('cases_data');
+        console.log('Raw localStorage data in getCases:', savedData);
+        
+        if (savedData) {
             const parsed = JSON.parse(savedData);
-            console.log('Parsed cases data:', parsed);
-            return Array.isArray(parsed) ? parsed : [];
-        } catch (error) {
-            console.error('Error parsing cases data:', error);
+            console.log('Parsed cases data in getCases:', parsed);
+            
+            if (Array.isArray(parsed)) {
+                console.log('Returning array of cases:', parsed);
+                return parsed;
+            } else {
+                console.log('Parsed data is not array, returning empty array');
+                return [];
+            }
+        } else {
+            console.log('No data in localStorage, returning empty array');
             return [];
         }
+    } catch (error) {
+        console.error('Error in getCases:', error);
+        return [];
     }
-    return [];
 }
 
-// Загрузка списка кейсов
+// Загрузка списка кейсов - ИСПРАВЛЕНА
 function loadCasesList() {
     console.log('=== loadCasesList() called ===');
     
