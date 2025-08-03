@@ -65,22 +65,11 @@
                 <!-- Active Autopilot (shown when configured) -->
                 <div class="active-autopilot" id="active-autopilot" style="display: none;">
                     
-                    <!-- Schedule Today/Tomorrow -->
+                    <!-- Schedule Today -->
                     <div class="schedule-section">
                         <div class="schedule-day">
-                            <h4>📅 Сегодня</h4>
+                            <h4>📅 Расписание на сегодня</h4>
                             <div class="posts-list" id="today-posts">
-                                <div class="post-item">
-                                    <span class="post-time">10:00</span>
-                                    <span class="post-status">⏳ Ожидание</span>
-                                    <span class="post-content">Пост готов к публикации</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="schedule-day">
-                            <h4>📅 Завтра</h4>
-                            <div class="posts-list" id="tomorrow-posts">
                                 <div class="post-item">
                                     <span class="post-time">10:00</span>
                                     <span class="post-status">⏳ Ожидание</span>
@@ -103,15 +92,6 @@
                         <div class="control-buttons">
                             <button class="control-button pause" id="pause-autopilot">
                                 ⏸️ Приостановить автопилот
-                            </button>
-                            <button class="control-button skip" id="skip-post">
-                                ⏭️ Пропустить следующий пост
-                            </button>
-                            <button class="control-button create" id="create-now">
-                                🔄 Создать новый пост сейчас
-                            </button>
-                            <button class="control-button calendar" id="view-calendar">
-                                🗓️ Просмотреть календарь
                             </button>
                             <button class="control-button settings" id="modify-settings">
                                 ⚙️ Изменить настройки
@@ -142,80 +122,7 @@
                     </div>
                 </div>
 
-                <!-- AI Requirements Section -->
-                <div class="ai-section">
-                    <h4>🧠 ИИ создает посты на основе вашей распаковки:</h4>
-                    <div class="ai-requirements">
-                        <div class="requirement-item" id="req-product">
-                            <span class="req-status">❌</span>
-                            <span class="req-text">Ваш продукт/услуга</span>
-                            <button class="req-button" onclick="goToSection('product')">Заполнить</button>
-                        </div>
-                        <div class="requirement-item" id="req-audience">
-                            <span class="req-status">❌</span>
-                            <span class="req-text">Целевая аудитория</span>
-                            <button class="req-button" onclick="goToSection('audience')">Заполнить</button>
-                        </div>
-                        <div class="requirement-item" id="req-style">
-                            <span class="req-status">❌</span>
-                            <span class="req-text">Стиль общения</span>
-                            <button class="req-button" onclick="goToSection('personality-lite')">Заполнить</button>
-                        </div>
-                        <div class="requirement-item" id="req-expertise">
-                            <span class="req-status">❌</span>
-                            <span class="req-text">Экспертная область</span>
-                            <button class="req-button" onclick="goToSection('personality-pro')">Заполнить</button>
-                        </div>
-                    </div>
-                    
-                    <div class="ai-progress">
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="ai-progress-fill" style="width: 0%"></div>
-                        </div>
-                        <div class="progress-text">
-                            Готовность ИИ: <span id="ai-progress-text">0%</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Statistics Section -->
-                <div class="stats-section">
-                    <h4>📊 Статистика автопилота:</h4>
-                    <div class="stats-grid">
-                        <div class="stat-item">
-                            <div class="stat-value" id="total-published">0</div>
-                            <div class="stat-label">Опубликовано всего</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="today-published">0</div>
-                            <div class="stat-label">Сегодня</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="scheduled-posts">0</div>
-                            <div class="stat-label">Запланировано</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value" id="success-rate">0%</div>
-                            <div class="stat-label">Успешность</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Navigation to other sections -->
-                <div class="navigation-section">
-                    <h4>🚀 Быстрые действия:</h4>
-                    <div class="nav-buttons">
-                        <button class="nav-button" id="go-to-connection">
-                            📋 Настройки подключения
-                        </button>
-                        <button class="nav-button" id="go-to-create">
-                            📝 Создать пост вручную
-                        </button>
-                        <button class="nav-button" id="go-to-personality">
-                            🧠 Распаковка личности
-                        </button>
-                    </div>
-                </div>
             </div>
         </main>
     </div>
