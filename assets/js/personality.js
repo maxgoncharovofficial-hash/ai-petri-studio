@@ -154,16 +154,30 @@ function animateElements() {
 // Функция подсчета заполненных полей
 function countFilledFields(dataObject, fieldNames) {
     if (!dataObject || typeof dataObject !== 'object') {
+        console.log('🔍 countFilledFields: dataObject is empty or invalid');
         return 0;
     }
     
+    console.log('🔍 countFilledFields: dataObject =', dataObject);
+    console.log('🔍 countFilledFields: fieldNames =', fieldNames);
+    
     let filledCount = 0;
     fieldNames.forEach(fieldName => {
-        if (dataObject[fieldName] && dataObject[fieldName].trim() !== '') {
+        // Пропускаем системные поля
+        if (fieldName === 'saved_at' || fieldName === 'timestamp') {
+            console.log(`🔍 Field "${fieldName}": SKIPPED (system field)`);
+            return;
+        }
+        
+        const value = dataObject[fieldName];
+        const isFilled = value && value.trim() !== '';
+        console.log(`🔍 Field "${fieldName}": "${value}" -> ${isFilled ? 'FILLED' : 'EMPTY'}`);
+        if (isFilled) {
             filledCount++;
         }
     });
     
+    console.log(`🔍 countFilledFields result: ${filledCount} из ${fieldNames.length}`);
     return filledCount;
 }
 
@@ -305,6 +319,11 @@ function updateAllSectionCounters() {
     console.log('🎭 Личность Lite:', progressResults.personalityLite);
     console.log('👨‍💼 Личность Pro:', progressResults.personalityPro);
     console.log('📋 Кейсы:', progressResults.cases);
+    console.log('🧮 === ПОДРОБНЫЙ ПОДСЧЕТ ===');
+    console.log('🧮 totalFilled =', totalFilled);
+    console.log('🧮 totalMaxFields =', totalMaxFields);
+    console.log('🧮 percentage =', percentage);
+    console.log('🧮 Математика: ', totalFilled, '/', totalMaxFields, '=', Math.round((totalFilled / totalMaxFields) * 100), '%');
     console.log('🎯 ИТОГО:', totalFilled, '/', totalMaxFields, '(', percentage, '%)');
     console.log('✅ Все счетчики обновлены успешно');
 }
