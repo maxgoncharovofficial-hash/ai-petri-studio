@@ -20,12 +20,12 @@ function setupEventHandlers() {
         backButton.addEventListener('click', function(e) {
             e.preventDefault();
             console.log('⬅️ Back button clicked');
-            window.location.href = '../index.html';
+            window.location.href = 'personality.html';
         });
         backButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
             console.log('⬅️ Back button touched');
-            window.location.href = '../index.html';
+            window.location.href = 'personality.html';
         });
     }
     
