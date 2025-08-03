@@ -63,7 +63,7 @@
                         <div class="section-content">
                             <div class="section-header">
                                 <h3>Распаковка продукта</h3>
-                                <div class="section-counter" id="product-counter">[0/4]</div>
+                                <div class="section-counter">[0/4]</div>
                             </div>
                             <div class="section-priority">⭐ ПРИОРИТЕТ</div>
                         </div>
@@ -84,7 +84,7 @@
                         <div class="section-content">
                             <div class="section-header">
                                 <h3>Распаковка аудитории</h3>
-                                <div class="section-counter" id="audience-counter">[0/6]</div>
+                                <div class="section-counter">[0/6]</div>
                             </div>
                             <div class="section-priority">⭐ ПРИОРИТЕТ</div>
                         </div>
@@ -103,7 +103,7 @@
                         <div class="section-content">
                             <div class="section-header">
                                 <h3>Распаковка кейсов</h3>
-                                <div class="section-counter" id="cases-counter">[0/6]</div>
+                                <div class="section-counter">[0/6]</div>
                             </div>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                         <div class="section-content">
                             <div class="section-header">
                                 <h3>Распаковка личности Lite</h3>
-                                <div class="section-counter" id="lite-counter">[0/6]</div>
+                                <div class="section-counter">[0/6]</div>
                             </div>
                         </div>
                     </div>
@@ -139,7 +139,7 @@
                         <div class="section-content">
                             <div class="section-header">
                                 <h3>Распаковка личности Pro</h3>
-                                <div class="section-counter" id="pro-counter">[0/5]</div>
+                                <div class="section-counter">[0/5]</div>
                             </div>
                         </div>
                     </div>
@@ -157,6 +157,6 @@
         </main>
     </div>
     
-    <script src="personality.js?v=30.11"></script>
+    <script src="personality.js?v=30.5"></script>
 </body>
-</html>
+</html> 
