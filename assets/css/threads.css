@@ -725,14 +725,14 @@
 }
 
 .control-button.clear {
-    background: #dc3545;
+    background: #6c757d;
     color: white;
-    border-color: #dc3545;
+    border-color: #6c757d;
 }
 
 .control-button.clear:hover {
-    background: #c82333;
-    border-color: #bd2130;
+    background: #5a6268;
+    border-color: #545b62;
 }
 
 /* Schedule Editor Modal */
@@ -1714,8 +1714,8 @@
 }
 
 .post-delete-btn {
-    background: none;
-    border: none;
+    background: #fff;
+    border: 1px solid #dc3545;
     color: #dc3545;
     cursor: pointer;
     padding: 4px 8px;
@@ -1725,6 +1725,10 @@
     margin-left: auto;
     flex-shrink: 0;
     min-width: 32px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .post-delete-btn:hover {
@@ -1903,6 +1907,13 @@
 }
 
 @media (max-width: 768px) {
+    .prompt-settings-container {
+        padding: 16px !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
     .action-buttons {
         flex-direction: column;
         gap: 8px;
@@ -1911,16 +1922,30 @@
     .info-section {
         padding: 16px;
         margin-bottom: 20px;
+        box-sizing: border-box;
     }
     
     .tips-block {
         padding: 12px;
+        box-sizing: border-box;
     }
     
     .prompt-input {
         min-height: 150px;
         padding: 12px;
         font-size: 16px; /* Prevents zoom on iOS */
+        box-sizing: border-box;
+        width: 100%;
+    }
+    
+    .preview-section {
+        margin-top: 16px;
+        box-sizing: border-box;
+    }
+    
+    .preview-box {
+        padding: 12px;
+        box-sizing: border-box;
     }
 }
 

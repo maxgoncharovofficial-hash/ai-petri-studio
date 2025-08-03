@@ -142,11 +142,13 @@ async function connectAccount() {
             // Сохраняем токен
             saveApiKeys();
             
+            // Обновляем кнопку подключения
+            button.textContent = '✅ Подключено';
+            button.style.background = '#28a745';
+            button.disabled = true;
+            
             // Обновляем интерфейс
             updateConnectionStatus(connectionData);
-            showConnectionResult('success', 'Успешно подключено к Threads API!', result.user);
-            
-            button.textContent = '✅ Подключено';
             
             // Активируем шаг 3 (перенумеровали после добавления OpenAI)
             const stepSchedule = document.getElementById('step-schedule');
@@ -157,9 +159,6 @@ async function connectAccount() {
                 scheduleButton.classList.remove('disabled');
                 scheduleButton.textContent = '🤖 Перейти к автопилоту';
             }
-            
-            // Показываем статус подключения без модального окна
-            showConnectionResult('success', `Успешно подключено! Профиль: @${result.username}`);
             
         } else {
             throw new Error(result.error || 'Не удалось инициализировать API');

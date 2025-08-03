@@ -162,22 +162,27 @@ function updateScheduleDisplay() {
     const todayContainer = document.getElementById('today-posts');
     const tomorrowContainer = document.getElementById('tomorrow-posts');
     
-    if (!scheduleData) {
-        todayContainer.innerHTML = '<div class="post-item">Расписание не настроено</div>';
-        tomorrowContainer.innerHTML = '<div class="post-item">Расписание не настроено</div>';
-        return;
+    // Защита от отсутствующих элементов
+    if (todayContainer) {
+        if (!scheduleData) {
+            todayContainer.innerHTML = '<div class="post-item">Расписание не настроено</div>';
+        } else {
+            const today = new Date();
+            const todayPosts = generateDayPosts(today, scheduleData);
+            todayContainer.innerHTML = todayPosts;
+        }
     }
     
-    // Генерируем посты на сегодня
-    const today = new Date();
-    const todayPosts = generateDayPosts(today, scheduleData);
-    todayContainer.innerHTML = todayPosts;
-    
-    // Генерируем посты на завтра
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowPosts = generateDayPosts(tomorrow, scheduleData);
-    tomorrowContainer.innerHTML = tomorrowPosts;
+    if (tomorrowContainer) {
+        if (!scheduleData) {
+            tomorrowContainer.innerHTML = '<div class="post-item">Расписание не настроено</div>';
+        } else {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowPosts = generateDayPosts(tomorrow, scheduleData);
+            tomorrowContainer.innerHTML = tomorrowPosts;
+        }
+    }
 }
 
 function generateDayPosts(date, scheduleData) {
