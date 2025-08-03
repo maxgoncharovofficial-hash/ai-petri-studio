@@ -557,17 +557,23 @@ function loadSavedData() {
     // Загружаем API ключи
     loadApiKeys();
     
+    // Проверяем сохраненные состояния API
+    checkSavedOpenAI();
+    
     // Загружаем данные подключения
     const connectionData = getFromStorage('threads_connection');
     if (connectionData && connectionData.connected) {
         updateConnectionStatus(connectionData);
         
-        // Активируем шаг 2
+        // Активируем шаг 3 (автопилот)
         const stepSchedule = document.getElementById('step-schedule');
         const scheduleButton = document.getElementById('schedule-button');
         
-        stepSchedule.classList.remove('disabled');
-        scheduleButton.classList.remove('disabled');
+        if (stepSchedule) stepSchedule.classList.remove('disabled');
+        if (scheduleButton) {
+            scheduleButton.classList.remove('disabled');
+            scheduleButton.textContent = '🤖 Перейти к автопилоту';
+        }
     }
     
     // Загружаем данные расписания

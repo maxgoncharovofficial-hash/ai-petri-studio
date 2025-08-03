@@ -1293,6 +1293,7 @@ function displayQueue() {
                 <div class="queue-number">${index + 1}</div>
                 <div class="queue-content">${post.text}</div>
                 <div class="queue-actions">
+                    <button class="queue-action-btn publish-now" onclick="publishPostNow(${post.id})">🚀 Опубликовать</button>
                     <button class="queue-action-btn edit" onclick="editQueuePost(${post.id})">✏️</button>
                     <button class="queue-action-btn move-up" onclick="moveQueuePost(${post.id}, 'up')" ${index === 0 ? 'disabled' : ''}>↑</button>
                     <button class="queue-action-btn move-down" onclick="moveQueuePost(${post.id}, 'down')" ${index === queuePosts.length - 1 ? 'disabled' : ''}>↓</button>
@@ -1387,6 +1388,72 @@ window.deleteQueuePost = function(postId) {
     saveToStorage('threads_queue_posts', filtered);
     displayQueue();
     updateQueueCount();
+};
+
+window.publishPostNow = async function(postId) {
+    try {
+        // Проверяем подключение к Threads API
+        if (!window.threadsAPI || !window.threadsAPI.isConnected()) {
+            alert('❌ Threads API не подключен. Перейдите в раздел "Подключение" и настройте API.');
+            return;
+        }
+        
+        // Находим пост в очереди
+        const queuePosts = getFromStorage('threads_queue_posts') || [];
+        const post = queuePosts.find(p => p.id === postId);
+        
+        if (!post) {
+            alert('❌ Пост не найден в очереди');
+            return;
+        }
+        
+        // Подтверждение публикации
+        if (!confirm(`Опубликовать пост сейчас?\n\n"${post.text.substring(0, 100)}..."`)) {
+            return;
+        }
+        
+        // Показываем статус публикации
+        const button = document.querySelector(`[onclick="publishPostNow(${postId})"]`);
+        if (button) {
+            button.textContent = '⏳ Публикуем...';
+            button.disabled = true;
+        }
+        
+        // Публикуем через Threads API
+        const result = await window.threadsAPI.createTextPost(post.text);
+        
+        if (result.success) {
+            // Удаляем пост из очереди
+            const updatedQueue = queuePosts.filter(p => p.id !== postId);
+            saveToStorage('threads_queue_posts', updatedQueue);
+            
+            // Обновляем счетчик опубликованных постов
+            updatePublishedCount();
+            
+            // Показываем уведомление об успешной публикации
+            showPublicationNotification('success', `✅ Пост успешно опубликован! ID: ${result.postId}`);
+            
+            // Обновляем интерфейс
+            displayQueue();
+            updateQueueCount();
+            
+        } else {
+            throw new Error(result.error || 'Неизвестная ошибка при публикации');
+        }
+        
+    } catch (error) {
+        console.error('Ошибка публикации:', error);
+        
+        // Восстанавливаем кнопку
+        const button = document.querySelector(`[onclick="publishPostNow(${postId})"]`);
+        if (button) {
+            button.textContent = '🚀 Опубликовать';
+            button.disabled = false;
+        }
+        
+        // Показываем ошибку
+        showPublicationNotification('error', `❌ Ошибка публикации: ${error.message}`);
+    }
 };
 
 window.moveQueuePost = function(postId, direction) {

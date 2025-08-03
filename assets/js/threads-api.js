@@ -42,6 +42,13 @@ class ThreadsAPI {
     }
 
     /**
+     * Проверка статуса подключения
+     */
+    isConnected() {
+        return this.accessToken && this.userId;
+    }
+
+    /**
      * Получение информации о текущем пользователе
      */
     async getCurrentUser() {

@@ -1602,6 +1602,28 @@
     color: #856404;
 }
 
+.queue-action-btn.publish-now {
+    background: #28a745;
+    border-color: #28a745;
+    color: white;
+    font-weight: 500;
+    padding: 6px 12px;
+    font-size: 11px;
+    min-width: 90px;
+    margin-bottom: 4px;
+}
+
+.queue-action-btn.publish-now:hover {
+    background: #218838;
+    border-color: #1e7e34;
+}
+
+.queue-action-btn.publish-now:disabled {
+    background: #6c757d;
+    border-color: #6c757d;
+    cursor: not-allowed;
+}
+
 /* Mobile responsive для очереди */
 @media (max-width: 480px) {
     .queue-item {
