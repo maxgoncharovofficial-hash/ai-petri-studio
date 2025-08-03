@@ -258,6 +258,11 @@ function saveData() {
         localStorage.setItem('cases_data', JSON.stringify(existingCases));
         console.log('Data saved to localStorage successfully');
         console.log('localStorage content after save:', localStorage.getItem('cases_data'));
+        
+        // Сразу обновляем список кейсов
+        loadCasesList();
+        console.log('Cases list updated immediately');
+        
     } catch (error) {
         console.error('Error saving to localStorage:', error);
         alert('Ошибка при сохранении данных');
