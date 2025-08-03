@@ -211,7 +211,7 @@ function updateAllSectionCounters() {
     
     // Кейсы (показываем количество сохраненных кейсов)
     try {
-        const casesData = JSON.parse(localStorage.getItem('cases_data') || '[]');
+        const casesData = JSON.parse(localStorage.getItem('cases') || '[]');
         const casesCount = casesData.length;
         updateCasesCounter('cases-counter', casesCount);
         console.log('Cases counter updated:', casesCount, 'cases');
@@ -269,7 +269,7 @@ function updateOverallProgress() {
         totalFields += 6;
         
         // Кейсы (считаем как заполненные если есть кейсы)
-        const casesData = JSON.parse(localStorage.getItem('cases_data') || '[]');
+        const casesData = JSON.parse(localStorage.getItem('cases') || '[]');
         if (casesData.length > 0) {
             totalFilled += 6; // Если есть кейсы, считаем как заполненные
         }
@@ -289,15 +289,20 @@ function updateOverallProgress() {
         
         // Обновляем общий прогресс
         const percentage = Math.round((totalFilled / totalFields) * 100);
-        const progressFill = document.querySelector('.progress-fill');
-        const statValue = document.querySelector('.stat-value');
+        const progressFill = document.getElementById('overall-progress-fill');
+        const statValue = document.getElementById('overall-progress');
+        const totalParams = document.getElementById('total-params');
         
         if (progressFill) {
             progressFill.style.width = percentage + '%';
         }
         
         if (statValue) {
-            statValue.textContent = totalFilled + '/' + totalFields;
+            statValue.textContent = percentage + '%';
+        }
+        
+        if (totalParams) {
+            totalParams.textContent = `${totalFilled}/${totalFields}`;
         }
         
         console.log('Overall progress updated:', totalFilled, '/', totalFields, '(', percentage, '%)');
