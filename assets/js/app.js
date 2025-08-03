@@ -1,7 +1,7 @@
 // Обработчики для каждой карточки
 function handlePersonality() {
     console.log('РАСПАКОВКА ЛИЧНОСТИ clicked');
-    window.location.href = 'personality.html';
+    window.location.href = 'pages/personality.html';
 }
 
 function handleThreadsZavod() {

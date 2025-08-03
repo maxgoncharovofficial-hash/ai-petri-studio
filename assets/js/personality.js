@@ -8,17 +8,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const backButton = document.getElementById('back-button');
     console.log('Back button found:', backButton);
     
-    if (backButton) {
+            if (backButton) {
         backButton.addEventListener('click', function(e) {
             e.preventDefault();
             console.log('Back button clicked');
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         });
         
         backButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
             console.log('Back button touched');
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         });
     }
     
@@ -124,7 +124,7 @@ function handlePersonalityProSection() {
 // Функция возврата на главную страницу (запасная)
 function goBack() {
     console.log('Back button clicked (fallback)');
-    window.location.href = 'index.html';
+    window.location.href = '../index.html';
 }
 
 // Анимация появления элементов
