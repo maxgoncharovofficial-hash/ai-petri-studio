@@ -107,7 +107,7 @@ function connectAccount() {
         
         stepSchedule.classList.remove('disabled');
         scheduleButton.classList.remove('disabled');
-        scheduleButton.textContent = '⚙️ Настроить расписание';
+        scheduleButton.textContent = '🤖 Перейти к автопилоту';
         
         alert('✅ Аккаунт Threads успешно подключен!');
     }, 1000);
@@ -158,14 +158,9 @@ function initializeScheduleSetup() {
 }
 
 function showScheduleSetup() {
-    const scheduleSetup = document.getElementById('schedule-setup');
-    scheduleSetup.style.display = 'block';
-    
-    // Генерируем календарь
-    generateCalendar();
-    
-    // Прокручиваем к настройкам
-    scheduleSetup.scrollIntoView({ behavior: 'smooth' });
+    // Перебрасываем в автопилот для настройки расписания
+    console.log('Redirecting to autopilot for schedule setup...');
+    window.location.href = 'threads-autopilot.html';
 }
 
 function updatePostsPerDay() {
