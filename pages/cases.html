@@ -11,65 +11,14 @@
     <div id="app">
         <!-- Header -->
         <div class="header-gradient">
-            <div class="header-factory-icon">
-                <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
-                    <!-- Factory Building - Industrial Design -->
-                    <rect x="5" y="25" width="40" height="20" fill="#4A5568" stroke="#2D3748" stroke-width="1.5" rx="2"/>
-                    <rect x="8" y="18" width="15" height="7" fill="#718096" stroke="#2D3748" stroke-width="1.2" rx="1"/>
-                    <rect x="27" y="18" width="15" height="7" fill="#718096" stroke="#2D3748" stroke-width="1.2" rx="1"/>
-                    <rect x="10" y="10" width="10" height="8" fill="#A0AEC0" stroke="#2D3748" stroke-width="1.2" rx="1"/>
-                    <rect x="30" y="10" width="10" height="8" fill="#A0AEC0" stroke="#2D3748" stroke-width="1.2" rx="1"/>
-                    
-                    <!-- Windows with Glow -->
-                    <rect x="10" y="30" width="4" height="4" fill="#F7FAFC" stroke="#E2E8F0" stroke-width="0.6"/>
-                    <rect x="16" y="30" width="4" height="4" fill="#F7FAFC" stroke="#E2E8F0" stroke-width="0.6"/>
-                    <rect x="29" y="30" width="4" height="4" fill="#F7FAFC" stroke="#E2E8F0" stroke-width="0.6"/>
-                    <rect x="35" y="30" width="4" height="4" fill="#F7FAFC" stroke="#E2E8F0" stroke-width="0.6"/>
-                    
-                    <!-- Industrial Details -->
-                    <rect x="12" y="22" width="2" height="3" fill="#2D3748"/>
-                    <rect x="32" y="22" width="2" height="3" fill="#2D3748"/>
-                    <rect x="15" y="13" width="2" height="5" fill="#2D3748"/>
-                    <rect x="35" y="13" width="2" height="5" fill="#2D3748"/>
-                    
-                    <!-- Left Smoke from chimney position -->
-                    <circle cx="13" cy="6" r="2" fill="#E2E8F0" opacity="0.8">
-                        <animate attributeName="cy" values="6;2.5;-1;-4.5;-8" dur="3.5s" repeatCount="indefinite"/>
-                        <animate attributeName="opacity" values="0.8;0.6;0.4;0.2;0" dur="3.5s" repeatCount="indefinite"/>
-                        <animate attributeName="r" values="2;2.6;3.2;3.8;4.4" dur="3.5s" repeatCount="indefinite"/>
-                    </circle>
-                    <circle cx="14" cy="4.5" r="1.6" fill="#CBD5E0" opacity="0.7">
-                        <animate attributeName="cy" values="4.5;1;-2.5;-6;-9.5" dur="4s" repeatCount="indefinite"/>
-                        <animate attributeName="opacity" values="0.7;0.5;0.3;0.1;0" dur="4s" repeatCount="indefinite"/>
-                        <animate attributeName="r" values="1.6;2.2;2.8;3.4;4" dur="4s" repeatCount="indefinite"/>
-                    </circle>
-                    <circle cx="12" cy="7.5" r="1.2" fill="#F7FAFC" opacity="0.6">
-                        <animate attributeName="cy" values="7.5;4;0.5;-3;-6.5" dur="3.2s" repeatCount="indefinite"/>
-                        <animate attributeName="opacity" values="0.6;0.4;0.2;0;0" dur="3.2s" repeatCount="indefinite"/>
-                        <animate attributeName="r" values="1.2;1.8;2.4;3;3.6" dur="3.2s" repeatCount="indefinite"/>
-                    </circle>
-                    
-                    <!-- Right Smoke from chimney position -->
-                    <circle cx="37" cy="6" r="2" fill="#E2E8F0" opacity="0.8">
-                        <animate attributeName="cy" values="6;2.5;-1;-4.5;-8" dur="3.8s" repeatCount="indefinite"/>
-                        <animate attributeName="opacity" values="0.8;0.6;0.4;0.2;0" dur="3.8s" repeatCount="indefinite"/>
-                        <animate attributeName="r" values="2;2.6;3.2;3.8;4.4" dur="3.8s" repeatCount="indefinite"/>
-                    </circle>
-                    <circle cx="36" cy="4.5" r="1.6" fill="#CBD5E0" opacity="0.7">
-                        <animate attributeName="cy" values="4.5;1;-2.5;-6;-9.5" dur="4.2s" repeatCount="indefinite"/>
-                        <animate attributeName="opacity" values="0.7;0.5;0.3;0.1;0" dur="4.2s" repeatCount="indefinite"/>
-                        <animate attributeName="r" values="1.6;2.2;2.8;3.4;4" dur="4.2s" repeatCount="indefinite"/>
-                    </circle>
-                    <circle cx="38" cy="7.5" r="1.2" fill="#F7FAFC" opacity="0.6">
-                        <animate attributeName="cy" values="7.5;4;0.5;-3;-6.5" dur="3.5s" repeatCount="indefinite"/>
-                        <animate attributeName="opacity" values="0.6;0.4;0.2;0;0" dur="3.5s" repeatCount="indefinite"/>
-                        <animate attributeName="r" values="1.2;1.8;2.4;3;3.6" dur="3.5s" repeatCount="indefinite"/>
-                    </circle>
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
             <div class="header-title-block">
-                <div class="header-title">AiPetri Studio</div>
-                <div class="header-subtitle">РАСПАКОВКА КЕЙСОВ</div>
+                <div class="header-title">РАСПАКОВКА КЕЙСОВ</div>
+                <div class="header-subtitle">Истории успеха ваших клиентов</div>
             </div>
         </div>
 
@@ -128,6 +77,6 @@
         </main>
     </div>
 
-    <script src="../assets/js/cases.js?v=30.30"></script>
+    <script src="../assets/js/cases.js?v=30.31"></script>
 </body>
 </html> 

@@ -14,6 +14,21 @@ function initializePage() {
 function setupEventHandlers() {
     console.log('🎯 Setting up event handlers');
     
+    // Back button
+    const backButton = document.getElementById('back-button');
+    if (backButton) {
+        backButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('⬅️ Back button clicked');
+            window.location.href = '../index.html';
+        });
+        backButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            console.log('⬅️ Back button touched');
+            window.location.href = '../index.html';
+        });
+    }
+    
     // Create case card
     const createCaseCard = document.getElementById('create-case-card');
     if (createCaseCard) {
