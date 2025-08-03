@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <title>Настройка промпта - AiPetri Studio</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/personality.css">
+    <link rel="stylesheet" href="../assets/css/threads.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="header-gradient">
+            <div class="header-back-button" id="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="header-title-block">
+                <div class="header-title">⚙️ Настройка промпта</div>
+                <div class="header-subtitle">OpenAI генерация контента</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <div class="prompt-settings-container">
+                    
+                    <!-- Info Section -->
+                    <div class="info-section">
+                        <h3>🤖 Промпт для генерации постов</h3>
+                        <p>Настройте, как OpenAI будет генерировать контент для ваших постов в Threads.</p>
+                        
+                        <div class="tips-block">
+                            <h4>💡 Полезные советы:</h4>
+                            <ul>
+                                <li>Используйте <code>[ТЕМА]</code> для подстановки темы на основе ваших данных</li>
+                                <li>Укажите желаемую длину поста (например, 100-280 символов)</li>
+                                <li>Опишите стиль и тон сообщений</li>
+                                <li>Добавьте требования по эмодзи и хештегам</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Prompt Editor -->
+                    <div class="prompt-editor">
+                        <label for="prompt-textarea">Ваш промпт:</label>
+                        <textarea 
+                            id="prompt-textarea" 
+                            class="prompt-input"
+                            placeholder="Введите ваш промпт для генерации постов..."
+                            rows="12"
+                        ></textarea>
+                        
+                        <div class="character-count">
+                            <span id="char-count">0</span> символов
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions-section">
+                        <div class="action-buttons">
+                            <button class="threads-button secondary" id="reset-prompt">
+                                🔄 По умолчанию
+                            </button>
+                            <button class="threads-button primary" id="save-prompt">
+                                💾 Сохранить промпт
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div class="preview-section">
+                        <h4>👀 Предварительный просмотр</h4>
+                        <div class="preview-box" id="preview-box">
+                            <p>Здесь будет показан ваш промпт с подставленными данными...</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="success-modal" style="display: none;">
+        <div class="modal-content success-modal">
+            <div class="modal-header">
+                <h3>✅ Успешно!</h3>
+            </div>
+            <div class="modal-body">
+                <p id="success-message">Промпт сохранен!</p>
+            </div>
+            <div class="modal-footer">
+                <button class="threads-button primary" id="success-ok-btn">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../assets/js/openai-service.js"></script>
+    <script src="../assets/js/prompt-settings.js"></script>
+</body>
+</html>

@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTokenToggle();
     initializeNavigation();
     initializeOpenAI();
+    initializeSuccessModal();
     loadSavedData();
 });
 
@@ -135,13 +136,16 @@ async function connectAccount() {
                 userIdInput.value = result.user.id;
             }
             
+            // Сохраняем токен
+            saveApiKeys();
+            
             // Обновляем интерфейс
             updateConnectionStatus(connectionData);
             showConnectionResult('success', 'Успешно подключено к Threads API!', result.user);
             
             button.textContent = '✅ Подключено';
             
-            // Активируем шаг 2
+            // Активируем шаг 3 (перенумеровали после добавления OpenAI)
             const stepSchedule = document.getElementById('step-schedule');
             const scheduleButton = document.getElementById('schedule-button');
             
@@ -151,7 +155,8 @@ async function connectAccount() {
                 scheduleButton.textContent = '🤖 Перейти к автопилоту';
             }
             
-            // API stats removed - too technical for users
+            // Показываем модальное окно успеха
+            showSuccessModal('Threads API успешно подключен! Теперь можно переходить к настройке автопилота.');
             
         } else {
             throw new Error(result.error || 'Не удалось инициализировать API');
@@ -528,6 +533,9 @@ function modifySchedule() {
 function loadSavedData() {
     console.log('Loading saved data...');
     
+    // Загружаем API ключи
+    loadApiKeys();
+    
     // Загружаем данные подключения
     const connectionData = getFromStorage('threads_connection');
     if (connectionData && connectionData.connected) {
@@ -669,14 +677,25 @@ async function connectOpenAI() {
         const result = await window.openAIService.initialize(apiKey);
         
         if (result.success) {
-            showOpenAIResult('success', result.message);
+            // Сохраняем ключ
+            saveApiKeys();
+            
             connectBtn.textContent = '✅ Подключено';
             connectBtn.style.background = '#28a745';
+            
+            // Убираем старое сообщение
+            const resultDiv = document.getElementById('openai-result');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
             
             // Добавляем кнопку настроек
             setTimeout(() => {
                 addPromptSettingsButton();
-            }, 500);
+            }, 100);
+            
+            // Показываем модальное окно успеха
+            showSuccessModal('OpenAI успешно подключен! Теперь можно настроить промпт для генерации постов.');
             
         } else {
             throw new Error(result.error || 'Не удалось подключить OpenAI');
@@ -725,18 +744,8 @@ function addPromptSettingsButton() {
 }
 
 function openPromptSettings() {
-    const currentPrompt = window.openAIService.getCustomPrompt();
-    
-    const newPrompt = prompt(
-        'Настройте промпт для генерации постов:\n\n' +
-        'Используйте [ТЕМА] для подстановки темы на основе ваших данных.',
-        currentPrompt
-    );
-    
-    if (newPrompt !== null && newPrompt.trim()) {
-        window.openAIService.saveCustomPrompt(newPrompt.trim());
-        alert('✅ Промпт сохранен!');
-    }
+    // Переходим на отдельную страницу настройки промпта
+    window.location.href = 'prompt-settings.html';
 }
 
 function checkSavedOpenAI() {
@@ -750,6 +759,86 @@ function checkSavedOpenAI() {
         
         showOpenAIResult('success', 'OpenAI подключен');
         addPromptSettingsButton();
+    }
+}
+
+// === МОДАЛЬНЫЕ ОКНА ===
+function initializeSuccessModal() {
+    const modal = document.getElementById('success-modal');
+    const okBtn = document.getElementById('success-ok-btn');
+    
+    if (okBtn) {
+        okBtn.addEventListener('click', function() {
+            hideSuccessModal();
+        });
+    }
+    
+    // Закрытие при клике вне модального окна
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                hideSuccessModal();
+            }
+        });
+    }
+}
+
+function showSuccessModal(message) {
+    const modal = document.getElementById('success-modal');
+    const messageEl = document.getElementById('success-message');
+    
+    if (modal && messageEl) {
+        messageEl.textContent = message;
+        modal.style.display = 'flex';
+        
+        // Анимация появления
+        setTimeout(() => {
+            modal.style.opacity = '1';
+        }, 10);
+    }
+}
+
+function hideSuccessModal() {
+    const modal = document.getElementById('success-modal');
+    
+    if (modal) {
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+}
+
+// === СОХРАНЕНИЕ И ЗАГРУЗКА КЛЮЧЕЙ ===
+function saveApiKeys() {
+    const threadsToken = document.getElementById('access-token')?.value || '';
+    const openaiKey = document.getElementById('openai-api-key')?.value || '';
+    
+    if (threadsToken) {
+        localStorage.setItem('threads_api_token', threadsToken);
+    }
+    
+    if (openaiKey) {
+        localStorage.setItem('openai_api_key', openaiKey);
+    }
+}
+
+function loadApiKeys() {
+    const savedThreadsToken = localStorage.getItem('threads_api_token');
+    const savedOpenaiKey = localStorage.getItem('openai_api_key');
+    
+    if (savedThreadsToken) {
+        const tokenInput = document.getElementById('access-token');
+        if (tokenInput) {
+            tokenInput.value = savedThreadsToken;
+        }
+    }
+    
+    if (savedOpenaiKey) {
+        const keyInput = document.getElementById('openai-api-key');
+        if (keyInput) {
+            keyInput.value = savedOpenaiKey;
+        }
     }
 }
 

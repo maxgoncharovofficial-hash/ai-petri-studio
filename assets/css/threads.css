@@ -1690,6 +1690,206 @@
     color: #721c24;
 }
 
+/* Success Modal */
+.success-modal {
+    max-width: 400px;
+    text-align: center;
+}
+
+.success-modal .modal-header h3 {
+    color: #28a745;
+    margin: 0;
+    font-size: 20px;
+}
+
+.success-modal .modal-body {
+    padding: 20px 0;
+}
+
+.success-modal .modal-body p {
+    margin: 0;
+    font-size: 16px;
+    color: #2c3e50;
+}
+
+.success-modal .modal-footer {
+    padding-top: 0;
+}
+
+/* Fix OpenAI form help text positioning */
+.api-form .form-help {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 4px;
+    line-height: 1.4;
+    display: block;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
+/* Fix error messages overflow */
+.connection-status.error {
+    word-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.openai-result .connection-status {
+    word-wrap: break-word;
+    word-break: break-word;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+/* Prompt Settings Page */
+.prompt-settings-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.info-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.info-section h3 {
+    margin: 0 0 12px 0;
+    color: #2c3e50;
+    font-size: 20px;
+}
+
+.info-section p {
+    margin: 0 0 16px 0;
+    color: #6c757d;
+    line-height: 1.5;
+}
+
+.tips-block {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.tips-block h4 {
+    margin: 0 0 12px 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.tips-block ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.tips-block li {
+    margin-bottom: 8px;
+    color: #495057;
+    line-height: 1.4;
+}
+
+.tips-block code {
+    background: #f8f9fa;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 13px;
+    color: #e83e8c;
+}
+
+.prompt-editor {
+    margin-bottom: 24px;
+}
+
+.prompt-editor label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.prompt-input {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    resize: vertical;
+    min-height: 200px;
+    box-sizing: border-box;
+}
+
+.prompt-input:focus {
+    border-color: #2196f3;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.character-count {
+    text-align: right;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.actions-section {
+    margin-bottom: 24px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.preview-section {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.preview-section h4 {
+    margin: 0 0 16px 0;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.preview-box {
+    min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.preview-box p {
+    margin: 0;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .prompt-settings-container {
+        padding: 16px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons .threads-button {
+        width: 100%;
+    }
+}
+
 /* AI Section */
 .ai-section {
     background: #fff3cd;
