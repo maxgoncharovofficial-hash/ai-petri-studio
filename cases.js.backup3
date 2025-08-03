@@ -340,8 +340,7 @@ function loadCasesList() {
     console.log('loadCasesList() called');
     
     const cases = getCases();
-    console.log('Loaded cases from localStorage:', cases);
-    console.log('Cases count:', cases.length);
+    console.log('Loaded cases from localStorage:', cases.length);
     
     const casesList = document.getElementById('cases-list');
     const emptyState = document.getElementById('empty-state');
@@ -351,18 +350,8 @@ function loadCasesList() {
     console.log('Empty state element:', emptyState);
     console.log('Cases count element:', casesCount);
     
-    if (!casesList) {
-        console.error('Cases list element not found!');
-        return;
-    }
-    
-    if (!emptyState) {
-        console.error('Empty state element not found!');
-        return;
-    }
-    
-    if (!casesCount) {
-        console.error('Cases count element not found!');
+    if (!casesList || !emptyState || !casesCount) {
+        console.error('Required elements not found');
         return;
     }
     
@@ -388,10 +377,8 @@ function loadCasesList() {
     
     // Создаем HTML для каждого кейса
     const casesHTML = cases.map(case_ => createCaseCard(case_)).join('');
-    console.log('Generated HTML:', casesHTML);
-    
     casesList.innerHTML = casesHTML;
-    console.log('Cases HTML inserted into DOM');
+    console.log('Cases HTML generated and inserted');
     
     // Добавляем обработчики для кнопок
     addCaseCardHandlers();
@@ -402,10 +389,9 @@ function loadCasesList() {
 
 // Создание карточки кейса
 function createCaseCard(case_) {
-    console.log('Creating card for case:', case_);
     const description = case_.howFoundOut ? case_.howFoundOut.substring(0, 100) + (case_.howFoundOut.length > 100 ? '...' : '') : 'Описание не указано';
     
-    const cardHTML = `
+    return `
         <div class="case-card" data-case-id="${case_.id}">
             <div class="case-header">
                 <h4 class="case-title">${case_.clientName}</h4>
@@ -419,9 +405,6 @@ function createCaseCard(case_) {
             </div>
         </div>
     `;
-    
-    console.log('Generated card HTML:', cardHTML);
-    return cardHTML;
 }
 
 // Добавление обработчиков для карточек кейсов
