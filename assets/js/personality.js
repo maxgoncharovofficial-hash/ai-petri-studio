@@ -191,43 +191,131 @@ function updateCasesCounter(counterId, casesCount) {
 
 // Функция обновления всех счетчиков разделов
 function updateAllSectionCounters() {
-    console.log('Updating all section counters...');
+    console.log('🔄 === ОБНОВЛЕНИЕ ВСЕХ СЧЕТЧИКОВ ===');
+    
+    let totalFilled = 0;
+    const progressResults = {};
     
     // Продукт (4 поля)
     try {
+        console.log('📦 Проверяем продукт...');
+        const productData = JSON.parse(localStorage.getItem('product_data') || '{}');
+        const productFields = ['title', 'description', 'target_audience', 'value_proposition'];
+        const productFilled = countFilledFields(productData, productFields);
+        updateSectionCounter('product-counter', productFilled, 4);
+        progressResults.product = `${productFilled}/4`;
+        totalFilled += productFilled;
+        console.log('✅ Продукт:', productFilled, '/ 4');
     } catch (error) {
-        console.error('Error updating cases counter:', error);
-        updateCasesCounter('cases-counter', 0);
+        console.error('❌ Ошибка обновления счетчика продукта:', error);
+        updateSectionCounter('product-counter', 0, 4);
+        progressResults.product = '0/4';
+    }
+    
+    // Аудитория (6 полей)
+    try {
+        console.log('👥 Проверяем аудиторию...');
+        const audienceData = JSON.parse(localStorage.getItem('audience_data') || '{}');
+        const audienceFields = ['demographic', 'interests', 'pain_points', 'goals', 'behavior', 'preferred_content'];
+        const audienceFilled = countFilledFields(audienceData, audienceFields);
+        updateSectionCounter('audience-counter', audienceFilled, 6);
+        progressResults.audience = `${audienceFilled}/6`;
+        totalFilled += audienceFilled;
+        console.log('✅ Аудитория:', audienceFilled, '/ 6');
+    } catch (error) {
+        console.error('❌ Ошибка обновления счетчика аудитории:', error);
+        updateSectionCounter('audience-counter', 0, 6);
+        progressResults.audience = '0/6';
     }
     
     // Личность Lite (6 полей)
     try {
+        console.log('🎭 Проверяем личность Lite...');
         const liteData = JSON.parse(localStorage.getItem('personality_lite_data') || '{}');
         const liteFields = ['interesting_topics', 'frequent_questions', 'personal_experience', 'explain_to_beginner', 'transformation', 'communication_style'];
         const liteFilled = countFilledFields(liteData, liteFields);
         updateSectionCounter('lite-counter', liteFilled, 6);
-        console.log('Lite counter updated:', liteFilled, '/ 6');
+        progressResults.personalityLite = `${liteFilled}/6`;
+        totalFilled += liteFilled;
+        console.log('✅ Личность Lite:', liteFilled, '/ 6');
     } catch (error) {
-        console.error('Error updating lite counter:', error);
+        console.error('❌ Ошибка обновления счетчика личности Lite:', error);
         updateSectionCounter('lite-counter', 0, 6);
+        progressResults.personalityLite = '0/6';
     }
     
     // Личность Pro (5 полей)
     try {
+        console.log('👨‍💼 Проверяем личность Pro...');
         const proData = JSON.parse(localStorage.getItem('personality_pro_data') || '{}');
         const proFields = ['client_problem', 'unique_approach', 'common_mistakes', 'content_format', 'expert_mission'];
         const proFilled = countFilledFields(proData, proFields);
         updateSectionCounter('pro-counter', proFilled, 5);
-        console.log('Pro counter updated:', proFilled, '/ 5');
+        progressResults.personalityPro = `${proFilled}/5`;
+        totalFilled += proFilled;
+        console.log('✅ Личность Pro:', proFilled, '/ 5');
     } catch (error) {
-        console.error('Error updating pro counter:', error);
+        console.error('❌ Ошибка обновления счетчика личности Pro:', error);
         updateSectionCounter('pro-counter', 0, 5);
+        progressResults.personalityPro = '0/5';
     }
     
-    console.log('All section counters updated successfully');
+    // Кейсы (динамическое количество)
+    try {
+        console.log('📋 Проверяем кейсы...');
+        const casesData = JSON.parse(localStorage.getItem('cases') || '[]');
+        const casesCount = Array.isArray(casesData) ? casesData.length : 0;
+        updateCasesCounter('cases-counter', casesCount);
+        progressResults.cases = `${casesCount} кейсов`;
+        console.log('✅ Кейсы:', casesCount, 'шт.');
+    } catch (error) {
+        console.error('❌ Ошибка обновления счетчика кейсов:', error);
+        updateCasesCounter('cases-counter', 0);
+        progressResults.cases = '0 кейсов';
+    }
+    
+    // Общий прогресс (21 поле максимум)
+    const totalMaxFields = 21; // 4 + 6 + 6 + 5 = 21
+    const percentage = Math.round((totalFilled / totalMaxFields) * 100);
+    
+    // Обновляем глобальные счетчики
+    updateGlobalProgress(totalFilled, totalMaxFields, percentage);
+    
+    console.log('📊 === ИТОГОВАЯ СТАТИСТИКА ===');
+    console.log('📦 Продукт:', progressResults.product);
+    console.log('👥 Аудитория:', progressResults.audience);
+    console.log('🎭 Личность Lite:', progressResults.personalityLite);
+    console.log('👨‍💼 Личность Pro:', progressResults.personalityPro);
+    console.log('📋 Кейсы:', progressResults.cases);
+    console.log('🎯 ИТОГО:', totalFilled, '/', totalMaxFields, '(', percentage, '%)');
+    console.log('✅ Все счетчики обновлены успешно');
 }
 
-
+// Функция обновления глобального прогресса
+function updateGlobalProgress(filled, total, percentage) {
+    console.log('🎯 Обновляем глобальный прогресс:', filled, '/', total, '(', percentage, '%)');
+    
+    // Обновляем текст счетчика
+    const parametersElement = document.querySelector('[data-parameters-count]');
+    if (parametersElement) {
+        parametersElement.textContent = `${filled}/21 параметров`;
+        console.log('✅ Обновлен счетчик параметров:', `${filled}/21 параметров`);
+    }
+    
+    // Обновляем процент готовности
+    const percentageElement = document.querySelector('[data-readiness-percent]');
+    if (percentageElement) {
+        percentageElement.textContent = `${percentage}%`;
+        console.log('✅ Обновлен процент готовности:', `${percentage}%`);
+    }
+    
+    // Обновляем прогресс-бар
+    const progressBar = document.querySelector('[data-progress-bar]');
+    if (progressBar) {
+        progressBar.style.width = `${percentage}%`;
+        console.log('✅ Обновлен прогресс-бар:', `${percentage}%`);
+    }
+}
 
 // Служебная функция полной очистки данных
 function clearAllData() {

@@ -212,6 +212,12 @@ function saveCase() {
         
         if (verification === jsonString) {
             console.log('✅ Data verification successful');
+            
+            // Обновляем все счетчики
+            if (typeof updateAllSectionCounters === 'function') {
+                updateAllSectionCounters();
+            }
+            
             showModal('save-modal');
         } else {
             console.error('❌ Data verification failed');
