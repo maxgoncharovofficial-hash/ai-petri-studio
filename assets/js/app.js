@@ -8,7 +8,7 @@ function handlePersonality() {
 
 function handleThreadsZavod() {
     console.log('THREADS ZAVOD clicked');
-    alert('Раздел THREADS ZAVOD в разработке');
+    window.location.href = 'pages/threads.html';
 }
 
 
