@@ -1580,6 +1580,43 @@
     color: #856404;
 }
 
+/* OpenAI Form Styling */
+.api-form {
+    margin-top: 16px;
+}
+
+.api-form .form-group {
+    margin-bottom: 16px;
+}
+
+.api-form .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.api-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.api-form .form-help {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.api-form .form-help a {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+.api-form .form-help a:hover {
+    text-decoration: underline;
+}
+
 /* Manual Time Inputs */
 .manual-time-inputs {
     display: flex;

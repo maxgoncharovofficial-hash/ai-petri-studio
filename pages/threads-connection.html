@@ -64,17 +64,6 @@
                                     </ol>
                                 </div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="user-id">User ID (опционально):</label>
-                                <input 
-                                    type="text" 
-                                    id="user-id" 
-                                    placeholder="Автоматически определится по токену"
-                                    class="user-id-input"
-                                    disabled
-                                >
-                            </div>
                         </div>
                         
                         <button class="threads-button primary" id="connect-button">
@@ -86,26 +75,12 @@
                         </div>
                     </div>
 
-                    <!-- Step 2: Setup Schedule -->
-                    <div class="step-card disabled" id="step-schedule">
-                        <div class="step-header">
-                            <div class="step-icon">⚙️</div>
-                            <div class="step-text">
-                                <div class="step-title">ШАГ 2: Настроить автопилот</div>
-                                <div class="step-status">Требует подключения</div>
-                            </div>
-                        </div>
-                        <button class="threads-button secondary disabled" id="schedule-button">
-                            🤖 Перейти к автопилоту
-                        </button>
-                    </div>
-
                     <!-- OpenAI Integration -->
                     <div class="step-card" id="step-openai">
                         <div class="step-header">
                             <div class="step-icon">🤖</div>
                             <div class="step-text">
-                                <div class="step-title">ШАГ 3: Подключить OpenAI</div>
+                                <div class="step-title">ШАГ 2: Подключить OpenAI</div>
                                 <div class="step-status">Для генерации постов ИИ</div>
                             </div>
                         </div>
@@ -134,6 +109,20 @@
                                 <!-- OpenAI connection status will be displayed here -->
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Step 3: Setup Autopilot -->
+                    <div class="step-card disabled" id="step-schedule">
+                        <div class="step-header">
+                            <div class="step-icon">⚙️</div>
+                            <div class="step-text">
+                                <div class="step-title">ШАГ 3: Настроить автопилот</div>
+                                <div class="step-status">Требует подключения</div>
+                            </div>
+                        </div>
+                        <button class="threads-button secondary disabled" id="schedule-button">
+                            🤖 Перейти к автопилоту
+                        </button>
                     </div>
 
                 </div>
