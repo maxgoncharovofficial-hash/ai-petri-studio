@@ -43,20 +43,17 @@ document.addEventListener('DOMContentLoaded', function() {
 // Инициализация вкладок
 function initializeTabs() {
     const tabButtons = document.querySelectorAll('.tab-button');
-    console.log('Found tab buttons:', tabButtons.length);
     
     tabButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             const tabName = this.getAttribute('data-tab');
-            console.log('Tab button clicked:', tabName);
             switchTab(tabName);
         });
         
         button.addEventListener('touchstart', function(e) {
             e.preventDefault();
             const tabName = this.getAttribute('data-tab');
-            console.log('Tab button touched:', tabName);
             switchTab(tabName);
         });
     });
@@ -105,10 +102,6 @@ function initializeFormHandlers() {
     const textareas = document.querySelectorAll('textarea');
     const saveButton = document.getElementById('save-button');
     
-    console.log('Form found:', form);
-    console.log('Save button found:', saveButton);
-    console.log('Textareas found:', textareas.length);
-    
     // Обработчик отправки формы
     if (form) {
         form.addEventListener('submit', function(e) {
@@ -131,8 +124,6 @@ function initializeFormHandlers() {
             console.log('Save button touched, calling saveData()');
             saveData();
         });
-    } else {
-        console.error('Save button not found!');
     }
     
     // Обработчики для каждого textarea
@@ -346,10 +337,6 @@ function loadCasesList() {
     const emptyState = document.getElementById('empty-state');
     const casesCount = document.getElementById('cases-count');
     
-    console.log('Cases list element:', casesList);
-    console.log('Empty state element:', emptyState);
-    console.log('Cases count element:', casesCount);
-    
     if (!casesList || !emptyState || !casesCount) {
         console.error('Required elements not found');
         return;
@@ -410,7 +397,6 @@ function createCaseCard(case_) {
 // Добавление обработчиков для карточек кейсов
 function addCaseCardHandlers() {
     const actionButtons = document.querySelectorAll('.case-action-btn');
-    console.log('Found action buttons:', actionButtons.length);
     
     actionButtons.forEach(button => {
         button.addEventListener('click', function(e) {
