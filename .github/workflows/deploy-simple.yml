@@ -38,9 +38,21 @@ jobs:
           mkdir -p deploy
           
           # Копируем все необходимые файлы
+          echo "Copying index.html..."
           cp index.html deploy/
+          
+          echo "Copying assets..."
           cp -r assets deploy/
-          cp pages/*.html deploy/
+          
+          echo "Copying pages..."
+          if [ -d "pages" ]; then
+            for file in pages/*.html; do
+              if [ -f "$file" ]; then
+                cp "$file" deploy/
+                echo "Copied: $(basename "$file")"
+              fi
+            done
+          fi
           
           echo "✅ Files copied to deploy directory"
           ls -la deploy/
@@ -50,26 +62,32 @@ jobs:
           echo "🔧 Updating file paths..."
           
           # Обновляем пути в HTML файлах
-          for file in deploy/*.html; do
-            if [ -f "$file" ]; then
-              echo "Processing: $(basename "$file")"
-              # Заменяем ../assets/ на assets/
-              sed -i 's|../assets/|assets/|g' "$file"
-              # Убираем pages/ из навигации
-              sed -i 's|pages/||g' "$file"
-              sed -i 's|../index.html|index.html|g' "$file"
-            fi
-          done
+          if ls deploy/*.html 1> /dev/null 2>&1; then
+            for file in deploy/*.html; do
+              if [ -f "$file" ]; then
+                echo "Processing: $(basename "$file")"
+                # Заменяем ../assets/ на assets/
+                sed -i 's|../assets/|assets/|g' "$file" || echo "Warning: failed to update assets path in $file"
+                # Убираем pages/ из навигации
+                sed -i 's|pages/||g' "$file" || echo "Warning: failed to update pages path in $file"
+                sed -i 's|../index.html|index.html|g' "$file" || echo "Warning: failed to update index path in $file"
+              fi
+            done
+          else
+            echo "No HTML files found in deploy directory"
+          fi
           
           # Обновляем JS файлы
           if [ -d "deploy/assets/js" ]; then
             for file in deploy/assets/js/*.js; do
               if [ -f "$file" ]; then
                 echo "Processing JS: $(basename "$file")"
-                sed -i 's|pages/||g' "$file"
-                sed -i 's|../index.html|index.html|g' "$file"
+                sed -i 's|pages/||g' "$file" || echo "Warning: failed to update pages path in $file"
+                sed -i 's|../index.html|index.html|g' "$file" || echo "Warning: failed to update index path in $file"
               fi
             done
+          else
+            echo "No JS directory found"
           fi
           
           echo "✅ Paths updated successfully"
