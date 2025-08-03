@@ -1,3 +1,4 @@
+// Премиум автоматизация публикаций v30.42
 // Personality Page JavaScript
 
 // Инициализация приложения
@@ -25,29 +26,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация обработчиков событий
     initializeSectionHandlers();
     
-    // Добавить кнопку очистки для тестирования
-    addClearButton();
-    
-    // Отладка localStorage
-    debugLocalStorage();
-    
-    // Показать все ключи localStorage
-    console.log('📦 Все ключи localStorage:');
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        console.log('🔑', key);
-    }
+
     
     // Обновляем все счетчики при загрузке
     updateAllSectionCounters();
     
     // Пересчитать прогресс с существующими данными
     const progress = recalculateExistingProgress();
-    console.log('📊 Финальный результат:', progress);
-    
-    // Проверить соответствие с отображением на карточках
-    console.log('🎯 Ожидаемый результат: 16/21 (76%)');
-    console.log('💡 Показано на карточках: 3+4+5+4=16');
     
     updateOverallProgress();
     
@@ -210,34 +195,6 @@ function updateAllSectionCounters() {
     
     // Продукт (4 поля)
     try {
-        const productData = JSON.parse(localStorage.getItem('product_data') || '{}');
-        const productFields = ['main_product', 'advantages', 'values', 'freebies'];
-        const productFilled = countFilledFields(productData, productFields);
-        updateSectionCounter('product-counter', productFilled, 4);
-        console.log('Product counter updated:', productFilled, '/ 4');
-    } catch (error) {
-        console.error('Error updating product counter:', error);
-        updateSectionCounter('product-counter', 0, 4);
-    }
-    
-    // Аудитория (6 полей)
-    try {
-        const audienceData = JSON.parse(localStorage.getItem('audience_data') || '{}');
-        const audienceFields = ['age_location', 'family_status', 'interests', 'main_problems', 'solution_steps', 'your_solutions'];
-        const audienceFilled = countFilledFields(audienceData, audienceFields);
-        updateSectionCounter('audience-counter', audienceFilled, 6);
-        console.log('Audience counter updated:', audienceFilled, '/ 6');
-    } catch (error) {
-        console.error('Error updating audience counter:', error);
-        updateSectionCounter('audience-counter', 0, 6);
-    }
-    
-    // Кейсы (показываем количество сохраненных кейсов)
-    try {
-        const casesData = JSON.parse(localStorage.getItem('cases') || '[]');
-        const casesCount = casesData.length;
-        updateCasesCounter('cases-counter', casesCount);
-        console.log('Cases counter updated:', casesCount, 'cases');
     } catch (error) {
         console.error('Error updating cases counter:', error);
         updateCasesCounter('cases-counter', 0);
@@ -270,26 +227,10 @@ function updateAllSectionCounters() {
     console.log('All section counters updated successfully');
 }
 
-// Функция отладки localStorage
-function debugLocalStorage() {
-    console.log('🔍 === ОТЛАДКА LOCALSTORAGE ===');
-    
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        const value = localStorage.getItem(key);
-        
-        if (key.includes('product') || key.includes('audience') || 
-            key.includes('personality') || key.includes('lite') || 
-            key.includes('pro')) {
-            console.log('📝', key + ':', value);
-        }
-    }
-}
 
-// Функция полной очистки данных
+
+// Служебная функция полной очистки данных
 function clearAllData() {
-    console.log('🧹 === ПОЛНАЯ ОЧИСТКА ДАННЫХ ===');
-    
     // Список всех возможных ключей для удаления
     const keysToRemove = [
         // Данные разделов
@@ -309,7 +250,6 @@ function clearAllData() {
     keysToRemove.forEach(key => {
         if (localStorage.getItem(key)) {
             localStorage.removeItem(key);
-            console.log('🗑️ Удален ключ:', key);
         }
     });
     
@@ -324,17 +264,12 @@ function clearAllData() {
             key.includes('progress')
         )) {
             localStorage.removeItem(key);
-            console.log('🗑️ Удален найденный ключ:', key);
         }
     }
-    
-    console.log('✅ Все данные очищены');
 }
 
-// Функция сброса прогресса во всех разделах
+// Служебная функция сброса прогресса во всех разделах
 function resetAllProgress() {
-    console.log('🔄 === СБРОС ПРОГРЕССА ===');
-    
     // Сбросить глобальный прогресс
     const globalProgress = {
         answered: 0,
@@ -352,8 +287,6 @@ function resetAllProgress() {
     
     // Сбросить счетчик кейсов
     updateCasesCount(0);
-    
-    console.log('✅ Весь прогресс сброшен');
 }
 
 // Функция обновления отображения глобального прогресса
@@ -391,58 +324,22 @@ function updateCasesCount(count) {
     }
 }
 
-// Функция очистки форм на всех страницах
+// Служебная функция очистки форм на всех страницах
 function clearAllForms() {
-    console.log('📝 === ОЧИСТКА ФОРМ ===');
-    
     // Очистить все textarea на текущей странице
     const textareas = document.querySelectorAll('textarea');
     textareas.forEach(textarea => {
         textarea.value = '';
-        console.log('🧹 Очищено поле:', textarea.id || textarea.name);
     });
     
     // Очистить все input поля
     const inputs = document.querySelectorAll('input[type="text"], input[type="email"]');
     inputs.forEach(input => {
         input.value = '';
-        console.log('🧹 Очищено поле:', input.id || input.name);
     });
-    
-    console.log('✅ Все формы очищены');
 }
 
-// ВРЕМЕННАЯ кнопка для полной очистки
-function addClearButton() {
-    const clearBtn = document.createElement('button');
-    clearBtn.textContent = '🧹 ОЧИСТИТЬ ВСЕ ДАННЫЕ';
-    clearBtn.style.cssText = `
-        position: fixed !important;
-        bottom: 20px !important;
-        right: 20px !important;
-        z-index: 99999 !important;
-        background: #dc3545 !important;
-        color: white !important;
-        border: none !important;
-        padding: 15px !important;
-        font-size: 14px !important;
-        border-radius: 8px !important;
-        cursor: pointer !important;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
-    `;
-    
-    clearBtn.onclick = function() {
-        if (confirm('Удалить ВСЕ данные? Это действие нельзя отменить!')) {
-            clearAllData();
-            resetAllProgress();
-            clearAllForms();
-            alert('✅ Все данные очищены!');
-            location.reload(); // Перезагрузить страницу
-        }
-    };
-    
-    document.body.appendChild(clearBtn);
-}
+
 
 // Функция подсчета заполненных полей в объекте
 function countNonEmptyFields(data) {
@@ -485,7 +382,7 @@ function countFilledFieldsOnPage(sectionName) {
 
 // Функция подсчета заполненных вопросов для раздела с проверкой разных ключей
 function getFilledQuestionsCount(section, maxQuestions) {
-    console.log('🔍 === Проверка раздела:', section, '===');
+
     
     // Получить данные из localStorage
     const possibleKeys = [
@@ -531,7 +428,7 @@ function getFilledQuestionsCount(section, maxQuestions) {
 
 // Функция пересчета существующих данных
 function recalculateExistingProgress() {
-    console.log('🔄 === ПЕРЕСЧЕТ СУЩЕСТВУЮЩИХ ДАННЫХ ===');
+
     
     let totalAnswered = 0;
     

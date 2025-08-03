@@ -105,7 +105,7 @@ function updateCasesCount() {
 }
 
 function getCases() {
-    console.log('📋 === Getting cases from localStorage ===');
+
     
     const rawData = localStorage.getItem('cases');
     console.log('📋 Raw data:', rawData);

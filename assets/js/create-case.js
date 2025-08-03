@@ -137,7 +137,7 @@ function loadCaseData(caseData) {
 }
 
 function saveCase() {
-    console.log('💾 === Starting case save ===');
+    
     
     // Get form data
     const formData = {
@@ -248,7 +248,7 @@ function updateProgress() {
 }
 
 function showModal(modalId) {
-    console.log('📱 === Showing modal:', modalId, '===');
+    
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.style.display = 'flex';
@@ -262,7 +262,7 @@ function showModal(modalId) {
 }
 
 function hideModal(modalId) {
-    console.log('📱 === Hiding modal:', modalId, '===');
+    
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('show');
