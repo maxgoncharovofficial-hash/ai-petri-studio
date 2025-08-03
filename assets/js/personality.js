@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Обновляем все счетчики при загрузке
     updateAllSectionCounters();
+    updateOverallProgress();
     
     // Анимация появления элементов
     animateElements();
@@ -247,69 +248,72 @@ function updateAllSectionCounters() {
     console.log('All section counters updated successfully');
 }
 
+// Функция подсчета заполненных вопросов для раздела
+function getFilledQuestionsCount(section, maxQuestions) {
+    const data = JSON.parse(localStorage.getItem(`${section}-data`) || '{}');
+    let filledCount = 0;
+    
+    // Подсчитать количество заполненных полей
+    for (let key in data) {
+        if (data[key] && data[key].toString().trim().length > 0) {
+            filledCount++;
+        }
+    }
+    
+    return Math.min(filledCount, maxQuestions);
+}
+
+// Функция расчета глобального прогресса (БЕЗ кейсов)
+function calculateGlobalProgress() {
+    let totalQuestions = 21; // БЕЗ кейсов: 4+6+6+5 = 21
+    let answeredQuestions = 0;
+    
+    // Подсчет по разделам:
+    // Распаковка продукта (4 вопроса)
+    answeredQuestions += getFilledQuestionsCount('product', 4);
+    
+    // Распаковка аудитории (6 вопросов) 
+    answeredQuestions += getFilledQuestionsCount('audience', 6);
+    
+    // Распаковка личности Lite (6 вопросов)
+    answeredQuestions += getFilledQuestionsCount('personality_lite', 6);
+    
+    // Распаковка личности Pro (5 вопросов)
+    answeredQuestions += getFilledQuestionsCount('personality_pro', 5);
+    
+    let percentage = Math.round((answeredQuestions / totalQuestions) * 100);
+    
+    return {
+        answered: answeredQuestions,
+        total: totalQuestions,
+        percentage: percentage
+    };
+}
+
 // Функция обновления общего прогресса
 function updateOverallProgress() {
     console.log('Updating overall progress...');
     
-    let totalFilled = 0;
-    let totalFields = 0;
+    const progress = calculateGlobalProgress();
     
-    // Считаем общий прогресс по всем разделам
-    try {
-        // Продукт
-        const productData = JSON.parse(localStorage.getItem('product_data') || '{}');
-        const productFields = ['main_product', 'advantages', 'values', 'freebies'];
-        totalFilled += countFilledFields(productData, productFields);
-        totalFields += 4;
-        
-        // Аудитория
-        const audienceData = JSON.parse(localStorage.getItem('audience_data') || '{}');
-        const audienceFields = ['age_location', 'family_status', 'interests', 'main_problems', 'solution_steps', 'your_solutions'];
-        totalFilled += countFilledFields(audienceData, audienceFields);
-        totalFields += 6;
-        
-        // Кейсы (считаем как заполненные если есть кейсы)
-        const casesData = JSON.parse(localStorage.getItem('cases') || '[]');
-        if (casesData.length > 0) {
-            totalFilled += 6; // Если есть кейсы, считаем как заполненные
-        }
-        totalFields += 6;
-        
-        // Lite
-        const liteData = JSON.parse(localStorage.getItem('personality_lite_data') || '{}');
-        const liteFields = ['interesting_topics', 'frequent_questions', 'personal_experience', 'explain_to_beginner', 'transformation', 'communication_style'];
-        totalFilled += countFilledFields(liteData, liteFields);
-        totalFields += 6;
-        
-        // Pro
-        const proData = JSON.parse(localStorage.getItem('personality_pro_data') || '{}');
-        const proFields = ['client_problem', 'unique_approach', 'common_mistakes', 'content_format', 'expert_mission'];
-        totalFilled += countFilledFields(proData, proFields);
-        totalFields += 5;
-        
-        // Обновляем общий прогресс
-        const percentage = Math.round((totalFilled / totalFields) * 100);
-        const progressFill = document.getElementById('overall-progress-fill');
-        const statValue = document.getElementById('overall-progress');
-        const totalParams = document.getElementById('total-params');
-        
-        if (progressFill) {
-            progressFill.style.width = percentage + '%';
-        }
-        
-        if (statValue) {
-            statValue.textContent = percentage + '%';
-        }
-        
-        if (totalParams) {
-            totalParams.textContent = `${totalFilled}/${totalFields}`;
-        }
-        
-        console.log('Overall progress updated:', totalFilled, '/', totalFields, '(', percentage, '%)');
-        
-    } catch (error) {
-        console.error('Error updating overall progress:', error);
+    // Обновляем общий прогресс
+    const progressFill = document.getElementById('overall-progress-fill');
+    const statValue = document.getElementById('overall-progress');
+    const totalParams = document.getElementById('total-params');
+    
+    if (progressFill) {
+        progressFill.style.width = progress.percentage + '%';
     }
+    
+    if (statValue) {
+        statValue.textContent = progress.percentage + '%';
+    }
+    
+    if (totalParams) {
+        totalParams.textContent = `${progress.answered}/${progress.total} параметров`;
+    }
+    
+    console.log('Overall progress updated:', progress.answered, '/', progress.total, '(', progress.percentage, '%)');
 }
 
 // Функция обновления прогресса (обновленная)

@@ -142,6 +142,11 @@ function saveData() {
     // Сохраняем в localStorage
     localStorage.setItem('audience_data', JSON.stringify(formData));
     
+    // Обновляем глобальный прогресс на главной странице
+    if (window.parent && window.parent.updateOverallProgress) {
+        window.parent.updateOverallProgress();
+    }
+    
     // Показываем сообщение об успехе
     showSuccessMessage();
     
