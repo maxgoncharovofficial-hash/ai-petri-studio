@@ -472,6 +472,12 @@ function countNonEmptyFields(data) {
     
     if (typeof data === 'object' && data !== null) {
         for (let key in data) {
+            // Пропускаем системные поля
+            if (key === 'saved_at' || key === 'timestamp') {
+                console.log('⏭️ Пропускаем системное поле:', key);
+                continue;
+            }
+            
             const value = data[key];
             
             // Проверить что поле действительно заполнено
