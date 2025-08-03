@@ -28,11 +28,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Отладка localStorage
     debugLocalStorage();
     
+    // Показать все ключи localStorage
+    console.log('📦 Все ключи localStorage:');
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        console.log('🔑', key);
+    }
+    
     // Обновляем все счетчики при загрузке
     updateAllSectionCounters();
     
     // Пересчитать прогресс с существующими данными
-    recalculateExistingProgress();
+    const progress = recalculateExistingProgress();
+    console.log('📊 Финальный результат:', progress);
+    
+    // Проверить соответствие с отображением на карточках
+    console.log('🎯 Ожидаемый результат: 16/21 (76%)');
+    console.log('💡 Показано на карточках: 3+4+5+4=16');
+    
     updateOverallProgress();
     
     // Анимация появления элементов
@@ -277,8 +290,17 @@ function countNonEmptyFields(data) {
     if (typeof data === 'object' && data !== null) {
         for (let key in data) {
             const value = data[key];
-            if (value && typeof value === 'string' && value.trim().length > 0) {
+            
+            // Проверить что поле действительно заполнено
+            if (value !== null && 
+                value !== undefined && 
+                typeof value === 'string' && 
+                value.trim().length > 0) {
+                
+                console.log('✅ Заполненное поле:', key, '=', value.substring(0, 50) + '...');
                 count++;
+            } else {
+                console.log('❌ Пустое поле:', key, '=', value);
             }
         }
     }
@@ -302,41 +324,53 @@ function countFilledFieldsOnPage(sectionName) {
 
 // Функция подсчета заполненных вопросов для раздела с проверкой разных ключей
 function getFilledQuestionsCount(section, maxQuestions) {
-    let filledCount = 0;
+    console.log('🔍 === Проверка раздела:', section, '===');
     
-    // Попробовать разные возможные ключи localStorage для раздела
+    // Получить данные из localStorage
     const possibleKeys = [
         section + '-data',
         section + '_data', 
-        section,
-        section + 'Data'
+        section + 'Data',
+        section
     ];
+    
+    let filledCount = 0;
+    let foundData = null;
+    let foundKey = null;
     
     for (let key of possibleKeys) {
         const data = localStorage.getItem(key);
         if (data) {
-            console.log('✅ Найдены данные в:', key);
             try {
-                const parsed = JSON.parse(data);
-                filledCount = countNonEmptyFields(parsed);
+                foundData = JSON.parse(data);
+                foundKey = key;
+                console.log('✅ Найдены данные в ключе:', key);
+                console.log('📄 Данные:', foundData);
                 break;
             } catch (e) {
-                console.log('❌ Ошибка парсинга:', key);
+                console.log('❌ Ошибка парсинга ключа:', key);
             }
         }
     }
     
-    // Также проверить поля на самих страницах
-    if (filledCount === 0) {
-        filledCount = countFilledFieldsOnPage(section);
+    if (foundData) {
+        // ТОЧНО подсчитать заполненные поля
+        filledCount = countNonEmptyFields(foundData);
+        console.log('📝 Заполненных полей найдено:', filledCount);
+    } else {
+        console.log('❌ Данные не найдены для раздела:', section);
     }
     
-    return Math.min(filledCount, maxQuestions);
+    // НЕ превышать максимум для раздела
+    const result = Math.min(filledCount, maxQuestions);
+    console.log('📊 Результат для ' + section + ':', result + '/' + maxQuestions);
+    
+    return result;
 }
 
 // Функция пересчета существующих данных
 function recalculateExistingProgress() {
-    console.log('🔄 Пересчет существующих данных...');
+    console.log('🔄 === ПЕРЕСЧЕТ СУЩЕСТВУЮЩИХ ДАННЫХ ===');
     
     let totalAnswered = 0;
     
@@ -361,6 +395,8 @@ function recalculateExistingProgress() {
     totalAnswered = productAnswered + audienceAnswered + personalityLiteAnswered + personalityProAnswered;
     
     console.log('📊 Итого заполнено:', totalAnswered + '/21');
+    console.log('🎯 Ожидаемый результат: 16/21 (76%)');
+    console.log('💡 Показано на карточках: 3+4+5+4=16');
     
     return {
         answered: totalAnswered,
