@@ -1,3 +1,5 @@
+// AiPetri Studio - Main Application JavaScript v30.30
+
 // Обработчики для каждой карточки
 function handlePersonality() {
     console.log('РАСПАКОВКА ЛИЧНОСТИ clicked');
