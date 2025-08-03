@@ -1,0 +1,80 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Create deployment structure
+        run: |
+          echo "Creating deployment structure for GitHub Pages..."
+          
+          # Создаем временную папку для сборки
+          mkdir -p temp-deploy
+          
+          # Копируем index.html в корень
+          cp index.html temp-deploy/
+          
+          # Копируем папку assets
+          cp -r assets temp-deploy/
+          
+          # Копируем HTML файлы из pages/ в корень
+          cp pages/*.html temp-deploy/
+          
+          # Обновляем пути в HTML файлах для GitHub Pages
+          echo "Updating paths in HTML files..."
+          
+          # Обновляем пути в index.html
+          sed -i 's|assets/|assets/|g' temp-deploy/index.html
+          
+          # Обновляем пути в остальных HTML файлах
+          for file in temp-deploy/*.html; do
+            if [ "$(basename "$file")" != "index.html" ]; then
+              # Заменяем ../assets/ на assets/ для файлов из pages/
+              sed -i 's|../assets/|assets/|g' "$file"
+              # Обновляем навигацию между страницами
+              sed -i 's|pages/||g' "$file"
+            fi
+          done
+          
+          # Обновляем навигацию в JS файлах
+          echo "Updating navigation in JS files..."
+          for file in temp-deploy/assets/js/*.js; do
+            # Заменяем навигацию на pages/ на прямые ссылки
+            sed -i 's|pages/||g' "$file"
+            # Заменяем ../index.html на index.html
+            sed -i 's|../index.html|index.html|g' "$file"
+          done
+          
+          echo "Deployment structure created successfully!"
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./temp-deploy
+          force_orphan: true
+          
+      - name: Cleanup
+        run: |
+          echo "Cleaning up temporary files..."
+          rm -rf temp-deploy
+          
+      - name: Success message
+        run: |
+          echo "✅ Deployment completed successfully!"
+          echo "🌐 Your Telegram Mini App is now available at:"
+          echo "https://${{ github.repository_owner }}.github.io/$(echo ${{ github.repository }} | cut -d'/' -f2)/" 
