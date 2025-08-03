@@ -14,63 +14,91 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeBackButton() {
     const backButton = document.getElementById('back-button');
     if (backButton) {
-        backButton.addEventListener('click', function() {
+        backButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Back button clicked - going to index.html');
             window.location.href = '../index.html';
         });
         
         backButton.addEventListener('touchstart', function(e) {
             e.preventDefault();
+            console.log('Back button touched - going to index.html');
             window.location.href = '../index.html';
         });
+    } else {
+        console.error('Back button not found!');
     }
 }
 
 // === КАРТОЧКИ РАЗДЕЛОВ ===
 function initializeCards() {
+    console.log('Initializing cards...');
+    
     const connectionCard = document.getElementById('connection-section');
     const autopilotCard = document.getElementById('autopilot-section');
     const createCard = document.getElementById('create-section');
     
+    console.log('Cards found:', {
+        connection: !!connectionCard,
+        autopilot: !!autopilotCard,
+        create: !!createCard
+    });
+    
     if (connectionCard) {
+        console.log('Adding listeners to connection card');
         connectionCard.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Connection section clicked');
+            e.stopPropagation();
+            console.log('Connection section clicked - navigating...');
             window.location.href = 'threads-connection.html';
         });
         
         connectionCard.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('Connection section touched');
+            e.stopPropagation();
+            console.log('Connection section touched - navigating...');
             window.location.href = 'threads-connection.html';
         });
+    } else {
+        console.error('Connection card not found!');
     }
     
     if (autopilotCard) {
+        console.log('Adding listeners to autopilot card');
         autopilotCard.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Autopilot section clicked');
+            e.stopPropagation();
+            console.log('Autopilot section clicked - navigating...');
             window.location.href = 'threads-autopilot.html';
         });
         
         autopilotCard.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('Autopilot section touched');
+            e.stopPropagation();
+            console.log('Autopilot section touched - navigating...');
             window.location.href = 'threads-autopilot.html';
         });
+    } else {
+        console.error('Autopilot card not found!');
     }
     
     if (createCard) {
+        console.log('Adding listeners to create card');
         createCard.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Create section clicked');
+            e.stopPropagation();
+            console.log('Create section clicked - navigating...');
             window.location.href = 'threads-create.html';
         });
         
         createCard.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            console.log('Create section touched');
+            e.stopPropagation();
+            console.log('Create section touched - navigating...');
             window.location.href = 'threads-create.html';
         });
+    } else {
+        console.error('Create card not found!');
     }
 }
 
