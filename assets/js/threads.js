@@ -143,23 +143,9 @@ function updateConnectionStatus() {
     // Сброс всех классов статуса
     statusElement.className = 'section-counter';
     
-    // Принудительно применяем базовые стили
-    statusElement.style.cssText = `
-        font-size: 12px !important;
-        color: #ffffff !important;
-        background: #6c757d !important;
-        padding: 4px 8px !important;
-        border-radius: 12px !important;
-        font-weight: 500 !important;
-        display: inline-block !important;
-        min-width: 60px !important;
-        text-align: center !important;
-    `;
-    
     if (connectionData && connectionData.connected && scheduleData) {
         statusElement.textContent = '[Настроен]';
         statusElement.classList.add('configured');
-        statusElement.style.background = '#28a745 !important';
         console.log('✅ Added configured class');
         
         // Убираем приоритет если настроено
@@ -168,7 +154,6 @@ function updateConnectionStatus() {
     } else if (connectionData && connectionData.connected) {
         statusElement.textContent = '[Подключен]';
         statusElement.classList.add('connected');
-        statusElement.style.background = '#28a745 !important';
         console.log('✅ Added connected class');
     } else {
         statusElement.textContent = '[Настроить]';
@@ -200,31 +185,15 @@ function updateAutopilotStatus() {
     // Сброс всех классов статуса
     statusElement.className = 'section-counter';
     
-    // Принудительно применяем базовые стили
-    statusElement.style.cssText = `
-        font-size: 12px !important;
-        color: #ffffff !important;
-        background: #6c757d !important;
-        padding: 4px 8px !important;
-        border-radius: 12px !important;
-        font-weight: 500 !important;
-        display: inline-block !important;
-        min-width: 60px !important;
-        text-align: center !important;
-    `;
-    
     if (autopilotData && autopilotData.active && connectionData && connectionData.connected) {
         statusElement.textContent = '[Активен]';
         statusElement.classList.add('active');
-        statusElement.style.background = '#28a745 !important';
     } else if (connectionData && connectionData.connected) {
         statusElement.textContent = '[Готов]';
         statusElement.classList.add('ready');
-        statusElement.style.background = '#17a2b8 !important';
     } else {
         statusElement.textContent = '[Неактивен]';
         statusElement.classList.add('inactive');
-        statusElement.style.background = '#6c757d !important';
     }
 }
 
