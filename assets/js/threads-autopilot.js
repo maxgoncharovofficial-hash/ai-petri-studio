@@ -3,7 +3,7 @@
 
 // === ИНИЦИАЛИЗАЦИЯ ===
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Threads Autopilot page loaded');
+    console.log('🚀 Threads Autopilot page loaded');
     
     initializeBackButton();
     initializeAutopilot();
@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
     updateAIRequirements();
     updateQueueCount();
     updateTodayPosts();
+    
+    // Принудительно запускаем автопилот для тестирования
+    console.log('🔧 Debug: Force starting autopilot checker...');
+    window.autopilotInterval = setInterval(checkScheduledPosts, 60000); // каждую минуту
+    
+    // Сразу проверяем один раз
+    setTimeout(checkScheduledPosts, 5000); // через 5 секунд
 });
 
 // === КНОПКА НАЗАД ===
@@ -117,7 +124,7 @@ function loadAutopilotData() {
     
     // Автозапуск автопилота если он был активен
     if (autopilotData && autopilotData.active) {
-        console.log('Автозапуск автопилота...');
+        console.log('♻️ Автозапуск автопилота...');
         // Запускаем проверку каждую минуту
         if (window.autopilotInterval) {
             clearInterval(window.autopilotInterval);
@@ -126,6 +133,15 @@ function loadAutopilotData() {
         
         // Сразу проверяем есть ли посты к публикации
         checkScheduledPosts();
+    } else {
+        console.log('⚠️ Autopilot was not active, but enabling for debugging...');
+        // Принудительно активируем автопилот для отладки
+        const newAutopilotData = {
+            active: true,
+            startedAt: new Date().toISOString()
+        };
+        saveToStorage('threads_autopilot', newAutopilotData);
+        updateAutopilotStatus();
     }
 }
 
@@ -607,8 +623,9 @@ async function checkScheduledPosts() {
     }
     
     if (!autopilotData?.active) {
-        console.log('⏸️ Autopilot is not active');
-        return;
+        console.log('⏸️ Autopilot is not active, but checking anyway for debug...');
+        // Для отладки продолжаем проверку даже если автопилот неактивен
+        // return;
     }
 
     // Инициализируем API если еще не инициализирован
@@ -636,8 +653,37 @@ async function checkScheduledPosts() {
  */
 function shouldPostNow(scheduledTime, currentTime) {
     // Проверяем точное совпадение времени (с точностью до минуты)
-    return scheduledTime === currentTime;
+    const shouldPost = scheduledTime === currentTime;
+    if (shouldPost) {
+        console.log(`⏰ TIME MATCH: ${scheduledTime} === ${currentTime}`);
+    }
+    return shouldPost;
 }
+
+/**
+ * Тестовая функция для немедленной публикации
+ */
+window.testPublishNow = async function() {
+    console.log('🧪 TEST: Publishing post immediately...');
+    const queuePosts = getFromStorage('threads_queue_posts') || [];
+    
+    if (queuePosts.length === 0) {
+        console.warn('❌ No posts in queue for testing');
+        alert('Нет постов в очереди для тестирования. Добавьте хотя бы один пост.');
+        return;
+    }
+    
+    console.log(`📋 Found ${queuePosts.length} posts in queue`);
+    
+    try {
+        const currentTime = new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
+        await executeScheduledPost(currentTime);
+        console.log('✅ Test publish completed');
+    } catch (error) {
+        console.error('❌ Test publish failed:', error);
+        alert(`Ошибка тестовой публикации: ${error.message}`);
+    }
+};
 
 /**
  * Выполнение запланированной публикации

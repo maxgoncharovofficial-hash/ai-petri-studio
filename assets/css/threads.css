@@ -735,6 +735,17 @@
     border-color: #545b62;
 }
 
+.control-button.test {
+    background: #17a2b8;
+    color: white;
+    border-color: #17a2b8;
+}
+
+.control-button.test:hover {
+    background: #138496;
+    border-color: #117a8b;
+}
+
 /* Schedule Editor Modal */
 .modal-overlay {
     position: fixed;
