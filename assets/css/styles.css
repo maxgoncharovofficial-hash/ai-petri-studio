@@ -1,3 +1,48 @@
+/* === TELEGRAM WEB APP CSS VARIABLES === */
+:root {
+    /* Fallback цвета для стандартного режима */
+    --tg-theme-bg-color: #ffffff;
+    --tg-theme-text-color: #000000;
+    --tg-theme-hint-color: #999999;
+    --tg-theme-link-color: #0088cc;
+    --tg-theme-button-color: #0088cc;
+    --tg-theme-button-text-color: #ffffff;
+    --tg-theme-secondary-bg-color: #f5f5f5;
+    --tg-theme-header-bg-color: #0088cc;
+    --tg-theme-accent-text-color: #0088cc;
+    --tg-theme-section-bg-color: #ffffff;
+    --tg-theme-section-header-text-color: #0088cc;
+    --tg-theme-subtitle-text-color: #999999;
+    --tg-theme-destructive-text-color: #ff3333;
+}
+
+/* Скрыть/показать элементы в зависимости от режима */
+.telegram-only { 
+    display: none; 
+}
+
+.standard-only { 
+    display: block; 
+}
+
+/* В Telegram режиме */
+body.telegram-mode .telegram-only { 
+    display: block; 
+}
+
+body.telegram-mode .standard-only { 
+    display: none; 
+}
+
+/* В стандартном режиме */
+body.standard-mode .telegram-only { 
+    display: none; 
+}
+
+body.standard-mode .standard-only { 
+    display: block; 
+}
+
 * {
     margin: 0;
     padding: 0;
