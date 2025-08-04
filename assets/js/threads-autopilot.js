@@ -222,32 +222,18 @@ function showActiveAutopilot() {
 
 function updateAutopilotStatus() {
     const autopilotData = getFromStorage('threads_autopilot');
-    const connectionData = getFromStorage('threads_connection');
-    const statusDot = document.getElementById('autopilot-dot');
-    const statusText = document.getElementById('autopilot-status');
-    const accountElement = document.getElementById('autopilot-account');
     const pauseButton = document.getElementById('pause-autopilot');
     
     if (autopilotData && autopilotData.active) {
-        statusDot.textContent = '🟢';
-        statusText.textContent = 'Активен';
         if (pauseButton) {
             pauseButton.innerHTML = '⏸️ Приостановить автопилот';
             pauseButton.classList.remove('active');
         }
     } else {
-        statusDot.textContent = '🔴';
-        statusText.textContent = 'Неактивен';
         if (pauseButton) {
             pauseButton.innerHTML = '▶️ Запустить автопилот';
             pauseButton.classList.add('active');
         }
-    }
-    
-    if (connectionData && connectionData.connected) {
-        accountElement.textContent = `@${connectionData.username}`;
-    } else {
-        accountElement.textContent = 'Не подключен';
     }
 }
 
