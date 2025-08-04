@@ -10,11 +10,15 @@
     cursor: pointer;
     border-radius: 8px;
     transition: background-color 0.2s ease;
-    margin-right: 16px; /* Отступ от текста заголовка */
 }
 
 .header-back-button:hover {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Header Title Block - отступ от кнопки назад */
+.header-title-block {
+    margin-left: 16px;
 }
 
 /* Main Container */
