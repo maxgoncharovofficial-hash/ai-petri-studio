@@ -573,34 +573,15 @@ function modifySchedule() {
 
 // === ЗАГРУЗКА СОХРАНЕННЫХ ДАННЫХ ===
 function loadSavedData() {
-    console.log('Loading saved data...');
     
     // Загружаем API ключи
     loadApiKeys();
     
     // Проверяем сохраненные состояния API
+    checkSavedThreads();
     checkSavedOpenAI();
     
-    // Загружаем данные подключения
-    const connectionData = getFromStorage('threads_connection');
-    console.log('Loading saved connection data:', connectionData);
-    
-    if (connectionData && connectionData.connected) {
-        console.log('Found saved connection, restoring state...');
-        updateConnectionStatus(connectionData);
-        
-        // Активируем шаг 3 (автопилот)
-        const stepSchedule = document.getElementById('step-schedule');
-        const scheduleButton = document.getElementById('schedule-button');
-        
-        if (stepSchedule) stepSchedule.classList.remove('disabled');
-        if (scheduleButton) {
-            scheduleButton.classList.remove('disabled');
-            scheduleButton.textContent = '🤖 Перейти к автопилоту';
-        }
-    } else {
-        console.log('No saved connection found or not connected');
-    }
+    // Примечание: Загрузка данных подключения теперь в checkSavedThreads()
     
     // Загружаем данные расписания
     const scheduleData = getFromStorage('threads_schedule');
@@ -796,6 +777,49 @@ function addPromptSettingsButton() {
 function openPromptSettings() {
     // Переходим на отдельную страницу настройки промпта
     window.location.href = 'prompt-settings.html';
+}
+
+function checkSavedThreads() {
+    // Проверяем есть ли сохраненные данные подключения Threads
+    const connectionData = getFromStorage('threads_connection');
+    const savedToken = localStorage.getItem('threads_api_token');
+    
+    if (connectionData && connectionData.connected && savedToken) {
+        console.log('Found saved Threads connection, restoring button state');
+        
+        const connectBtn = document.getElementById('connect-button');
+        if (connectBtn) {
+            connectBtn.textContent = '✅ Подключено';
+            connectBtn.style.background = '#28a745';
+            connectBtn.style.borderColor = '#28a745';
+            connectBtn.style.color = 'white';
+            connectBtn.disabled = true;
+        }
+        
+        // Загружаем сохраненный токен в поле
+        const tokenInput = document.getElementById('access-token');
+        if (tokenInput) {
+            tokenInput.value = savedToken;
+        }
+        
+        // Обновляем статус
+        const statusElement = document.getElementById('connection-status');
+        if (statusElement && connectionData.userProfile) {
+            const username = connectionData.userProfile.username || connectionData.username || 'Неизвестно';
+            statusElement.textContent = `✅ Подключено: @${username}`;
+            statusElement.style.color = '#28a745';
+        }
+        
+        // Активируем шаг 3
+        const stepSchedule = document.getElementById('step-schedule');
+        const scheduleButton = document.getElementById('schedule-button');
+        
+        if (stepSchedule) stepSchedule.classList.remove('disabled');
+        if (scheduleButton) {
+            scheduleButton.classList.remove('disabled');
+            scheduleButton.textContent = '🤖 Перейти к автопилоту';
+        }
+    }
 }
 
 function checkSavedOpenAI() {
