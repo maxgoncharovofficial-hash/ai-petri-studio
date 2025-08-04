@@ -114,6 +114,19 @@ function loadAutopilotData() {
     updateScheduleDisplay();
     updateQueueCount();
     updateStatistics();
+    
+    // Автозапуск автопилота если он был активен
+    if (autopilotData && autopilotData.active) {
+        console.log('Автозапуск автопилота...');
+        // Запускаем проверку каждую минуту
+        if (window.autopilotInterval) {
+            clearInterval(window.autopilotInterval);
+        }
+        window.autopilotInterval = setInterval(checkScheduledPosts, 60000);
+        
+        // Сразу проверяем есть ли посты к публикации
+        checkScheduledPosts();
+    }
 }
 
 function showSetupRequired() {
@@ -584,9 +597,17 @@ function clearOldScheduleLogs() {
 async function checkScheduledPosts() {
     const scheduleData = getFromStorage('threads_schedule');
     const connectionData = getFromStorage('threads_connection');
+    const autopilotData = getFromStorage('threads_autopilot');
+    
+    console.log('🤖 Checking scheduled posts...', new Date().toLocaleTimeString());
     
     if (!scheduleData || !connectionData?.connected) {
-        console.log('No schedule or connection data available');
+        console.log('❌ No schedule or connection data available');
+        return;
+    }
+    
+    if (!autopilotData?.active) {
+        console.log('⏸️ Autopilot is not active');
         return;
     }
 
@@ -598,9 +619,13 @@ async function checkScheduledPosts() {
     const now = new Date();
     const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
     
+    console.log(`📅 Current time: ${currentTime}`);
+    console.log(`⏰ Scheduled times:`, scheduleData.postingTimes);
+    
     // Проверяем каждое время в расписании
     for (const scheduledTime of scheduleData.postingTimes) {
         if (shouldPostNow(scheduledTime, currentTime)) {
+            console.log(`✅ Time match! Publishing post at ${scheduledTime}`);
             await executeScheduledPost(scheduledTime);
         }
     }
@@ -627,10 +652,18 @@ async function executeScheduledPost(scheduledTime) {
             return;
         }
 
-        // Публикуем пост
-        const result = await window.ThreadsIntegration.publishScheduledPost({
-            text: postContent.text,
-            scheduledTime: scheduledTime,
+        // Инициализируем API если нужно
+        const connectionData = getFromStorage('threads_connection');
+        if (!window.threadsAPI || !window.threadsAPI.accessToken) {
+            if (connectionData && connectionData.accessToken) {
+                await window.threadsAPI.initialize(connectionData.accessToken);
+            } else {
+                throw new Error('Threads API не инициализирован');
+            }
+        }
+
+        // Публикуем пост через Threads API
+        const result = await window.threadsAPI.createTextPost(postContent.text, {
             replyControl: postContent.replyControl || 'everyone'
         });
 
