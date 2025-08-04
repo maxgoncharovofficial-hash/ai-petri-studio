@@ -182,7 +182,7 @@ function updateConnectionStatus(data) {
     
     const statusElement = document.getElementById('connection-status');
     const usernameElement = document.getElementById('connected-username');
-    const connectBtn = document.getElementById('connect-threads');
+    const connectBtn = document.getElementById('connect-button');
     
     console.log('Found elements:', {
         statusElement: !!statusElement,

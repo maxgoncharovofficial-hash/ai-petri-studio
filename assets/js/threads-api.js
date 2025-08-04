@@ -91,16 +91,60 @@ class ThreadsAPI {
      */
     async createTextPost(text, options = {}) {
         try {
-            // Шаг 1: Создание медиа-контейнера
-            const container = await this.createMediaContainer({
-                media_type: 'TEXT_POST',
-                text: text,
-                reply_control: options.replyControl || 'everyone',
-                ...options
+            console.log('Creating text post with text:', text.substring(0, 50) + '...');
+            console.log('Using access token:', this.accessToken ? 'Token present' : 'No token');
+            console.log('Using user ID:', this.userId);
+
+            // Создание медиа-контейнера
+            const url = `${this.baseURL}/${this.userId}/threads`;
+            
+            const formData = new FormData();
+            formData.append('media_type', 'TEXT_POST');
+            formData.append('text', text);
+            formData.append('reply_control', options.replyControl || 'everyone');
+            formData.append('access_token', this.accessToken);
+
+            console.log('Making request to:', url);
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
             });
 
-            // Шаг 2: Публикация контейнера
-            const published = await this.publishContainer(container.id);
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API Error Response:', errorText);
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+
+            const container = await response.json();
+            console.log('Container created:', container);
+
+            // Публикация контейнера
+            const publishUrl = `${this.baseURL}/${this.userId}/threads_publish`;
+            const publishFormData = new FormData();
+            publishFormData.append('creation_id', container.id);
+            publishFormData.append('access_token', this.accessToken);
+
+            console.log('Publishing container:', container.id);
+            
+            const publishResponse = await fetch(publishUrl, {
+                method: 'POST',
+                body: publishFormData
+            });
+
+            console.log('Publish response status:', publishResponse.status);
+            
+            if (!publishResponse.ok) {
+                const errorText = await publishResponse.text();
+                console.error('Publish Error Response:', errorText);
+                throw new Error(`Publish failed: HTTP ${publishResponse.status}: ${errorText}`);
+            }
+
+            const published = await publishResponse.json();
+            console.log('Post published:', published);
             
             return {
                 success: true,
