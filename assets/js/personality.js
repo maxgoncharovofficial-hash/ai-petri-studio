@@ -664,7 +664,7 @@ function initializeTelegramFeatures() {
 function setupBackButton() {
     const handleBack = function(e) {
         if (e) e.preventDefault();
-        console.log('Back button triggered');
+        console.log('Back button triggered - going to index.html');
         
         // Хэптик-фидбек
         if (isTelegramWebApp) {
@@ -678,21 +678,23 @@ function setupBackButton() {
         window.location.href = '../index.html';
     };
     
-    if (isTelegramWebApp) {
-        // Используем Telegram BackButton
-        Telegram.WebApp.BackButton.show().onClick(handleBack);
-        
-        // Скрываем стандартную кнопку
-        const backButton = document.getElementById('back-button');
-        if (backButton) {
-            backButton.style.display = 'none';
-        }
+    // ВСЕГДА настраиваем стандартную кнопку
+    const backButton = document.getElementById('back-button');
+    if (backButton) {
+        backButton.addEventListener('click', handleBack);
+        backButton.addEventListener('touchstart', handleBack);
+        console.log('✅ Standard back button initialized');
     } else {
-        // Используем стандартную кнопку
-        const backButton = document.getElementById('back-button');
-        if (backButton) {
-            backButton.addEventListener('click', handleBack);
-            backButton.addEventListener('touchstart', handleBack);
+        console.error('❌ Back button not found!');
+    }
+    
+    // Дополнительно Telegram BackButton если доступен
+    if (isTelegramWebApp) {
+        try {
+            Telegram.WebApp.BackButton.show().onClick(handleBack);
+            console.log('✅ Telegram BackButton initialized');
+        } catch (error) {
+            console.warn('⚠️ Telegram BackButton failed:', error);
         }
     }
 }

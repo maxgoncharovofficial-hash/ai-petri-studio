@@ -80,14 +80,10 @@ function updateUserInterface(user) {
 function setupTelegramUI() {
     if (!isTelegramWebApp) return;
     
-    // Скрываем стандартные кнопки назад
-    const backButtons = document.querySelectorAll('.header-back-button, #back-button');
-    backButtons.forEach(btn => btn.style.display = 'none');
-    
     // BackButton для главной страницы не нужен
     Telegram.WebApp.BackButton.hide();
     
-    console.log('🎨 Telegram UI configured');
+    console.log('🎨 Telegram UI configured (main page)');
 }
 
 // Универсальный хэптик-фидбек
