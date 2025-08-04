@@ -18,12 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateQueueCount();
     updateTodayPosts();
     
-    // Принудительно запускаем автопилот для тестирования
-    console.log('🔧 Debug: Force starting autopilot checker...');
-    window.autopilotInterval = setInterval(checkScheduledPosts, 60000); // каждую минуту
-    
-    // Сразу проверяем один раз
-    setTimeout(checkScheduledPosts, 5000); // через 5 секунд
+
 });
 
 // === КНОПКА НАЗАД ===
@@ -129,19 +124,10 @@ function loadAutopilotData() {
         if (window.autopilotInterval) {
             clearInterval(window.autopilotInterval);
         }
-        window.autopilotInterval = setInterval(checkScheduledPosts, 60000);
+        window.autopilotInterval = setInterval(checkScheduledPosts, 30000); // каждые 30 секунд
         
         // Сразу проверяем есть ли посты к публикации
         checkScheduledPosts();
-    } else {
-        console.log('⚠️ Autopilot was not active, but enabling for debugging...');
-        // Принудительно активируем автопилот для отладки
-        const newAutopilotData = {
-            active: true,
-            startedAt: new Date().toISOString()
-        };
-        saveToStorage('threads_autopilot', newAutopilotData);
-        updateAutopilotStatus();
     }
 }
 
@@ -269,21 +255,25 @@ function updateStatistics() {
     const scheduledPosts = getFromStorage('threads_scheduled_posts') || [];
     const queuePosts = getFromStorage('threads_queue_posts') || [];
     
-    // Обновляем статистику
-    document.getElementById('total-published').textContent = publishedPosts.length;
+    // Обновляем статистику только если элементы существуют
+    const totalPublishedEl = document.getElementById('total-published');
+    if (totalPublishedEl) totalPublishedEl.textContent = publishedPosts.length;
     
     // Посты сегодня
     const today = new Date().toDateString();
     const todayPublished = publishedPosts.filter(post => 
         new Date(post.publishedAt).toDateString() === today
     ).length;
-    document.getElementById('today-published').textContent = todayPublished;
+    const todayPublishedEl = document.getElementById('today-published');
+    if (todayPublishedEl) todayPublishedEl.textContent = todayPublished;
     
     // Запланированные
-    document.getElementById('scheduled-posts').textContent = scheduledPosts.length + queuePosts.length;
+    const scheduledPostsEl = document.getElementById('scheduled-posts');
+    if (scheduledPostsEl) scheduledPostsEl.textContent = scheduledPosts.length + queuePosts.length;
     
     // Успешность (заглушка)
-    document.getElementById('success-rate').textContent = '98%';
+    const successRateEl = document.getElementById('success-rate');
+    if (successRateEl) successRateEl.textContent = '98%';
 }
 
 function toggleAutopilot() {
@@ -623,9 +613,8 @@ async function checkScheduledPosts() {
     }
     
     if (!autopilotData?.active) {
-        console.log('⏸️ Autopilot is not active, but checking anyway for debug...');
-        // Для отладки продолжаем проверку даже если автопилот неактивен
-        // return;
+        console.log('⏸️ Autopilot is not active');
+        return;
     }
 
     // Инициализируем API если еще не инициализирован
@@ -660,30 +649,7 @@ function shouldPostNow(scheduledTime, currentTime) {
     return shouldPost;
 }
 
-/**
- * Тестовая функция для немедленной публикации
- */
-window.testPublishNow = async function() {
-    console.log('🧪 TEST: Publishing post immediately...');
-    const queuePosts = getFromStorage('threads_queue_posts') || [];
-    
-    if (queuePosts.length === 0) {
-        console.warn('❌ No posts in queue for testing');
-        alert('Нет постов в очереди для тестирования. Добавьте хотя бы один пост.');
-        return;
-    }
-    
-    console.log(`📋 Found ${queuePosts.length} posts in queue`);
-    
-    try {
-        const currentTime = new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
-        await executeScheduledPost(currentTime);
-        console.log('✅ Test publish completed');
-    } catch (error) {
-        console.error('❌ Test publish failed:', error);
-        alert(`Ошибка тестовой публикации: ${error.message}`);
-    }
-};
+
 
 /**
  * Выполнение запланированной публикации
@@ -874,7 +840,7 @@ function startAutopilot() {
         clearInterval(window.autopilotInterval);
     }
     
-    window.autopilotInterval = setInterval(checkScheduledPosts, 60000); // каждую минуту
+            window.autopilotInterval = setInterval(checkScheduledPosts, 30000); // каждые 30 секунд
     
     console.log('Autopilot started');
 }
