@@ -117,19 +117,22 @@ function updateConnectionStatus() {
     const scheduleData = getFromStorage('threads_schedule');
     const statusElement = document.getElementById('connection-status');
     
+    // Сброс всех классов статуса
+    statusElement.className = 'section-counter';
+    
     if (connectionData && connectionData.connected && scheduleData) {
         statusElement.textContent = '[Настроен]';
-        statusElement.style.color = '#28a745';
+        statusElement.classList.add('configured');
         
         // Убираем приоритет если настроено
         const connectionCard = document.getElementById('connection-section');
         connectionCard.classList.remove('priority');
     } else if (connectionData && connectionData.connected) {
         statusElement.textContent = '[Подключен]';
-        statusElement.style.color = '#ffc107';
+        statusElement.classList.add('connected');
     } else {
         statusElement.textContent = '[Настроить]';
-        statusElement.style.color = '#dc3545';
+        statusElement.classList.add('not-connected');
     }
 }
 
@@ -138,15 +141,18 @@ function updateAutopilotStatus() {
     const connectionData = getFromStorage('threads_connection');
     const statusElement = document.getElementById('autopilot-status');
     
+    // Сброс всех классов статуса
+    statusElement.className = 'section-counter';
+    
     if (autopilotData && autopilotData.active && connectionData && connectionData.connected) {
         statusElement.textContent = '[Активен]';
-        statusElement.style.color = '#28a745';
+        statusElement.classList.add('active');
     } else if (connectionData && connectionData.connected) {
         statusElement.textContent = '[Готов]';
-        statusElement.style.color = '#ffc107';
+        statusElement.classList.add('ready');
     } else {
         statusElement.textContent = '[Неактивен]';
-        statusElement.style.color = '#6c757d';
+        statusElement.classList.add('inactive');
     }
 }
 
@@ -157,12 +163,15 @@ function updateCreateStatus() {
     
     const totalContent = drafts.length + scheduled.length;
     
+    // Сброс всех классов статуса
+    statusElement.className = 'section-counter';
+    
     if (totalContent > 0) {
         statusElement.textContent = `[${totalContent} готово]`;
-        statusElement.style.color = '#28a745';
+        statusElement.classList.add('ready');
     } else {
         statusElement.textContent = '[0 черновиков]';
-        statusElement.style.color = '#6c757d';
+        statusElement.classList.add('inactive');
     }
 }
 

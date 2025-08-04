@@ -75,11 +75,33 @@
 
 .section-counter {
     font-size: 12px;
-    color: var(--tg-theme-hint-color, #999999);
-    background: var(--tg-theme-hint-color, #f0f0f0);
-    padding: 2px 8px;
-    border-radius: 8px;
+    color: #ffffff;
+    background: #6c757d;
+    padding: 4px 8px;
+    border-radius: 12px;
     font-weight: 500;
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Статусы для состояний */
+.section-counter.connected,
+.section-counter.active,
+.section-counter.configured {
+    background: #28a745;
+    color: #ffffff;
+}
+
+.section-counter.ready {
+    background: #17a2b8;
+    color: #ffffff;
+}
+
+.section-counter.inactive,
+.section-counter.not-connected {
+    background: #6c757d;
+    color: #ffffff;
 }
 
 .section-priority {
