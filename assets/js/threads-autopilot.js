@@ -63,7 +63,19 @@ function initializeNavigation() {
     
     if (setupButton) {
         setupButton.addEventListener('click', function() {
-            window.location.href = 'threads-connection.html';
+            console.log('🛠️ Настройка автопилота...');
+            
+            // Проверяем что именно не подключено
+            const threadsToken = localStorage.getItem('threads_api_token');
+            const openaiKey = localStorage.getItem('openai_api_key');
+            
+            if (!threadsToken || !openaiKey) {
+                // Переходим к подключению
+                window.location.href = 'threads-connection.html';
+            } else {
+                // Все подключено, перезагружаем данные
+                loadAutopilotData();
+            }
         });
     }
 }
@@ -101,39 +113,106 @@ function initializeAutopilot() {
 }
 
 function loadAutopilotData() {
-    const autopilotData = getFromStorage('threads_autopilot');
+    console.log('🔍 Проверяем подключения...');
+    
+    // Расширенная проверка подключений
     const connectionData = getFromStorage('threads_connection');
+    const threadsToken = localStorage.getItem('threads_api_token');
+    const openaiKey = localStorage.getItem('openai_api_key');
     const scheduleData = getFromStorage('threads_schedule');
+    const autopilotData = getFromStorage('threads_autopilot');
     
-    // Проверяем настроен ли автопилот
-    if (!connectionData?.connected || !scheduleData) {
-        showSetupRequired();
-        return;
-    }
+    console.log('📊 Данные подключений:', {
+        connectionData: !!connectionData,
+        threadsToken: !!threadsToken,
+        openaiKey: !!openaiKey,
+        scheduleData: !!scheduleData
+    });
     
-    showActiveAutopilot();
-    updateAutopilotStatus();
-    updateScheduleDisplay();
-    updateQueueCount();
-    updateStatistics();
+    // Проверяем Threads подключение
+    const threadsConnected = (connectionData && connectionData.connected) || 
+                           (threadsToken && threadsToken.length > 20);
     
-    // Автозапуск автопилота если он был активен
-    if (autopilotData && autopilotData.active) {
-        console.log('♻️ Автозапуск автопилота...');
-        // Запускаем проверку каждую минуту
-        if (window.autopilotInterval) {
-            clearInterval(window.autopilotInterval);
-        }
-        window.autopilotInterval = setInterval(checkScheduledPosts, 30000); // каждые 30 секунд
+    // Проверяем OpenAI подключение  
+    const openaiConnected = openaiKey && openaiKey.length > 20;
+    
+    console.log('✅ Статус подключений:', {
+        threadsConnected,
+        openaiConnected
+    });
+    
+    // Если оба API подключены - показываем активный автопилот
+    if (threadsConnected && openaiConnected) {
+        console.log('🚀 Все подключения активны - запуск автопилота');
+        showActiveAutopilot();
+        updateAutopilotStatus();
+        updateScheduleDisplay();
+        updateQueueCount();
+        updateStatistics();
         
-        // Сразу проверяем есть ли посты к публикации
-        checkScheduledPosts();
+        // Восстанавливаем автопилот если был активен
+        if (autopilotData && autopilotData.active) {
+            console.log('♻️ Автозапуск автопилота...');
+            startAutopilotLoop();
+        }
+    } else {
+        console.log('⚠️ Не все подключения активны - показываем экран настройки');
+        showSetupRequired(threadsConnected, openaiConnected);
     }
 }
 
-function showSetupRequired() {
-    document.getElementById('setup-required').style.display = 'block';
-    document.getElementById('active-autopilot').style.display = 'none';
+// Функция для запуска автопилота
+function startAutopilotLoop() {
+    if (window.autopilotInterval) {
+        clearInterval(window.autopilotInterval);
+    }
+    window.autopilotInterval = setInterval(checkScheduledPosts, 30000); // каждые 30 секунд
+    
+    // Сразу проверяем есть ли посты к публикации
+    checkScheduledPosts();
+}
+
+function showSetupRequired(threadsConnected = false, openaiConnected = false) {
+    const setupContainer = document.getElementById('setup-required');
+    const autopilotContainer = document.getElementById('active-autopilot');
+    
+    if (setupContainer) setupContainer.style.display = 'block';
+    if (autopilotContainer) autopilotContainer.style.display = 'none';
+    
+    // Обновляем чек-листы в зависимости от статуса подключений
+    const threadsCheck = document.querySelector('.setup-checklist li:nth-child(1)');
+    const openaiCheck = document.querySelector('.setup-checklist li:nth-child(2)');
+    const dataCheck = document.querySelector('.setup-checklist li:nth-child(3)');
+    
+    if (threadsCheck) {
+        threadsCheck.innerHTML = threadsConnected ? 
+            '✅ Подключить аккаунт Threads' : 
+            '❌ Подключить аккаунт Threads';
+    }
+    
+    if (openaiCheck) {
+        openaiCheck.innerHTML = openaiConnected ? 
+            '✅ Настроить OpenAI для генерации контента' : 
+            '❌ Настроить OpenAI для генерации контента';
+    }
+    
+    if (dataCheck) {
+        const hasData = checkPersonalityData();
+        dataCheck.innerHTML = hasData ? 
+            '✅ Заполнить данные для ИИ-генерации' : 
+            '❌ Заполнить данные для ИИ-генерации';
+    }
+}
+
+// Функция проверки данных личности
+function checkPersonalityData() {
+    const productData = localStorage.getItem('product_data');
+    const audienceData = localStorage.getItem('audience_data');
+    const casesData = localStorage.getItem('cases_data');
+    
+    return (productData && productData !== '{}') || 
+           (audienceData && audienceData !== '{}') || 
+           (casesData && casesData !== '{}');
 }
 
 function showActiveAutopilot() {
