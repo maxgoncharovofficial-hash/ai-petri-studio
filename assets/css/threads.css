@@ -990,6 +990,27 @@
     box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
 }
 
+/* Token Validation States */
+.token-input.token-valid {
+    border-color: #28a745;
+    background: #f8fff9;
+}
+
+.token-input.token-valid:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+.token-input.token-invalid {
+    border-color: #dc3545;
+    background: #fff5f5;
+}
+
+.token-input.token-invalid:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
 .toggle-token {
     position: absolute;
     right: 8px;

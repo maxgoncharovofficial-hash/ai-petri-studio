@@ -73,6 +73,9 @@ function initializeConnection() {
         connectButton.addEventListener('click', connectAccount);
     }
     
+    // Добавляем слушатели для реактивности кнопок
+    initializeInputListeners();
+    
     if (scheduleButton) {
         scheduleButton.addEventListener('click', showScheduleSetup);
     }
@@ -777,6 +780,121 @@ function addPromptSettingsButton() {
 function openPromptSettings() {
     // Переходим на отдельную страницу настройки промпта
     window.location.href = 'prompt-settings.html';
+}
+
+// === РЕАКТИВНОСТЬ КНОПОК ===
+function initializeInputListeners() {
+    // Threads API Token
+    const threadsTokenInput = document.getElementById('access-token');
+    if (threadsTokenInput) {
+        threadsTokenInput.addEventListener('input', onThreadsTokenChange);
+        threadsTokenInput.addEventListener('paste', () => {
+            setTimeout(onThreadsTokenChange, 10); // Небольшая задержка для paste
+        });
+    }
+    
+    // OpenAI API Key
+    const openaiKeyInput = document.getElementById('openai-api-key');
+    if (openaiKeyInput) {
+        openaiKeyInput.addEventListener('input', onOpenAIKeyChange);
+        openaiKeyInput.addEventListener('paste', () => {
+            setTimeout(onOpenAIKeyChange, 10);
+        });
+    }
+}
+
+function onThreadsTokenChange() {
+    const tokenInput = document.getElementById('access-token');
+    const connectBtn = document.getElementById('connect-button');
+    
+    if (!tokenInput || !connectBtn) return;
+    
+    const currentToken = tokenInput.value.trim();
+    const savedToken = localStorage.getItem('threads_api_token');
+    const connectionData = getFromStorage('threads_connection');
+    
+    // Проверяем валидность токена (базовая проверка)
+    const isValidToken = currentToken && currentToken.length > 20; // Минимальная длина токена
+    
+    // Если поле пустое, токен невалидный или изменился от сохраненного
+    if (!currentToken || !isValidToken || currentToken !== savedToken || !connectionData?.connected) {
+        // Сброс кнопки в исходное состояние
+        connectBtn.textContent = '🔗 Подключить и проверить токен';
+        connectBtn.style.background = '';
+        connectBtn.style.borderColor = '';
+        connectBtn.style.color = '';
+        connectBtn.disabled = false;
+        
+        // Сброс статуса
+        const statusElement = document.getElementById('connection-status');
+        if (statusElement) {
+            statusElement.textContent = 'Не подключен';
+            statusElement.style.color = '';
+        }
+        
+        // Деактивируем шаг 3
+        const stepSchedule = document.getElementById('step-schedule');
+        const scheduleButton = document.getElementById('schedule-button');
+        
+        if (stepSchedule) stepSchedule.classList.add('disabled');
+        if (scheduleButton) {
+            scheduleButton.classList.add('disabled');
+            scheduleButton.textContent = '🤖 Перейти к автопилоту';
+        }
+    }
+    
+    // Показываем визуальную валидацию токена
+    updateTokenValidation(tokenInput, isValidToken);
+}
+
+function onOpenAIKeyChange() {
+    const keyInput = document.getElementById('openai-api-key');
+    const connectBtn = document.getElementById('connect-openai');
+    
+    if (!keyInput || !connectBtn) return;
+    
+    const currentKey = keyInput.value.trim();
+    const savedKey = localStorage.getItem('openai_api_key');
+    
+    // Проверяем валидность ключа OpenAI
+    const isValidKey = currentKey && 
+                      currentKey.startsWith('sk-') && 
+                      currentKey.length > 40; // OpenAI ключи обычно длиннее 40 символов
+    
+    // Если поле пустое, ключ невалидный или изменился
+    if (!currentKey || !isValidKey || currentKey !== savedKey) {
+        // Сброс кнопки в исходное состояние
+        connectBtn.textContent = '🔗 Подключить OpenAI';
+        connectBtn.style.background = '';
+        connectBtn.disabled = false;
+        
+        // Убираем кнопку настроек промпта
+        const promptButton = document.querySelector('.prompt-settings-btn');
+        if (promptButton) {
+            promptButton.remove();
+        }
+    }
+    
+    // Показываем визуальную валидацию ключа
+    updateTokenValidation(keyInput, isValidKey);
+}
+
+// === ВИЗУАЛЬНАЯ ВАЛИДАЦИЯ ===
+function updateTokenValidation(inputElement, isValid) {
+    if (!inputElement) return;
+    
+    const value = inputElement.value.trim();
+    
+    // Убираем предыдущие классы валидации
+    inputElement.classList.remove('token-valid', 'token-invalid');
+    
+    if (value.length > 0) {
+        if (isValid) {
+            inputElement.classList.add('token-valid');
+        } else {
+            inputElement.classList.add('token-invalid');
+        }
+    }
 }
 
 function checkSavedThreads() {
