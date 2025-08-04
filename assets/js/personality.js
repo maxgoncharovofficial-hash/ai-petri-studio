@@ -1,19 +1,27 @@
-// Премиум автоматизация публикаций v30.43
+// Премиум автоматизация публикаций v30.44
 // Personality Page JavaScript
-
-// === TELEGRAM WEB APP INTEGRATION ===
-const isTelegramWebApp = typeof window.Telegram !== 'undefined' && window.Telegram.WebApp;
 
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Personality page loaded');
-    console.log('📱 Telegram Web App detected:', isTelegramWebApp);
     
-    // Telegram интеграция БЕЗ BackButton
-    initializeTelegramFeatures();
+    // Добавляем обработчик для кнопки назад - КАК В PRODUCT.JS
+    const backButton = document.getElementById('back-button');
+    console.log('Back button found:', backButton);
     
-    // Настройка ТОЛЬКО кастомной кнопки назад
-    initializeBackButton();
+    if (backButton) {
+        backButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Back button clicked');
+            window.location.href = '../index.html'; // Изменить путь на главную
+        });
+        
+        backButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            console.log('Back button touched');
+            window.location.href = '../index.html'; // Изменить путь на главную
+        });
+    }
     
     // Инициализация обработчиков событий
     initializeSectionHandlers();
@@ -68,9 +76,6 @@ function initializeSectionHandlers() {
 // Обработка кликов по секциям
 function handleSectionClick(sectionId) {
     console.log('Handling section click:', sectionId);
-    
-    // Хэптик-фидбек при клике на секцию
-    triggerHapticFeedback('light');
     
     switch(sectionId) {
         case 'product-section':
@@ -632,112 +637,5 @@ function updateProgress(filledQuestions, totalQuestions) {
     
     if (statValue) {
         statValue.textContent = filledQuestions + '/' + totalQuestions;
-    }
-}
-
-// === TELEGRAM WEB APP FUNCTIONS ===
-
-// Telegram интеграция
-function initializeTelegramFeatures() {
-    if (!isTelegramWebApp) return;
-    
-    try {
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
-        
-        // Применяем тему
-        applyTelegramTheme();
-        
-        // Персонализация
-        const user = Telegram.WebApp.initDataUnsafe.user;
-        if (user) {
-            updateUserInterface(user);
-        }
-        
-        console.log('✅ Telegram features initialized');
-    } catch (error) {
-        console.warn('⚠️ Telegram features init failed:', error);
-    }
-}
-
-// Инициализация ТОЛЬКО кастомной кнопки назад
-function initializeBackButton() {
-    console.log('🔙 Initializing custom back button...');
-    
-    // ТОЛЬКО кастомная кнопка - БЕЗ Telegram BackButton
-    const backButton = document.getElementById('back-button');
-    if (backButton) {
-        console.log('✅ Back button found, setting up listeners');
-        
-        // Принудительно показать кнопку
-        backButton.style.display = 'flex';
-        backButton.style.visibility = 'visible';
-        
-        const handleBack = function(e) {
-            if (e) e.preventDefault();
-            console.log('🏠 Back button clicked - going to index.html');
-            
-            // Хэптик-фидбек если доступен
-            if (isTelegramWebApp) {
-                try {
-                    Telegram.WebApp.HapticFeedback.impactOccurred('light');
-                } catch (error) {
-                    console.warn('Haptic feedback failed:', error);
-                }
-            }
-            
-            window.location.href = '../index.html';
-        };
-        
-        backButton.addEventListener('click', handleBack);
-        backButton.addEventListener('touchstart', handleBack);
-        
-        console.log('✅ Custom back button initialized successfully');
-    } else {
-        console.error('❌ Back button not found in DOM!');
-    }
-    
-    // ПРИНУДИТЕЛЬНО скрыть Telegram BackButton
-    if (isTelegramWebApp && Telegram.WebApp.BackButton) {
-        try {
-            Telegram.WebApp.BackButton.hide();
-            console.log('✅ Telegram BackButton hidden');
-        } catch (error) {
-            console.warn('⚠️ Failed to hide Telegram BackButton:', error);
-        }
-    }
-}
-
-// Применение темы Telegram
-function applyTelegramTheme() {
-    if (!isTelegramWebApp) return;
-    
-    const WebApp = Telegram.WebApp;
-    document.body.classList.add('telegram-mode');
-    
-    // Применяем цвета темы
-    document.documentElement.style.setProperty('--tg-theme-bg-color', WebApp.backgroundColor || '#ffffff');
-    document.documentElement.style.setProperty('--tg-theme-text-color', WebApp.textColor || '#000000');
-    document.documentElement.style.setProperty('--tg-theme-hint-color', WebApp.hintColor || '#999999');
-    document.documentElement.style.setProperty('--tg-theme-link-color', WebApp.linkColor || '#0088cc');
-    document.documentElement.style.setProperty('--tg-theme-button-color', WebApp.buttonColor || '#0088cc');
-    document.documentElement.style.setProperty('--tg-theme-button-text-color', WebApp.buttonTextColor || '#ffffff');
-}
-
-// Персонализация интерфейса
-function updateUserInterface(user) {
-    console.log('👤 Personalizing for user:', user.first_name);
-    
-    // Можем добавить персонализацию в будущем
-}
-
-// Универсальный хэптик-фидбек
-function triggerHapticFeedback(type = 'medium') {
-    if (isTelegramWebApp) {
-        try {
-            Telegram.WebApp.HapticFeedback.impactOccurred(type);
-        } catch (error) {
-            console.warn('Haptic feedback failed:', error);
-        }
     }
 }
