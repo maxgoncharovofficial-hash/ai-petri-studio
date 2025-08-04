@@ -106,6 +106,14 @@ function initializeCards() {
 function loadMainPageData() {
     console.log('Loading main page data...');
     
+    // Отладка localStorage
+    console.log('📦 LocalStorage dump:', {
+        threads_connection: getFromStorage('threads_connection'),
+        threads_schedule: getFromStorage('threads_schedule'), 
+        threads_autopilot: getFromStorage('threads_autopilot'),
+        allKeys: Object.keys(localStorage).filter(k => k.startsWith('threads_'))
+    });
+    
     // Обновляем статусы карточек
     updateConnectionStatus();
     updateAutopilotStatus();
@@ -120,7 +128,11 @@ function updateConnectionStatus() {
     console.log('🔍 updateConnectionStatus:', {
         statusElement,
         connectionData,
-        scheduleData
+        scheduleData,
+        hasConnection: !!connectionData?.connected,
+        hasSchedule: !!scheduleData,
+        connectionKeys: connectionData ? Object.keys(connectionData) : [],
+        scheduleKeys: scheduleData ? Object.keys(scheduleData) : []
     });
     
     if (!statusElement) {
@@ -173,7 +185,11 @@ function updateAutopilotStatus() {
     console.log('🔍 updateAutopilotStatus:', {
         statusElement,
         autopilotData,
-        connectionData
+        connectionData,
+        isAutopilotActive: !!autopilotData?.active,
+        isConnected: !!connectionData?.connected,
+        autopilotKeys: autopilotData ? Object.keys(autopilotData) : [],
+        connectionKeys: connectionData ? Object.keys(connectionData) : []
     });
     
     if (!statusElement) {
