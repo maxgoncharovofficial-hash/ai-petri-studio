@@ -399,7 +399,6 @@ body {
     align-items: center;
     padding: 12px 20px;
     background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
-    position: relative;
 }
 .header-factory-icon {
     margin-right: 20px;
