@@ -130,8 +130,13 @@ async function connectAccount() {
             };
             
             // Сохраняем данные подключения
+            console.log('Saving connection data:', connectionData);
             saveToStorage('threads_connection', connectionData);
             window.ThreadsIntegration.saveConnection(connectionData);
+            
+            // Проверяем что данные сохранились
+            const savedData = getFromStorage('threads_connection');
+            console.log('Verification - saved data:', savedData);
             
             // Заполняем User ID
             if (userIdInput) {
@@ -173,13 +178,22 @@ async function connectAccount() {
 }
 
 function updateConnectionStatus(data) {
+    console.log('updateConnectionStatus called with:', data);
+    
     const statusElement = document.getElementById('connection-status');
     const usernameElement = document.getElementById('connected-username');
     const connectBtn = document.getElementById('connect-threads');
     
+    console.log('Found elements:', {
+        statusElement: !!statusElement,
+        usernameElement: !!usernameElement,
+        connectBtn: !!connectBtn
+    });
+    
     if (data && data.connected) {
         // Получаем username с защитой от ошибок
         const username = data.userProfile?.username || data.username || 'Неизвестно';
+        console.log('Updating for username:', username);
         
         if (statusElement) {
             statusElement.textContent = `✅ Подключено: @${username}`;
@@ -188,20 +202,28 @@ function updateConnectionStatus(data) {
         
         // Обновляем кнопку подключения
         if (connectBtn) {
+            console.log('Updating connect button to connected state');
             connectBtn.textContent = '✅ Подключено';
             connectBtn.style.background = '#28a745';
+            connectBtn.style.borderColor = '#28a745';
+            connectBtn.style.color = 'white';
             connectBtn.disabled = true;
+        } else {
+            console.log('Connect button not found!');
         }
         
         // Загружаем токен в поле
         const tokenInput = document.getElementById('access-token');
         if (tokenInput && data.accessToken) {
             tokenInput.value = data.accessToken;
+            console.log('Token loaded into input field');
         }
         
         if (usernameElement) {
             usernameElement.textContent = `@${username}`;
         }
+    } else {
+        console.log('Data not valid for connection status update');
     }
 }
 
@@ -561,7 +583,10 @@ function loadSavedData() {
     
     // Загружаем данные подключения
     const connectionData = getFromStorage('threads_connection');
+    console.log('Loading saved connection data:', connectionData);
+    
     if (connectionData && connectionData.connected) {
+        console.log('Found saved connection, restoring state...');
         updateConnectionStatus(connectionData);
         
         // Активируем шаг 3 (автопилот)
@@ -573,6 +598,8 @@ function loadSavedData() {
             scheduleButton.classList.remove('disabled');
             scheduleButton.textContent = '🤖 Перейти к автопилоту';
         }
+    } else {
+        console.log('No saved connection found or not connected');
     }
     
     // Загружаем данные расписания
